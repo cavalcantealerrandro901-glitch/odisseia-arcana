@@ -1,74 +1,83 @@
-Atue como um desenvolvedor sénior de
+Atue como um desenvolvedor especialista em
 Discord.js v14.
-O objetivo desta tarefa é reestruturar o bot
-ODISSEIA ARCANA para usar uma arquitetura
-modular baseada em comandos por arquivos
-individuais dentro da pasta 'commands/',
-mantendo a compatibilidade total com os
-prefixos 'O.' e 'o.'.
---- ESTRUTURA DE FICHEIROS E PASTA
+O objetivo desta etapa é criar a estrutura
+modular de pastas e a PRIMEIRA PARTE dos
+comandos do bot ODISSEIA ARCANA.
+--- ESTRUTURA E ARQUIVO PRINCIPAL (index.js)
+---
 
-'commands/' ---
+1. Mantendo o Servidor Web (index.js):
+Mantenha OBRIGATORIAMENTE o
+servidor Web Express (app.listen na porta
 
-1. FICHEIRO PRINCIPAL (index.js):
-Deve manter o servidor Express ativo
-rodando na porta process.env.PORT ou
-10000 para evitar o erro "Application
-exited early" na hospedagem do Render.
-Deve carregar dinamicamente todos os
-ficheiros .js localizados na pasta
-'commands/'.
-Deve processar os comandos recebidos
-pelas mensagens que comecem com os
-prefixos 'O.' ou 'o.'.
-Deve conter uma estrutura simples de
-banco de dados em memória para gerir o
-saldo de 'Almas' dos utilizadores.
+process.env.PORT || 10000) no index.js
+para evitar que a hospedagem no Render
+dê erro "Application exited early".
 
-2. COMANDOS A SEREM CRIADOS NA PASTA
+2. Handler de Comandos e Pastas:
+Crie as pastas:
+'commands/economia/'
+'commands/info/'
+O index.js deve carregar dinamicamente
+todos os comandos de todas as
+subpastas dentro de 'commands/'.
+O bot deve aceitar os prefixos 'O.' e 'o.'.
+Crie uma estrutura em memória/banco de
+dados simples para gerenciar as Almas
+dos usuários.
 
-'commands/':
+--- PASTA 'commands/economia/' ---
 
-a) commands/daily.js:
-- Comando: O.daily
-- Descrição: Recompensa diária de Almas.
-Resgate único por dia (com verificação/reinício).
-Adiciona entre 500 e 1000 Almas ao utilizador e
-envia uma mensagem/embed confirmando o
-valor recebido e o novo saldo.
-b) commands/atm.js:
-- Comandos: O.atm / O.saldo
-- Descrição: Consulta o saldo bancário de Almas
-do utilizador ou do membro mencionado
-(@user).
-c) commands/work.js:
-- Comando: O.work
-- Descrição: Trabalha para ganhar uma
+1. commands/economia/daily.js (Comando:
+O.daily)
+Recompensa diária em Almas (entre 500
+e 1000 Almas).
+Impede resgate duplo no mesmo dia e
+exibe Embed com valor recebido e novo
+saldo.
 
-quantidade aleatória de Almas (ex: 100 a 400
-Almas) com tempo de recarga (cooldown).
-d) commands/ping.js:
-- Comando: O.ping
-- Descrição: Responde com a latência atual do
-bot e da API do Discord.
-e) commands/help.js:
-- Comandos: O.help / O.ajuda
-- Descrição: Exibe um painel/embed moderno
-com a lista de categorias e comandos
-disponíveis no bot.
-f) commands/clear.js:
-- Comando: O.clear <quantidade>
-- Descrição: Comando de moderação para
-apagar de 1 a 100 mensagens no canal atual
-(requer permissão de Gestão de Mensagens).
+2. commands/economia/atm.js (Comando:
+O.atm ou O.saldo)
+Consulta o saldo de Almas do próprio
+usuário ou do membro mencionado.
 
---- REQUISITOS TÉCNICOS --Todo o código deve ser gerado sem erros de
-sintaxe.
-Deve usar os recursos modernos da v14 do
-Discord.js (EmbedBuilder, ActionRowBuilder,
-etc.).
-Deve garantir a criação da pasta
-'commands/' e o salvamento individual de
-cada ficheiro.
+3. commands/economia/work.js (Comando:
+O.work)
+Permite trabalhar para ganhar Almas
+aleatórias (100 a 400 Almas) com
 
-
+cooldown.
+
+4. commands/economia/pay.js (Comando:
+O.pay <@membro> <quantidade>)
+Permite transferir Almas da conta do
+usuário para outro membro do servidor.
+
+--- PASTA 'commands/info/' ---
+
+1. commands/info/ping.js (Comando: O.ping)
+Responde com a latência da API do
+Discord e do bot.
+
+2. commands/info/ajuda.js (Comando: O.help
+ou O.ajuda)
+Exibe um Embed bem organizado listando
+
+os comandos disponíveis.
+
+3. commands/info/botinfo.js (Comando:
+O.botinfo)
+Exibe informações do bot (Uptime,
+Servidores, Memória).
+
+4. commands/info/perfil.js (Comando: O.perfil)
+Exibe um cartão/Embed do perfil do
+usuário mostrando suas Almas e
+estatísticas.
+
+--- REQUISITOS --Gere todos os arquivos de código completos,
+funcionais e sem erros de sintaxe, garantindo
+que a pasta 'commands/' e suas subpastas
+sejam criadas corretamente.
+
+
