@@ -2,7 +2,7 @@ const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const { Database } = require('st.db');
 const db = new Database({ filePath: './database/economia.json' });
 
-const TEMPO_COOLDOWN = 2 * 60 * 60 * 1000; // 2 horas de espera
+const TEMPO_COOLDOWN = 2 * 60 * 60 * 1000; // 2 horas
 
 const TRABALHOS = [
   'Trabalhou como caçador de recompensas',
@@ -31,7 +31,8 @@ module.exports = {
 
 async function processarWork(contexto, autor, isSlash = false) {
   const chaveCooldown = `work_cooldown_${autor.id}`;
-  const chaveSaldo = `carteira_${autor.id}`;
+  const chaveCarteira = `carteira_${autor.id}`;
+  const chaveBanco = `banco_${autor.id}`;
 
   const ultimoTrabalho = (await db.get(chaveCooldown)) || 0;
   const agora = Date.now();
@@ -45,16 +46,27 @@ async function processarWork(contexto, autor, isSlash = false) {
   }
 
   const ganho = Math.floor(Math.random() * (400 - 150 + 1)) + 150;
-  const saldoAtual = (await db.get(chaveSaldo)) || 0;
+  
+  const saldoCarteira = (await db.get(chaveCarteira)) || 0;
+  const saldoBanco = (await db.get(chaveBanco)) || 0;
+
+  const novaCarteira = saldoCarteira + ganho;
+  const novoTotal = novaCarteira + saldoBanco;
+
   const trabalhoRealizado = TRABALHOS[Math.floor(Math.random() * TRABALHOS.length)];
 
-  await db.set(chaveSaldo, saldoAtual + ganho);
+  await db.set(chaveCarteira, novaCarteira);
   await db.set(chaveCooldown, agora);
 
   const embed = new EmbedBuilder()
     .setTitle('💼 Hora do Trabalho!')
     .setColor('#3498db')
-    .setDescription(`${trabalhoRealizado} e recebeu **${ganho.toLocaleString()}** 🪙!\n\n**Saldo na Carteira:** \`${(saldoAtual + ganho).toLocaleString()}\` 🪙`)
+    .setDescription(`${trabalhoRealizado} e recebeu **+${ganho.toLocaleString()}** 🪙!`)
+    .addFields(
+      { name: '👛 Carteira', value: `\`${novaCarteira.toLocaleString()}\` 🪙`, inline: true },
+      { name: '🏦 Banco', value: `\`${saldoBanco.toLocaleString()}\` 🪙`, inline: true },
+      { name: '💎 Total', value: `\`${novoTotal.toLocaleString()}\` 🪙`, inline: false }
+    )
     .setFooter({ text: `Aeternus Economia • ${autor.tag}`, iconURL: autor.displayAvatarURL({ dynamic: true }) })
     .setTimestamp();
 

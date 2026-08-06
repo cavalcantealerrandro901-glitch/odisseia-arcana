@@ -1,141 +1,124 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
-const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 require('dotenv').config();
 
-// Servidor Web para o Render
-const app = express();
+// 1. Criar Servidor Web para o Render (Porta 10000 ou PORT do ambiente)
 const PORT = process.env.PORT || 10000;
-
-app.get('/', (req, res) => {
-  res.send('🤖 Odisseia Arcana - Online!');
-});
-
-app.listen(PORT, () => {
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.write('Aeternus Bot está online e ativo!');
+  res.end();
+}).listen(PORT, () => {
   console.log(`🌐 Servidor Web rodando na porta ${PORT}`);
 });
 
-// Instância do Bot
+// 2. Inicializar Cliente do Discord
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
-  ],
+    GatewayIntentBits.GuildMembers
+  ]
 });
 
 client.commands = new Collection();
-client.aliases = new Collection();
-client.slashCommands = new Collection();
-
 const slashCommandsArray = [];
 
-// Carregador Dinâmico de Comandos
-const commandsPath = path.join(__dirname, 'commands');
+// 3. Carregamento Automático de Comandos
+const categoriesPath = path.join(__dirname, 'commands');
+if (fs.existsSync(categoriesPath)) {
+  const categoryFolders = fs.readdirSync(categoriesPath);
 
-if (fs.existsSync(commandsPath)) {
-  const commandFolders = fs.readdirSync(commandsPath);
-
-  for (const folder of commandFolders) {
-    const folderPath = path.join(commandsPath, folder);
+  for (const folder of categoryFolders) {
+    const folderPath = path.join(categoriesPath, folder);
     if (fs.statSync(folderPath).isDirectory()) {
       const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
+
       for (const file of commandFiles) {
         const filePath = path.join(folderPath, file);
         const command = require(filePath);
-        
-        // Registra comando de Prefixo
-        if (command.name) {
-          client.commands.set(command.name.toLowerCase(), command);
-          console.log(`✅ Prefixo: ${command.name} (${folder})`);
 
+        if ('name' in command && ('execute' in command || 'executeSlash' in command)) {
+          client.commands.set(command.name, command);
+
+          // Registra apelidos (aliases) se existirem
           if (command.aliases && Array.isArray(command.aliases)) {
-            command.aliases.forEach(alias => {
-              client.aliases.set(alias.toLowerCase(), command.name.toLowerCase());
-            });
+            command.aliases.forEach(alias => client.commands.set(alias, command));
           }
-        }
 
-        // Registra comando Slash (se existir slashData)
-        if (command.slashData) {
-          client.slashCommands.set(command.slashData.name.toLowerCase(), command);
-          slashCommandsArray.push(command.slashData.toJSON());
-          console.log(`⚡ Slash: /${command.slashData.name} (${folder})`);
+          if (command.slashData) {
+            slashCommandsArray.push(command.slashData.toJSON());
+          }
         }
       }
     }
   }
 }
 
-// Evento Ready + Registro de Slash Commands na API
+// 4. Evento Ready: Registrar Slash Commands na API do Discord
 client.once('ready', async () => {
-  console.log(`🤖 ODISSEIA ARCANA online como: ${client.user.tag}`);
+  console.log(`🤖 Bot ${client.user.tag} conectado com sucesso!`);
 
-  // Registra os Slash Commands globalmente
   const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+
   try {
-    console.log('🔄 Registrando Slash Commands no Discord...');
+    console.log('⚡ Registrando comandos Slash (/)...');
+    // Registra apenas as definições únicas (sem duplicar por alias)
+    const comandosUnicos = Array.from(
+      new Map(slashCommandsArray.map(cmd => [cmd.name, cmd])).values()
+    );
+
     await rest.put(
       Routes.applicationCommands(client.user.id),
-      { body: slashCommandsArray }
+      { body: comandosUnicos }
     );
-    console.log('✅ Slash Commands registrados com sucesso!');
+    console.log(`✅ ${comandosUnicos.length} comandos Slash registrados!`);
   } catch (error) {
     console.error('❌ Erro ao registrar Slash Commands:', error);
   }
 });
 
-// Evento de Mensagens (Comandos por Prefixo)
+// 5. Tratar Comandos por Prefixo (O. e o.)
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
-  const content = message.content.trim();
-  let prefix = null;
-
-  if (content.toLowerCase().startsWith('o.')) {
-    prefix = content.slice(0, 2);
-  }
-
+  const prefixes = ['O.', 'o.'];
+  const prefix = prefixes.find(p => message.content.startsWith(p));
   if (!prefix) return;
 
-  const args = content.slice(prefix.length).trim().split(/ +/);
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  const cmdName = client.commands.has(commandName) 
-    ? commandName 
-    : client.aliases.get(commandName);
+  const command = client.commands.get(commandName);
 
-  const command = client.commands.get(cmdName);
-
-  if (!command) return;
+  if (!command || !command.execute) return;
 
   try {
     await command.execute(message, args, client);
   } catch (error) {
-    console.error(`❌ Erro no comando ${commandName}:`, error);
+    console.error(error);
     message.reply('❌ Ocorreu um erro ao executar este comando.');
   }
 });
 
-// Evento de Interação (Slash Commands)
+// 6. Tratar Interações Slash (/)
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const command = client.slashCommands.get(interaction.commandName);
-
-  if (!command) return;
+  const command = client.commands.get(interaction.commandName);
+  if (!command || !command.executeSlash) return;
 
   try {
     await command.executeSlash(interaction, client);
   } catch (error) {
-    console.error(`❌ Erro no Slash /${interaction.commandName}:`, error);
-    const replyOptions = { content: '❌ Ocorreu um erro ao executar este comando.', ephemeral: true };
+    console.error(error);
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(replyOptions);
+      await interaction.followUp({ content: '❌ Ocorreu um erro ao executar este comando!', ephemeral: true });
     } else {
-      await interaction.reply(replyOptions);
+      await interaction.reply({ content: '❌ Ocorreu um erro ao executar este comando!', ephemeral: true });
     }
   }
 });
