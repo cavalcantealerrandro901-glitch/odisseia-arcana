@@ -1,9 +1,9 @@
 Atue como um desenvolvedor especialista em
 Discord.js v14.
-O objetivo desta etapa é criar a SEGUNDA
-PARTE dos comandos do bot ODISSEIA
-ARCANA, organizando-os em subpastas dentro
-da pasta 'commands/'.
+O objetivo desta etapa é criar a TERCEIRA
+PARTE do bot ODISSEIA ARCANA, focada no
+Sistema de Assistir Vídeos na Call (Voice /
+Multimédia) com botões interativos.
 --- ESTRUTURA E ARQUIVO PRINCIPAL (index.js)
 ---
 
@@ -15,7 +15,7 @@ process.env.PORT || 10000) no index.js
 para evitar o erro "Application exited early"
 na hospedagem do Render.
 
-2. Suporte a Subpastas do Handler:
+2. Suporte às Subpastas do Handler:
 Garanta que o index.js carregue
 dinamicamente todas as subpastas da
 pasta 'commands/':
@@ -24,82 +24,46 @@ pasta 'commands/':
 'commands/jogos/'
 'commands/moderacao/'
 'commands/eventos/'
+'commands/multimedia/'
 O bot deve continuar aceitando os
-prefixos 'O.' e 'o.'.
+prefixos 'O.' e 'o.' assim como interações
+por botões.
 
---- PASTA 'commands/jogos/' ---
+--- PASTA 'commands/multimedia/' ---
 
-1. commands/jogos/caracoroa.js (Comando:
-O.caracoroa <cara/coroa> <aposta>)
-Jogo clássico de cara ou coroa
-apostando Almas. Duplica o valor em
-caso de vitória e desconta no caso de
-derrota.
+1. commands/multimedia/assistir.js
+(Comando: O.assistir <link ou busca>)
+Requisitos:
+Verifica se o usuário está num canal de
+voz no servidor.
+O bot entra no canal de voz do usuário.
+Envia um Embed moderno com as
+informações da sessão de vídeo (Título,
+Duração, Solicitante) e uma fila de
+botões de controle (ActionRowBuilder):
 
-2. commands/jogos/roleta.js (Comando:
-O.roleta <cor> <aposta>)
-Permite apostar Almas em cores
-(vermelho, preto ou verde) com
-multiplicadores de saldo.
+▶️ Reproduzir / ⏸️ Pausar
+(btn_play_pause)
+⏭️ Avançar / ⏩ Avançar 10s
+(btn_skip)
+🔊 Volume (btn_volume)
+🔁 Reiniciar (btn_restart)
 
-3. commands/jogos/slots.js (Comando: O.slots
-<aposta>)
+❌ Encerrar Sessão (btn_stop - o bot
+sai da call e limpa a sessão)
+Lógica de Voz:
+Se todos os membros saírem da call
+(canal de voz ficar vazio), o bot encerra
+automaticamente a sessão e
+desconecta do canal de voz.
 
-Caça-níqueis com emojis animados/
-estáticos. Vitória com 3 emojis iguais.
+--- REQUISITOS TÉCNICOS --Todo o código deve ser gerado em
+JavaScript moderno para Discord.js v14,
+utilizando @discordjs/voice (se aplicável
+para conexões de voz) e manipuladores de
+botões (interactionCreate).
+Certifique-se de que não haja erros de
+sintaxe e que o index.js trate a interação
+com os botões interativos dos vídeos na call.
 
-4. commands/jogos/mines.js (Comando:
-O.mines <aposta>)
-Jogo de campo minado simples adaptado
-para Discord apostando Almas.
-
---- PASTA 'commands/moderacao/' ---
-
-1. commands/moderacao/ban.js (Comando:
-O.ban <@membro> [motivo])
-Bane um membro do servidor (requer
-permissão BanMembers).
-
-2. commands/moderacao/kick.js (Comando:
-
-O.kick <@membro> [motivo])
-Expulsa um membro do servidor (requer
-permissão KickMembers).
-
-3. commands/moderacao/clear.js (Comando:
-O.clear <quantidade>)
-Apaga de 1 a 100 mensagens do canal
-atual.
-
-4. commands/moderacao/lock.js e unlock.js
-(Comandos: O.lock / O.unlock)
-Tranca e destranca o canal atual
-alterando as permissões do cargo
-@everyone.
-
-5. commands/moderacao/warn.js (Comando:
-
-O.warn <@membro> [motivo])
-Aplica e registra uma advertência ao
-membro no banco de dados temporário.
-
---- PASTA 'commands/eventos/' ---
-
-1. commands/eventos/fim.js (Comando: O.fim)
-Envia uma mensagem em Embed
-anunciando o encerramento de um evento
-no servidor.
-
-2. commands/eventos/mensagem.js
-(Comando: O.mensagem <texto>)
-Envia uma mensagem personalizada em
-formato Embed no canal atual através do
-bot.
-
---- REQUISITOS --Gere todo o código JavaScript completo, sem
-erros de sintaxe, garantindo que as subpastas
-em 'commands/' sejam criadas e os comandos
-fiquem 100% integrados ao sistema de Almas e
-ao index.js.
-
-
+
