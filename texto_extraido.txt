@@ -1,8 +1,37 @@
-Construa uma estrutura das pastas e arquivos.
-Os comandos de slash iram focar em pastas e
-quilos próprios para cada comandos. Os
-comandos de Prefixo também, eles terão uma
-pasta e arquivos próprios. E monte uma
-estrutura organizada do bot.
+Atue como um desenvolvedor especialista em
+Discord.js v14.
+Atualize o arquivo index.js mantendo
+OBRIGATORIAMENTE o servidor Express ativo
+para a hospedagem no Render, garantindo que o
+processo não seja finalizado com "Application
+exited early".
+A estrutura do arquivo index.js DEVE conter:
+
+1. Servidor Express:
+Inicializar o express.
+Criar rota GET em '/' que responda 'Bot
+Online'.
+Executar o app.listen usando
+process.env.PORT ou a porta 10000.
+
+2. Cliente do Discord:
+Utilizar as intents: Guilds, GuildMessages,
+MessageContent.
+Evento clientReady mostrando no console
+que o bot está online.
+Manipulador do evento messageCreate
+para comandos com o prefixo 'o.'
+(exemplo: 'o.ping' que responde 'Pong!').
+Manipulador de interações para
+comandos Slash (/) como '/ping' e '/ajuda'.
+
+3. Login:
+Conectar utilizando
+process.env.DISCORD_TOKEN.
+
+Gere apenas o código JavaScript completo, sem
+erros de sintaxe.
+4. Re organize todos os arquivos em seus
+devidos lugares.
 
 
