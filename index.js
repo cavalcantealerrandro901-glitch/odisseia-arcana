@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -28,6 +28,9 @@ const client = new Client({
 
 client.commands = new Collection();
 client.aliases = new Collection();
+client.slashCommands = new Collection();
+
+const slashCommandsArray = [];
 
 // Carregador Dinâmico de Comandos
 const commandsPath = path.join(__dirname, 'commands');
@@ -43,9 +46,10 @@ if (fs.existsSync(commandsPath)) {
         const filePath = path.join(folderPath, file);
         const command = require(filePath);
         
+        // Registra comando de Prefixo
         if (command.name) {
           client.commands.set(command.name.toLowerCase(), command);
-          console.log(`✅ Comando carregado: ${command.name} (${folder})`);
+          console.log(`✅ Prefixo: ${command.name} (${folder})`);
 
           if (command.aliases && Array.isArray(command.aliases)) {
             command.aliases.forEach(alias => {
@@ -53,17 +57,37 @@ if (fs.existsSync(commandsPath)) {
             });
           }
         }
+
+        // Registra comando Slash (se existir slashData)
+        if (command.slashData) {
+          client.slashCommands.set(command.slashData.name.toLowerCase(), command);
+          slashCommandsArray.push(command.slashData.toJSON());
+          console.log(`⚡ Slash: /${command.slashData.name} (${folder})`);
+        }
       }
     }
   }
 }
 
-// Evento Ready
-client.once('ready', () => {
+// Evento Ready + Registro de Slash Commands na API
+client.once('ready', async () => {
   console.log(`🤖 ODISSEIA ARCANA online como: ${client.user.tag}`);
+
+  // Registra os Slash Commands globalmente
+  const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+  try {
+    console.log('🔄 Registrando Slash Commands no Discord...');
+    await rest.put(
+      Routes.applicationCommands(client.user.id),
+      { body: slashCommandsArray }
+    );
+    console.log('✅ Slash Commands registrados com sucesso!');
+  } catch (error) {
+    console.error('❌ Erro ao registrar Slash Commands:', error);
+  }
 });
 
-// Evento de Mensagens
+// Evento de Mensagens (Comandos por Prefixo)
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
@@ -90,8 +114,29 @@ client.on('messageCreate', async (message) => {
   try {
     await command.execute(message, args, client);
   } catch (error) {
-    console.error(`❌ Erro ao executar ${commandName}:`, error);
+    console.error(`❌ Erro no comando ${commandName}:`, error);
     message.reply('❌ Ocorreu um erro ao executar este comando.');
+  }
+});
+
+// Evento de Interação (Slash Commands)
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+
+  const command = client.slashCommands.get(interaction.commandName);
+
+  if (!command) return;
+
+  try {
+    await command.executeSlash(interaction, client);
+  } catch (error) {
+    console.error(`❌ Erro no Slash /${interaction.commandName}:`, error);
+    const replyOptions = { content: '❌ Ocorreu um erro ao executar este comando.', ephemeral: true };
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp(replyOptions);
+    } else {
+      await interaction.reply(replyOptions);
+    }
   }
 });
 
