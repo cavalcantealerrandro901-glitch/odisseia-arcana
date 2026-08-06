@@ -1,9 +1,7 @@
-cat << 'EOF' > index.js
 const { Client, GatewayIntentBits } = require('discord.js');
 const express = require('express');
 require('dotenv').config();
 
-// Servidor Web necessário para o Render manter o bot ligado
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -15,7 +13,6 @@ app.listen(PORT, () => {
   console.log(`🌐 Servidor Web rodando na porta ${PORT}`);
 });
 
-// Configuração do Bot no Discord
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -28,7 +25,6 @@ client.once('clientReady', () => {
   console.log(`🤖 Bot online como: ${client.user.tag}`);
 });
 
-// Resposta ao comando o.ping
 client.on('messageCreate', (message) => {
   if (message.author.bot || !message.content.startsWith('o.')) return;
 
@@ -41,5 +37,3 @@ client.on('messageCreate', (message) => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
-EOF
-
