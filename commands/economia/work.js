@@ -2,9 +2,6 @@ const { EmbedBuilder, SlashCommandBuilder } = require('discord.js');
 const { Database } = require('st.db');
 const db = new Database({ filePath: './database/economia.json' });
 
-// GIF Místico e Cósmico para o Work
-const GIF_WORK = 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eHNrb3RsdzN3b2d1NmxrdmxmZzE3YW80bnBrOXlvaTF4bWs1ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKMt1VVNkHV2PaE/giphy.gif';
-
 const TEMPO_COOLDOWN = 30 * 60 * 1000; // 30 minutos em milissegundos
 
 // Tabela Ampliada de Cargos Divinos (9 Ranks)
@@ -70,11 +67,10 @@ async function processarWork(contexto, autor, isSlash = false) {
       .setTitle('🧘 SEU CORPO DIVINO REQUER REPOUSO! 🧘')
       .setColor('#9b59b6')
       .setThumbnail(autor.displayAvatarURL({ dynamic: true }))
-      .setImage(GIF_WORK)
       .setDescription(
         `🏛️ **CALMA, ENTIDADE SUPREMA!**\n\n` +
         `Sua energia cósmica está se esgotando. Aguarde o tempo de regeneração para executar outro feito divino!\n\n` +
-        `⏳ **Descanso Restante:** \`${minutos}m ${segundos}s\`\n\n` +
+        `⏳ **Descanso Restante:** \`${minutos}m${segundos}s\`\n\n` +
         `*Seus oráculos irão lhe notificar no PV assim que suas forças forem restauradas!*`
       )
       .setFooter({ text: 'Aeternus Trabalho • Cooldown de 30 Minutos' })
@@ -92,7 +88,7 @@ async function processarWork(contexto, autor, isSlash = false) {
 
   // Sorteio de Almas baseado no Cargo Atual
   const almasGanhadas = Math.floor(Math.random() * (cargoAtual.maxAlmas - cargoAtual.minAlmas + 1)) + cargoAtual.minAlmas;
-  const xpGanhado = Math.floor(Math.random() * (45 - 20 + 1)) + 20; // 20 a 45 XP por trabalho
+  const xpGanhado = Math.floor(Math.random() * (45 - 20 + 1)) + 20;
 
   // Atualizar Saldos e XP
   const saldoCarteira = (await db.get(chaveCarteira)) || 0;
@@ -109,7 +105,7 @@ async function processarWork(contexto, autor, isSlash = false) {
   if (novoXP >= cargoAtual.xpNecessario && rankIndex < CARGOS_DIVINOS.length - 1) {
     subiuDeCargo = true;
     rankIndex += 1;
-    novoXP = 0; // O XP zera quando sobe de cargo
+    novoXP = 0;
     await db.set(chaveRank, rankIndex);
   }
 
@@ -132,14 +128,13 @@ async function processarWork(contexto, autor, isSlash = false) {
     .setTitle('🌌 TRABALHO DIVINO EXECUTADO COM SUCESSO! 🌌')
     .setColor('#f1c40f')
     .setThumbnail(autor.displayAvatarURL({ dynamic: true }))
-    .setImage(GIF_WORK)
     .setDescription(
       `💥 **O UNIVERSO RECONHECEU O SEU PODER!** 💥\n\n` +
       `📜 **Feito Realizado:** *${trabalhoSorteado}*\n\n` +
       `🔮 **Almas Absorvidas:** \`+${almasGanhadas.toLocaleString('pt-BR')}\` ✨\n` +
       `⭐ **XP Adquirido:** \`+${xpGanhado} XP\`\n` +
       `👑 **Cargo Divino:** **${cargoFinal.nome}**\n` +
-      `📊 **Progresso XP:** \`${novoXP} / ${cargoFinal.xpNecessario === Infinity ? 'MAX' : cargoFinal.xpNecessario.toLocaleString('pt-BR') + ' XP'}\`${textoEvolucao}\n\n` +
+      `📊 **Progresso XP:** \`${novoXP} /${cargoFinal.xpNecessario === Infinity ? 'MAX' : cargoFinal.xpNecessario.toLocaleString('pt-BR') + ' XP'}\`${textoEvolucao}\n\n` +
       `👛 **Carteira:** \`${novaCarteira.toLocaleString('pt-BR')}\` ✨\n` +
       `💎 **Total Patrimônio:** \`${totalPatrimonio.toLocaleString('pt-BR')}\` ✨`
     )
@@ -175,7 +170,6 @@ function iniciarNotificadorProativoWork(client) {
               const embedPV = new EmbedBuilder()
                 .setTitle('⚡ SUAS FORÇAS FORAM RESTAURADAS NO AETERNUS!')
                 .setColor('#f1c40f')
-                .setImage(GIF_WORK)
                 .setDescription(
                   `✨ **O tempo de descanso de 30 minutos chegou ao fim!** ✨\n\n` +
                   `Sua energia cósmica foi renovada. Acesse o servidor e use \`O.work\` ou \`/work\` para executar seu trabalho divino, acumular mais Almas e evoluir de Cargo!`
