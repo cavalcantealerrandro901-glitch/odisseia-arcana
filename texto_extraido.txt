@@ -1,37 +1,41 @@
 Atue como um desenvolvedor especialista em
 Discord.js v14.
-Atualize o arquivo index.js mantendo
-OBRIGATORIAMENTE o servidor Express ativo
-para a hospedagem no Render, garantindo que o
-processo não seja finalizado com "Application
-exited early".
-A estrutura do arquivo index.js DEVE conter:
+Refatore o projeto do bot ODISSEIA ARCANA
+para usar uma estrutura modular de comandos
+em arquivos separados.
+REQUISITOS DA ESTRUTURA:
 
-1. Servidor Express:
-Inicializar o express.
-Criar rota GET em '/' que responda 'Bot
-Online'.
-Executar o app.listen usando
-process.env.PORT ou a porta 10000.
+1. Servidor Web Express (index.js):
+Mantenha o servidor Express ativo
+rodando na porta process.env.PORT ou
+10000 para não dar o erro "Application
+exited early" no Render.
 
-2. Cliente do Discord:
-Utilizar as intents: Guilds, GuildMessages,
-MessageContent.
-Evento clientReady mostrando no console
-que o bot está online.
-Manipulador do evento messageCreate
-para comandos com o prefixo 'o.'
-(exemplo: 'o.ping' que responde 'Pong!').
-Manipulador de interações para
-comandos Slash (/) como '/ping' e '/ajuda'.
+2. Handler de Comandos Modular:
+Crie uma pasta 'commands' para
+armazenar os arquivos de comando
+individualmente.
+O index.js deve carregar dinamicamente
+todos os arquivos .js dentro da pasta
+'commands'.
 
-3. Login:
-Conectar utilizando
-process.env.DISCORD_TOKEN.
+3. Arquivos de Exemplo na pasta 'commands/':
+commands/ping.js (Responde o ping/
+latência do bot para O.ping e /ping).
+commands/help.js (Menu de ajuda com
+os sistemas do bot para O.help e /help).
+commands/daily.js (Comando de resgate
+diário de Almas).
+commands/atm.js (Comando de ver o
+saldo de Almas).
 
-Gere apenas o código JavaScript completo, sem
+4. Suporte a Prefixos:
+O bot deve aceitar os prefixos 'O.' e 'o.'.
+Deve ser fácil adicionar novos arquivos de
+comando na pasta 'commands' no futuro.
+
+Crie/atualize o index.js e os arquivos da pasta
+'commands' mantendo o código limpo e sem
 erros de sintaxe.
-4. Re organize todos os arquivos em seus
-devidos lugares.
 
 
