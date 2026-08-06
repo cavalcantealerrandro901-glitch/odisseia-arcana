@@ -1,0 +1,26 @@
+{
+  "name": "odisseia-arcana-bot",
+  "version": "1.0.0",
+  "description": "Bot com prefixo o. e slash commands",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "dotenv": "^16.6.1",
+    "express": "^5.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cavalcantealerrandro901-glitch/odisseia-arcana.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/cavalcantealerrandro901-glitch/odisseia-arcana/issues"
+  },
+  "homepage": "https://github.com/cavalcantealerrandro901-glitch/odisseia-arcana#readme"
+}

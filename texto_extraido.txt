@@ -1,0 +1,9704 @@
+1. Comando Daily — ODISSEIA ARCANA
+O comando Daily é a principal recompensa
+diária do ODISSEIA ARCANA. Seu objetivo é
+incentivar os usuários a entrarem no servidor
+todos os dias, oferecendo uma recompensa
+diária em Almas e fortalecendo a economia do
+bot.
+Cada usuário poderá resgatar o Daily apenas
+uma vez por dia. O sistema será reiniciado
+automaticamente à meia-noite (00:00),
+independentemente do horário em que o usuário
+fez o último resgate. Isso significa que, assim
+que começar um novo dia, o Daily estará
+disponível novamente.
+Quando o Daily for resgatado, o bot verificará se
+o usuário já recebeu a recompensa naquele dia.
+Se ainda não recebeu, as Almas serão
+adicionadas ao saldo, o banco de dados será
+atualizado e o usuário receberá uma mensagem
+confirmando o resgate com o valor recebido e o
+
+novo saldo.
+Quando o relógio marcar 00:00, o sistema
+liberará automaticamente o Daily para todos os
+usuários que já possuem uma conta registrada
+no bot. Além disso, aqueles que permitirem
+mensagens privadas receberão uma notificação
+informando que sua recompensa diária já está
+disponível para ser resgatada.
+O valor do Daily poderá variar conforme futuras
+atualizações do bot. O sistema já será
+preparado para aplicar bônus de eventos, cargos
+especiais, multiplicadores VIP, recompensas por
+sequência de dias consecutivos (streaks) e
+outros benefícios sem necessidade de
+reescrever o comando.
+O Daily contará com diversas proteções para
+impedir abusos, verificando o registro do
+usuário, evitando múltiplos resgates no mesmo
+dia e garantindo que todas as alterações sejam
+salvas corretamente no banco de dados.
+
+No futuro, o sistema poderá incluir recursos
+como:
+
+🔥 Sequência de dias consecutivos (Streak
+Daily).
+👑 Bônus para usuários VIP.
+🎉 Eventos com recompensas multiplicadas.
+🎁 Prêmios aleatórios e recompensas raras.
+💎 Itens exclusivos recebidos pelo Daily.
+📊 Estatísticas de dias consecutivos e total de
+Dailies resgatados.
+🏆 Conquistas relacionadas ao uso do Daily.
+Todo o sistema será modular, organizado e
+
+integrado à economia do ODISSEIA ARCANA,
+permitindo que novas funcionalidades sejam
+adicionadas facilmente sem alterar a estrutura
+principal do comando.
+2. Work: Comando Work — ODISSEIA ARCANA
+O comando Work representa o sistema de
+trabalho do ODISSEIA ARCANA. Ele permite que
+
+os usuários ganhem Almas realizando
+diferentes profissões e atividades dentro da
+economia do bot, sendo uma das principais
+formas de obter recursos além do Daily e dos
+jogos.
+Cada usuário poderá utilizar o comando apenas
+quando o tempo de espera (cooldown) terminar.
+Ao usar o comando, o bot escolherá
+aleatoriamente uma profissão ou atividade e
+mostrará uma pequena história descrevendo o
+trabalho realizado. Após isso, o usuário receberá
+uma quantidade de Almas correspondente ao
+serviço executado.
+O sistema contará com dezenas de profissões
+diferentes, cada uma com suas próprias
+mensagens e recompensas. Algumas serão
+comuns e oferecerão ganhos menores,
+enquanto outras serão mais raras e poderão
+conceder recompensas significativamente
+maiores.
+
+Além da recompensa principal, o Work poderá
+gerar eventos especiais de forma aleatória. Em
+algumas ocasiões, o usuário poderá encontrar
+um tesouro, receber uma gorjeta, ganhar um
+bônus inesperado, descobrir um item raro ou
+desbloquear uma conquista exclusiva.
+No futuro, o sistema será integrado ao sistema
+de cargos (profissões) do bot. Cada cargo
+poderá alterar os valores recebidos, diminuir o
+tempo de espera, desbloquear trabalhos
+exclusivos ou aumentar as chances de eventos
+especiais. Isso dará mais profundidade à
+progressão dos usuários.
+O Work será totalmente integrado à economia
+do ODISSEIA ARCANA. Todas as Almas
+recebidas serão adicionadas automaticamente
+ao saldo do usuário e registradas em suas
+estatísticas, permitindo acompanhar ganhos
+totais, quantidade de trabalhos realizados e
+outras informações relacionadas.
+
+Entre as funcionalidades planejadas estão:
+
+💼 Diversas profissões e atividades.
+💰 Recompensas aleatórias.
+🎁 Eventos especiais durante o trabalho.
+👑 Bônus para usuários VIP.
+⭐ Multiplicadores de acordo com o cargo do
+usuário.
+⏳ Tempo de espera configurável.
+📊 Estatísticas completas de trabalhos
+realizados.
+🏆 Conquistas relacionadas ao sistema de
+trabalho.
+🎉 Eventos sazonais com profissões exclusivas.
+O sistema será desenvolvido de forma modular,
+facilitando a adição de novas profissões,
+recompensas e eventos sem alterar a estrutura
+principal do comando. Dessa forma, o Work se
+tornará um dos pilares da economia do
+ODISSEIA ARCANA, oferecendo uma forma
+divertida e constante de evolução para todos os
+
+jogadores.
+
+3.Sistema de Moderação — ODISSEIA ARCANA
+O sistema de moderação do ODISSEIA ARCANA
+foi desenvolvido para oferecer aos
+administradores e moderadores um conjunto
+completo de ferramentas para manter a
+organização, a segurança e o bom
+funcionamento do servidor. Todos os comandos
+serão rápidos, seguros e registrarão
+automaticamente as ações realizadas,
+facilitando o acompanhamento da equipe de
+moderação.
+Cada comando verificará automaticamente se o
+usuário possui as permissões necessárias antes
+de ser executado, impedindo o uso por
+membros sem autorização. Além disso, todas
+as ações poderão registrar o responsável, o
+usuário afetado, o motivo da punição e a data
+
+em que a ação foi aplicada.
+Comandos de moderação
+Ban (/ban e O.ban)
+Remove permanentemente um membro do
+servidor. O comando permitirá informar um
+motivo, registrará a ação nos logs e poderá
+enviar uma mensagem privada ao usuário antes
+do banimento, caso seja possível.
+Desbanir (/unban e O.unban)
+Remove o banimento de um usuário utilizando o
+ID da conta, permitindo que ele volte a entrar no
+servidor.
+Expulsar (/kick e O.kick)
+Expulsa um membro do servidor sem bani-lo. O
+usuário poderá retornar posteriormente caso
+receba um novo convite.
+Silenciar (/mute e O.mute)
+Impede temporariamente que um membro envie
+mensagens ou participe de conversas,
+utilizando cargos ou permissões configuradas
+
+no servidor.
+Timeout (/timeout e O.timeout)
+Aplica o tempo limite nativo do Discord,
+impedindo o envio de mensagens e a
+participação em chamadas de voz pelo período
+definido.
+Remover Timeout (/untimeout e O.untimeout)
+Remove imediatamente o tempo limite aplicado
+a um usuário.
+Limpar (/clear e O.clear)
+Apaga uma quantidade específica de
+mensagens de um canal, respeitando os limites
+da API do Discord.
+Avisar (/warn e O.warn)
+Aplica uma advertência ao usuário, registrando
+o motivo no banco de dados do bot.
+Advertências (/warnings e O.warnings)
+Exibe o histórico completo de advertências de
+um membro, incluindo datas, motivos e o
+moderador responsável.
+
+Remover Advertência (/unwarn e O.unwarn)
+Remove uma advertência específica do histórico
+do usuário.
+Trancar Canal (/lock e O.lock)
+Bloqueia temporariamente um canal para
+impedir que membros enviem novas mensagens.
+Destrancar Canal (/unlock e O.unlock)
+Restaura as permissões do canal, permitindo
+novamente o envio de mensagens.
+Recursos do sistema
+
+🛡️ Verificação automática de permissões.
+📝 Registro completo de todas as ações da
+moderação.
+👮 Registro do moderador responsável por cada
+ação.
+📅 Data e horário de todas as punições.
+📌 Motivo obrigatório ou opcional, conforme o
+comando.
+🔔 Notificações privadas para o usuário punido
+(quando possível).
+
+📊 Histórico permanente de advertências.
+
+⚡ Respostas rápidas utilizando Slash
+Commands e comandos por prefixo.
+🔒 Proteção contra ações em administradores,
+donos do servidor e membros com cargos
+superiores.
+
+📁 Estrutura modular para facilitar futuras
+expansões.
+
+O sistema será desenvolvido de forma
+organizada e independente dos demais módulos
+do bot, permitindo adicionar novos comandos,
+tipos de punição, automações e integrações
+sem alterar sua estrutura principal. Dessa forma,
+a moderação do ODISSEIA ARCANA será
+completa, segura e preparada para servidores de
+qualquer tamanho. Todos teram um botão de
+confirmação, menos os comandos de limpar,
+lock e unlock.
+3. Jogo Mines — ODISSEIA
+
+ARCANA
+O Mines é um dos principais jogos de apostas
+do ODISSEIA ARCANA, inspirado no clássico
+Campo Minado e adaptado para a economia do
+bot. O objetivo é abrir casas seguras para
+aumentar o multiplicador da aposta, evitando as
+minas escondidas no tabuleiro. Quanto mais
+casas seguras forem abertas, maior será a
+recompensa, mas também maior será o risco de
+perder tudo.
+Antes de iniciar a partida, o usuário escolhe o
+valor da aposta e a quantidade de minas que
+deseja enfrentar. O sistema aceitará valores
+numéricos, abreviações como 1k, 2.5m, 1b, além
+das opções all e half. Também será possível
+jogar no modo diversão, sem apostar Almas.
+O tabuleiro será composto por 25 casas (5×5).
+As minas serão posicionadas aleatoriamente no
+início de cada partida, garantindo que cada jogo
+
+seja único. O usuário poderá escolher entre 1 e
+24 minas, alterando completamente a
+dificuldade e o multiplicador da partida.
+Durante o jogo, cada casa aberta com sucesso
+aumentará automaticamente o multiplicador e o
+valor que poderá ser sacado. A qualquer
+momento, antes de encontrar uma mina, o
+jogador poderá utilizar o botão
+
+💰 Sacar para
+
+encerrar a partida e receber o prêmio
+acumulado.
+
+Se o jogador clicar em uma mina antes de sacar,
+a partida terminará imediatamente e toda a
+aposta será perdida. Nesse momento, todas as
+minas serão reveladas e o resultado será exibido
+no tabuleiro.
+A interface utilizará botões interativos do
+Discord, permitindo que o jogador abra as casas
+diretamente na mensagem do jogo. O sistema
+atualizará automaticamente o tabuleiro, o
+multiplicador, o prêmio atual e o número de
+
+casas restantes após cada jogada.
+Além do botão
+botão
+
+💰 Sacar, o jogo contará com um
+
+🔄 Jogar Novamente, permitindo iniciar
+
+uma nova partida rapidamente utilizando a
+
+mesma configuração de aposta e quantidade de
+minas, sem precisar digitar o comando
+novamente.
+O Mines contará com diversas proteções para
+impedir erros e abusos. Apenas o dono da
+partida poderá interagir com os botões, apenas
+uma partida poderá ficar ativa por usuário ao
+mesmo tempo e todas as jogadas serão
+verificadas antes de atualizar o saldo da
+economia.
+Recursos do sistema
+
+💣 Tabuleiro de 5×5 (25 casas).
+🎯 Escolha entre 1 e 24 minas.
+💰 Apostas personalizadas.
+
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+🎮 Modo diversão (sem apostar Almas).
+📈 Multiplicador atualizado em tempo real.
+💰 Botão Sacar para garantir o prêmio
+acumulado.
+🔄 Botão Jogar Novamente.
+👤 Apenas o dono da partida pode jogar.
+📊 Estatísticas completas de partidas,
+vitórias, derrotas, maior prêmio e maior
+multiplicador.
+
+🏆 Integração com conquistas e missões
+futuras.
+
+⚡ Código modular para facilitar melhorias e
+novos recursos.
+
+O sistema será desenvolvido de forma
+organizada e independente, permitindo
+adicionar novos modos de jogo, animações,
+efeitos visuais, tabelas de multiplicadores,
+eventos especiais e outras funcionalidades sem
+
+alterar sua estrutura principal. O Mines será um
+dos jogos mais completos e importantes da
+economia do ODISSEIA ARCANA.
+4. Comando Ajuda / Help — ODISSEIA ARCANA
+O comando Ajuda (ou Help) é o centro de
+informações do ODISSEIA ARCANA. Ele foi
+desenvolvido para permitir que qualquer usuário
+encontre rapidamente os comandos do bot,
+entenda como cada sistema funciona e aprenda
+a utilizar todos os recursos disponíveis.
+Ao executar o comando, o bot exibirá um painel
+interativo organizado por categorias. Em vez de
+mostrar uma lista extensa de comandos, o
+usuário poderá navegar entre diferentes menus
+utilizando botões e menus de seleção, tornando
+a experiência muito mais intuitiva.
+Cada categoria reunirá comandos relacionados,
+apresentando uma breve descrição, exemplos
+de uso, permissões necessárias (quando
+
+houver) e observações importantes.
+Categorias disponíveis
+
+💰 Economia — ATM, Daily, Work, Pay, Pix e
+outros comandos relacionados às Almas.
+🎲 Jogos — Mines, Blackjack, Cara ou Coroa,
+
+Pedra-Papel-Tesoura, Rinha e futuros minijogos.
+
+👤 Perfil — Perfil, personalização, biografia,
+banners, reputação, estatísticas e conquistas.
+🛡️ Moderação — Ban, Kick, Timeout, Mute, Warn,
+Lock, Unlock, Clear e demais ferramentas
+administrativas.
+
+⚙️ Configuração — Comandos para configurar
+recursos do servidor, quando disponíveis.
+📊 Informações — Ping, informações do bot,
+versão, uptime, estatísticas e links úteis.
+
+Ao selecionar uma categoria, o painel será
+atualizado automaticamente, mostrando apenas
+os comandos daquele sistema. Cada comando
+terá uma descrição clara, explicando sua
+função, seus parâmetros e exemplos de
+
+utilização.
+O sistema também contará com uma busca
+inteligente. O usuário poderá solicitar ajuda
+sobre um comando específico, como:
+/help pay
+/help mines
+O.help perfil
+Nesse caso, o bot exibirá uma explicação
+completa sobre o comando escolhido, incluindo
+exemplos de uso, opções disponíveis e
+informações adicionais.
+Além disso, o painel exibirá informações gerais
+sobre o bot, como quantidade de comandos
+disponíveis, versão atual, tempo de atividade,
+desenvolvedor e links oficiais do projeto.
+Recursos do sistema
+
+📚 Painel organizado por categorias.
+🎛️ Navegação por botões e menus interativos.
+🔍 Busca por comando específico.
+📝 Descrição detalhada de cada comando.
+
+💡 Exemplos práticos de utilização.
+
+⚙️ Compatível com comandos de prefixo e
+Slash Commands.
+📱 Interface organizada e fácil de navegar.
+🚀 Atualização automática sempre que novos
+comandos forem adicionados.
+
+O sistema será totalmente modular. Sempre que
+um novo comando for criado no ODISSEIA
+ARCANA, bastará registrá-lo na categoria
+correspondente para que ele apareça
+automaticamente no painel de ajuda. Isso
+garante que o comando Ajuda/Help permaneça
+sempre atualizado, tornando-se o principal guia
+para todos os usuários do bot.
+
+5. Jogo Blackjack — ODISSEIA
+
+ARCANA
+
+O Blackjack é um dos principais jogos de
+apostas do ODISSEIA ARCANA, baseado nas
+regras clássicas do jogo 21 e totalmente
+integrado à economia do bot. O objetivo é
+derrotar o adversário obtendo uma mão com
+valor o mais próximo possível de 21, sem
+ultrapassar esse limite.
+O jogador poderá desafiar o próprio bot ou outro
+usuário do servidor. Antes da partida, será
+definido o valor da aposta, que poderá ser
+informado utilizando números normais ou
+abreviações como 1k, 2.5m, 1b, além das
+opções all e half.
+Quando a partida começar, cada participante
+receberá duas cartas. Durante o jogo, será
+possível utilizar botões interativos para decidir
+cada jogada.
+Botões disponíveis
+
+🃏 Pedir Carta (Hit) — Compra mais uma
+carta.
+✋ Parar (Stand) — Encerra sua vez e
+mantém a mão atual.
+🚪 Desistir (Surrender)(quando permitido) —
+Encerra a partida antecipadamente,
+perdendo apenas parte da aposta.
+
+🔄 Jogar Novamente — Inicia uma nova
+partida rapidamente após o término da
+anterior.
+As cartas seguirão os valores tradicionais do
+Blackjack:
+Cartas 2 a 10 mantêm seus valores.
+J, Q e K valem 10.
+O Ás (A) poderá valer 1 ou 11, sendo
+ajustado automaticamente para favorecer o
+jogador sem ultrapassar 21.
+Quando a partida for contra o bot, ele seguirá
+
+uma estratégia automática, comprando cartas
+até atingir uma pontuação considerada segura e
+então encerrando sua jogada. Ao final, o
+sistema comparará as mãos para determinar o
+vencedor.
+Nas partidas entre dois usuários, ambos jogarão
+individualmente utilizando os botões. Quando os
+dois terminarem suas jogadas, o sistema
+comparará automaticamente as pontuações e
+anunciará o resultado.
+Todo o sistema será protegido contra abusos.
+Apenas os participantes poderão utilizar os
+botões da partida, apenas um jogo poderá
+permanecer ativo por usuário ao mesmo tempo
+e todas as apostas serão verificadas antes do
+início da partida.
+Recursos do sistema
+
+🃏 Baralho completo de 52 cartas.
+
+🤖 Partidas contra o bot.
+👥 Partidas entre usuários.
+💰 Apostas personalizadas.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+🎮 Modo diversão (sem apostar Almas).
+🎛️ Botões interativos.
+🧠 IA para o bot.
+📊 Estatísticas completas de partidas,
+
+vitórias, derrotas, empates, maior vitória e
+total apostado.
+
+🏆 Integração com conquistas, missões e
+eventos futuros.
+🔒 Proteção para que apenas os jogadores
+possam interagir com a partida.
+
+O Blackjack será desenvolvido de forma
+modular, permitindo adicionar futuramente
+recursos como Double Down, Split, torneios,
+rankings, desafios diários, mesas privadas e
+eventos especiais. Assim, ele se tornará um dos
+
+jogos mais estratégicos e completos da
+economia do ODISSEIA ARCANA.
+
+6. Jogo Cara ou Coroa — ODISSEIA
+
+ARCANA
+O Cara ou Coroa é um jogo de apostas rápido e
+totalmente baseado na sorte. O jogador escolhe
+entre Cara ou Coroa, define o valor da aposta e
+aguarda o lançamento da moeda. Se acertar o
+resultado, recebe a recompensa; caso contrário,
+perde o valor apostado.
+O sistema aceitará apostas utilizando números
+comuns e abreviações como 1k, 2.5m, 1b, além
+das opções all e half. Também será possível
+jogar no modo diversão, sem apostar Almas.
+Após iniciar a partida, o bot exibirá uma
+pequena animação simulando o giro da moeda
+antes de revelar o resultado. Isso torna a
+
+experiência mais dinâmica e emocionante.
+O resultado será completamente aleatório,
+utilizando um sistema justo para garantir que
+tanto Cara quanto Coroa tenham exatamente
+50% de chance de serem sorteadas.
+Ao final da partida, o bot mostrará:
+
+🪙 O lado sorteado.
+💰 O valor apostado.
+📈 O prêmio recebido (em caso de vitória).
+💸 O saldo atualizado do usuário.
+O jogo registrará automaticamente todas as
+partidas no perfil do jogador, permitindo
+acompanhar estatísticas detalhadas.
+Recursos do sistema
+
+🪙 Escolha entre Cara ou Coroa.
+💰 Apostas personalizadas.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+
+🎮 Modo diversão (sem apostar Almas).
+🎲 Resultado totalmente aleatório e justo.
+✨ Animação do lançamento da moeda.
+📊 Estatísticas completas de partidas,
+
+vitórias, derrotas, total apostado, total ganho
+e maior prêmio.
+
+🏆 Integração com conquistas, missões e
+eventos especiais.
+
+⚡ Sistema rápido, ideal para partidas
+curtas.
+
+O sistema será modular e preparado para
+futuras melhorias, como multiplicadores em
+eventos especiais, sequências de vitórias
+(streaks), desafios diários, rankings e torneios. O
+Cara ou Coroa será um dos jogos mais simples,
+rápidos e acessíveis do ODISSEIA ARCANA,
+perfeito para quem deseja testar a sorte em
+poucos segundos.
+
+7. Jogo Roleta — ODISSEIA
+
+ARCANA
+A Roleta é um jogo de apostas baseado em
+estratégia e sorte, inspirado nas roletas
+clássicas dos cassinos. O jogador escolhe onde
+deseja apostar e, após o giro da roleta, recebe
+uma recompensa caso sua aposta seja
+vencedora.
+O sistema permitirá diferentes tipos de apostas,
+oferecendo opções com maior segurança e
+menor retorno, ou apostas mais arriscadas com
+recompensas muito maiores.
+Antes de iniciar a partida, o usuário informará o
+valor da aposta. O sistema aceitará números
+comuns e abreviações como 1k, 2.5m, 1b, além
+das opções all e half. Também será possível
+jogar no modo diversão, sem apostar Almas.
+
+Após escolher o valor, o jogador selecionará o
+tipo de aposta por meio de botões ou menus
+interativos.
+Tipos de apostas
+
+🔴 Vermelho
+
+⚫ Preto
+🟢 Verde (mais raro)
+🔢 Número específico
+⚖️ Par
+🔺 Ímpar
+⬆️ Alto (19–36)
+⬇️ Baixo (1–18)
+🧱 Colunas
+📦 Dúzias
+
+Depois da escolha, o bot exibirá uma animação
+simulando o giro da roleta antes de revelar o
+número sorteado, sua cor e o resultado da
+aposta.
+
+Cada tipo de aposta terá um multiplicador
+diferente. Apostas mais fáceis terão
+pagamentos menores, enquanto apostas mais
+difíceis poderão oferecer prêmios muito maiores.
+Ao final da partida, o usuário verá:
+
+🎯 Número sorteado.
+🎨 Cor sorteada.
+💰 Valor apostado.
+📈 Multiplicador aplicado.
+🏆 Prêmio recebido (em caso de vitória).
+💸 Saldo atualizado.
+Todas as partidas serão registradas
+automaticamente no perfil do usuário,
+permitindo acompanhar estatísticas detalhadas.
+Recursos do sistema
+
+🎡 Roleta totalmente interativa.
+🎯 Diversos tipos de apostas.
+
+💰 Apostas personalizadas.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+🎮 Modo diversão (sem apostar Almas).
+✨ Animação do giro da roleta.
+🎲 Sorteio totalmente aleatório e justo.
+📊 Estatísticas completas de partidas,
+
+vitórias, derrotas, total apostado, total ganho
+e maior prêmio.
+
+🏆 Integração com conquistas, missões e
+eventos especiais.
+
+⚡ Sistema modular para facilitar a adição
+de novos tipos de aposta e recompensas.
+
+A Roleta será um dos jogos mais completos do
+ODISSEIA ARCANA, oferecendo uma
+combinação de sorte, estratégia e emoção. Com
+vários tipos de apostas e multiplicadores, ela
+permitirá que cada jogador escolha entre jogar
+de forma mais segura ou buscar grandes
+recompensas assumindo riscos maiores.
+
+8. Jogo Rinha — ODISSEIA ARCANA
+A Rinha é um jogo competitivo do ODISSEIA
+ARCANA onde dois jogadores se enfrentam em
+uma batalha baseada em sorte, estratégia e
+apostas. O objetivo é desafiar outro usuário,
+colocar Almas em disputa e descobrir quem
+será o vencedor do confronto.
+Para iniciar uma partida, o jogador desafia outro
+membro do servidor e define o valor da aposta.
+O sistema aceitará valores comuns e
+abreviações como 1k, 2.5m, 1b, além das
+opções all e half.
+Após receber o desafio, o adversário poderá
+aceitar ou recusar utilizando botões interativos.
+Se o desafio for recusado ou não for respondido
+dentro do tempo determinado, ele será
+cancelado automaticamente e nenhuma Alma
+
+será transferida.
+Quando ambos aceitarem, o combate
+começará. Cada participante terá seus atributos
+gerados automaticamente, como força, defesa,
+velocidade, sorte e resistência. Esses atributos
+influenciarão os acontecimentos da batalha,
+tornando cada confronto único.
+A luta será narrada em tempo real por meio de
+mensagens e atualizações no embed. Cada
+rodada mostrará os ataques, esquivas, golpes
+críticos, bloqueios e outros eventos especiais
+até que um dos jogadores seja derrotado.
+Ao final da batalha, o vencedor receberá toda a
+aposta, enquanto o perdedor perderá o valor
+apostado. Todas as estatísticas da partida
+serão registradas automaticamente no perfil
+dos dois participantes.
+Recursos do sistema
+
+⚔️ Desafios entre usuários.
+💰 Apostas personalizadas.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+🎮 Modo diversão (sem apostar Almas).
+✅ Botões para aceitar o desafio.
+⏳ Cancelamento automático caso o
+desafio expire.
+🎲 Sistema de combate baseado em sorte e
+atributos.
+✨ Narração dinâmica da batalha.
+📊 Estatísticas completas de vitórias,
+derrotas, sequência de vitórias, total
+apostado e maior prêmio.
+
+🏆 Integração com conquistas, missões e
+rankings.
+🔒 Apenas os participantes podem interagir
+com a partida.
+
+O sistema será modular e preparado para
+futuras expansões, como personagens
+
+exclusivos, equipamentos, habilidades
+especiais, arenas temáticas, torneios,
+temporadas competitivas e modos de batalha
+diferenciados. A Rinha será um dos jogos PvP
+mais divertidos e disputados do ODISSEIA
+ARCANA, incentivando desafios entre os
+membros e movimentando a economia do
+servidor.
+9. Jogo Crash — ODISSEIA
+
+ARCANA
+O Crash é um dos jogos mais emocionantes do
+ODISSEIA ARCANA. O objetivo é apostar uma
+quantidade de Almas e sacar antes que o
+multiplicador "quebre" (crash). Quanto mais
+tempo o jogador esperar, maior será o
+multiplicador e o possível prêmio, mas também
+maior será o risco de perder toda a aposta.
+Antes da partida, o jogador escolhe o valor da
+
+aposta. O sistema aceitará números comuns e
+abreviações como 1k, 2.5m, 1b, além das
+opções all e half. Também será possível jogar
+no modo diversão, sem apostar Almas.
+Após iniciar a partida, um multiplicador
+começará em 1.00x e aumentará
+continuamente. Durante esse período, o jogador
+poderá pressionar o botão
+
+💰 Sacar a qualquer
+
+momento para garantir seu prêmio.
+
+Se o jogador sacar antes do crash, receberá sua
+aposta multiplicada pelo valor atual. Porém, se o
+multiplicador quebrar antes do saque, toda a
+aposta será perdida.
+O momento do crash será totalmente aleatório,
+tornando cada partida imprevisível e
+emocionante. Em algumas rodadas ele poderá
+acontecer rapidamente, enquanto em outras o
+multiplicador poderá atingir valores muito altos.
+O jogo utilizará uma interface interativa com
+atualização em tempo real, mostrando o
+
+multiplicador atual, o prêmio estimado e o
+estado da partida.
+Recursos do sistema
+
+📈 Multiplicador em tempo real.
+💰 Botão Sacar para garantir o prêmio.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+🎮 Modo diversão (sem apostar Almas).
+🎲 Crash totalmente aleatório.
+⚡ Atualização dinâmica da partida.
+📊 Estatísticas completas de partidas,
+vitórias, derrotas, maior multiplicador
+
+alcançado, maior prêmio e total apostado.
+
+🏆 Integração com conquistas, missões e
+rankings.
+🔒 Apenas o dono da partida pode interagir
+com os botões.
+🚀 Estrutura modular para adicionar efeitos
+visuais, animações, multiplicadores
+
+especiais e eventos futuros.
+O Crash será um dos jogos mais arriscados e
+recompensadores do ODISSEIA ARCANA. Cada
+decisão importa: sacar cedo garante um lucro
+menor, enquanto esperar por multiplicadores
+maiores pode render uma grande recompensa...
+ou fazer o jogador perder tudo em um instante.
+10. Jogo Slots — ODISSEIA
+
+ARCANA
+O Slots é o tradicional jogo de caça-níqueis do
+ODISSEIA ARCANA, totalmente integrado à
+economia do bot. O jogador faz uma aposta e
+gira os rolos da máquina na esperança de
+alinhar símbolos iguais para conquistar grandes
+prêmios.
+Antes de iniciar a partida, o usuário escolhe o
+valor da aposta. O sistema aceitará números
+comuns e abreviações como 1k, 2.5m, 1b, além
+
+das opções all e half. Também será possível
+jogar no modo diversão, sem apostar Almas.
+Após confirmar a aposta, os três rolos
+começarão a girar com uma pequena animação.
+Quando pararem, o sistema verificará
+automaticamente a combinação sorteada e
+calculará o prêmio.
+Cada símbolo terá uma raridade diferente.
+Símbolos comuns aparecerão com mais
+frequência, enquanto símbolos lendários serão
+extremamente raros e oferecerão
+multiplicadores muito maiores.
+Exemplos de símbolos
+
+🍒 Cereja
+
+🍋 Limão
+🍇 Uva
+💎 Diamante
+👑 Coroa
+
+⭐ Estrela
+🔥 Chama
+
+🌌 Símbolo Arcano (Lendário)
+As combinações determinarão a recompensa do
+jogador:
+
+🥇 Três símbolos iguais — Grande prêmio.
+🥈 Dois símbolos iguais — Prêmio parcial.
+💎 Três símbolos lendários — Jackpot.
+❌ Nenhuma combinação — Aposta perdida.
+Em ocasiões especiais, o jogador poderá ativar
+recursos extras, como rodadas grátis,
+multiplicadores temporários ou jackpots
+progressivos durante eventos do servidor.
+Ao final da rodada, o bot mostrará:
+
+🎰 Resultado dos três rolos.
+💰 Valor apostado.
+📈 Multiplicador obtido.
+🏆 Valor ganho (caso vença).
+
+💸 Saldo atualizado.
+Todas as partidas serão registradas
+automaticamente no perfil do usuário,
+permitindo acompanhar estatísticas completas.
+Recursos do sistema
+
+🎰 Máquina caça-níqueis totalmente
+interativa.
+💰 Apostas personalizadas.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+🎮 Modo diversão (sem apostar Almas).
+✨ Animação dos rolos girando.
+🎲 Sorteio totalmente aleatório e justo.
+🌌 Símbolos exclusivos do universo
+ODISSEIA ARCANA.
+💎 Jackpot com grandes recompensas.
+📊 Estatísticas de partidas, vitórias,
+derrotas, jackpots conquistados, maior
+prêmio e total apostado.
+
+🏆 Integração com conquistas, missões,
+rankings e eventos especiais.
+🚀 Estrutura modular para adicionar novos
+símbolos, jackpots temáticos e modos de
+jogo no futuro.
+O Slots será um dos jogos mais rápidos e
+viciantes do ODISSEIA ARCANA, oferecendo
+partidas dinâmicas, grandes recompensas e a
+emoção de tentar conquistar o tão desejado
+Jackpot Arcano.
+11.Perfeito. Vamos fazer um por um, bem
+detalhado.
+Começando pelo ATM.
+───
+
+Comando ATM — ODISSEIA
+
+ARCANA
+O comando ATM é o principal comando da
+economia do ODISSEIA ARCANA. Ele permite
+que o usuário consulte rapidamente todas as
+informações relacionadas ao seu patrimônio
+dentro do bot, funcionando como um extrato da
+sua conta.
+Ao utilizar o comando, o bot exibirá um painel
+moderno contendo o saldo atual de Almas, além
+de diversas estatísticas econômicas do jogador.
+Todas as informações serão carregadas em
+tempo real diretamente do banco de dados,
+garantindo que os valores estejam sempre
+atualizados.
+Além do saldo principal, o ATM também
+mostrará informações complementares, como o
+patrimônio total, a posição do usuário no
+ranking global e no ranking do servidor, a
+quantidade de Almas recebidas por
+
+recompensas, trabalhos, jogos e transferências,
+além do total gasto em apostas, compras e
+pagamentos.
+O comando também poderá exibir o histórico
+financeiro do usuário, mostrando suas últimas
+movimentações, como recebimento do Daily,
+Work, vitórias e derrotas em jogos, compras
+realizadas na loja, transferências enviadas e
+recebidas e outras transações importantes.
+A interface será organizada em um embed
+moderno, utilizando ícones, cores e botões para
+facilitar a navegação. O usuário poderá alternar
+entre diferentes páginas para visualizar seu
+saldo, histórico financeiro, estatísticas da
+economia e outras informações relacionadas.
+Informações exibidas
+
+💰 Saldo atual de Almas.
+🏆 Posição no ranking global.
+
+🌍 Posição no ranking do servidor.
+📈 Total de Almas ganhas.
+📉 Total de Almas gastas.
+🎮 Ganhos obtidos em jogos.
+💼 Ganhos obtidos pelo Work.
+🎁 Ganhos obtidos pelo Daily.
+💸 Total enviado e recebido por Pay/Pix.
+📊 Histórico das últimas movimentações.
+📅 Data da criação da conta no bot.
+Recursos do sistema
+
+⚡ Atualização em tempo real.
+💾 Integração completa com o banco de
+dados.
+🎨 Interface moderna e organizada.
+📱 Compatível com Slash Commands (/atm)
+e comandos por prefixo (O.atm).
+🔒 Sistema seguro contra alterações
+indevidas.
+
+📊 Preparado para futuras expansões da
+economia.
+
+O comando ATM será o centro financeiro do
+ODISSEIA ARCANA, reunindo todas as
+informações econômicas do usuário em um
+único lugar. Conforme novos sistemas forem
+adicionados ao bot, como banco, investimentos,
+empréstimos, mercado e eventos econômicos,
+eles também serão integrados ao ATM,
+tornando-o a principal ferramenta de consulta
+da economia do bot.
+
+12. Comando Ping — ODISSEIA
+
+ARCANA
+O comando Ping é responsável por mostrar o
+desempenho e o estado atual do ODISSEIA
+ARCANA. Ele permite que os usuários e
+administradores verifiquem rapidamente se o
+
+bot está funcionando corretamente, além de
+fornecer informações sobre a conexão com o
+Discord e o desempenho do sistema.
+Ao utilizar o comando, o bot calculará
+automaticamente o tempo de resposta entre a
+mensagem enviada e a resposta recebida, além
+da latência da API do Discord. Essas
+informações serão exibidas em um painel
+organizado e atualizado em tempo real.
+Além da latência, o comando poderá mostrar
+informações técnicas sobre o funcionamento do
+bot, permitindo acompanhar sua estabilidade e
+identificar possíveis problemas de desempenho.
+Informações exibidas
+
+🟢 Status atual do bot.
+📡 Latência da API do Discord.
+⚡ Tempo de resposta da mensagem.
+⏱️ Tempo em que o bot está online (Uptime).
+
+💾 Uso de memória RAM.
+🖥️ Versão do Node.js.
+🤖 Versão do Discord.js.
+📊 Quantidade de servidores conectados.
+
+👥 Quantidade total de usuários atendidos.
+⚙️ Número de comandos carregados.
+🔄 Status do banco de dados.
+O comando também utilizará indicadores de
+desempenho para facilitar a leitura:
+
+🟢 Excelente — Resposta muito rápida.
+🟡 Boa — Funcionamento normal.
+🟠 Moderada — Pequeno atraso.
+
+🔴 Alta — Latência elevada ou possível
+instabilidade.
+
+Recursos do sistema
+
+⚡ Atualização em tempo real.
+📊 Informações técnicas completas.
+
+🔍 Verificação da conexão com o Discord.
+💾 Monitoramento do consumo de memória.
+⏱️ Exibição do tempo online do bot.
+🎨 Interface moderna com embeds
+personalizados.
+📱 Compatível com /ping e O.ping.
+🔒 Informações protegidas, exibindo apenas
+dados úteis aos usuários.
+
+O comando Ping será uma ferramenta essencial
+para monitorar a saúde do ODISSEIA ARCANA,
+permitindo que usuários e administradores
+verifiquem rapidamente o desempenho do bot.
+No futuro, ele poderá ser expandido para incluir
+informações como uso de CPU, tempo médio de
+resposta dos comandos, status do painel web,
+conexão com serviços externos e
+monitoramento detalhado de todos os módulos
+do sistema.
+
+13.Comando BotInfo — ODISSEIA
+
+ARCANA
+O comando BotInfo foi desenvolvido para
+apresentar todas as informações importantes
+sobre o ODISSEIA ARCANA. Ele funciona como
+um painel informativo, permitindo que qualquer
+usuário conheça melhor o bot, acompanhe seu
+desempenho e visualize estatísticas gerais de
+funcionamento.
+Ao utilizar o comando, o bot exibirá um embed
+moderno e organizado com informações
+atualizadas em tempo real. O objetivo é oferecer
+transparência sobre o funcionamento do
+sistema e mostrar a evolução do projeto.
+Além das informações técnicas, o comando
+também destacará dados da comunidade, da
+economia e do desenvolvimento do bot.
+
+Informações exibidas
+
+🤖 Nome e versão atual do bot.
+🌌 Descrição do ODISSEIA ARCANA.
+⏱️ Tempo online (Uptime).
+📡 Latência da API do Discord.
+⚡ Tempo de resposta do bot.
+
+🌍 Quantidade de servidores em que o bot
+está presente.
+
+👥 Total de usuários atendidos.
+💬 Total de canais monitorados.
+📜 Quantidade de comandos disponíveis.
+🎮 Número de sistemas e jogos disponíveis.
+💾 Uso atual de memória RAM.
+🖥️ Versão do Node.js.
+📦 Versão do Discord.js.
+🔄 Status do banco de dados.
+🌐 Status do painel web.
+📅 Data da última atualização do bot.
+
+Botões interativos
+O painel poderá contar com botões para facilitar
+o acesso a recursos importantes, como:
+
+📖 Documentação.
+🌐 Site Oficial.
+💬 Servidor de Suporte.
+📢 Canal de Atualizações.
+🗳️ Votar no Bot (quando disponível).
+❤️ Apoiar o Projeto (caso exista um sistema
+de apoio).
+
+Recursos do sistema
+
+📊 Informações atualizadas em tempo real.
+🎨 Interface moderna e organizada.
+
+⚡ Compatível com Slash Commands (/
+botinfo) e comandos por prefixo (O.botinfo).
+🔒 Exibição apenas de informações públicas
+e úteis.
+
+🌐 Integração com o painel web do
+ODISSEIA ARCANA.
+📈 Preparado para exibir novas estatísticas
+conforme o projeto evoluir.
+
+O BotInfo será o cartão de apresentação do
+ODISSEIA ARCANA, reunindo em um único
+painel tudo o que os usuários precisam saber
+sobre o bot. À medida que novos sistemas,
+jogos e funcionalidades forem adicionados, o
+comando será atualizado automaticamente para
+refletir a evolução do projeto e manter a
+comunidade sempre informada.
+
+14.Comando ServerInfo —
+
+ODISSEIA ARCANA
+O comando ServerInfo foi desenvolvido para
+exibir informações completas sobre o servidor
+
+onde o ODISSEIA ARCANA está sendo utilizado.
+Seu objetivo é oferecer aos membros e
+administradores um painel organizado com os
+principais dados da comunidade, facilitando a
+consulta de estatísticas e configurações do
+servidor.
+Ao utilizar o comando, o bot exibirá um embed
+moderno contendo informações atualizadas em
+tempo real sobre o servidor, incluindo detalhes
+administrativos, estatísticas de membros,
+canais, cargos e recursos disponíveis.
+Além das informações básicas, o comando
+poderá mostrar dados exclusivos relacionados
+ao ODISSEIA ARCANA, como a economia do
+servidor, quantidade de contas registradas no
+bot, total de Almas movimentadas e estatísticas
+dos jogos.
+Informações exibidas
+
+🏰 Nome do servidor.
+🆔 ID do servidor.
+👑 Dono do servidor.
+📅 Data de criação.
+
+👥 Total de membros.
+
+🤖 Quantidade de bots.
+
+👤 Quantidade de usuários.
+🟢 Membros online.
+📂 Total de categorias.
+💬 Total de canais de texto.
+🔊 Total de canais de voz.
+🎭 Quantidade de cargos.
+😀 Quantidade de emojis.
+🎨 Quantidade de figurinhas (Stickers).
+🚀 Nível de impulsionamento (Boost).
+💎 Quantidade de impulsionamentos.
+🌍 Região automática do Discord.
+🔒 Nível de verificação do servidor.
+
+Informações do ODISSEIA ARCANA
+
+💰 Total de contas registradas no servidor.
+💎 Total de Almas em circulação.
+🎮 Quantidade de partidas realizadas.
+📈 Comando mais utilizado.
+🏆 Usuário mais rico do servidor.
+⭐ Usuário com maior nível.
+📅 Data em que o bot entrou no servidor.
+Botões interativos
+O comando poderá incluir botões para navegar
+entre diferentes páginas:
+
+📊 Estatísticas do servidor.
+👥 Informações dos membros.
+🎮 Estatísticas dos jogos.
+💰 Economia do servidor.
+
+⚙️ Configurações do servidor (para
+administradores).
+
+Recursos do sistema
+
+📊 Dados atualizados em tempo real.
+🎨 Interface moderna e organizada.
+🏰 Informações completas do servidor.
+💰 Integração com a economia do ODISSEIA
+ARCANA.
+🎮 Estatísticas dos jogos da comunidade.
+📱 Compatível com /serverinfo e
+O.serverinfo.
+🔒 Algumas informações administrativas
+serão exibidas apenas para quem possuir
+permissão.
+O ServerInfo será um verdadeiro painel de
+informações da comunidade dentro do
+ODISSEIA ARCANA, reunindo em um único
+comando tudo o que administradores e
+membros precisam saber sobre o servidor.
+Conforme novas funcionalidades forem
+
+expandido para incluir estatísticas mais
+detalhadas e recursos exclusivos.
+
+15.Comando UserInfo — ODISSEIA
+
+ARCANA
+O comando UserInfo foi criado para exibir
+informações detalhadas sobre qualquer
+membro do servidor. Seu objetivo é fornecer um
+painel completo com dados públicos da conta e
+informações relacionadas à participação do
+usuário na comunidade.
+Ao utilizar o comando, o usuário poderá
+consultar as próprias informações ou mencionar
+outro membro do servidor para visualizar seus
+dados. O bot exibirá um painel moderno,
+organizado e atualizado em tempo real.
+Além das informações do Discord, o comando
+
+também poderá integrar dados do ODISSEIA
+ARCANA, permitindo visualizar a evolução do
+jogador dentro do bot.
+Informações exibidas
+
+👤 Nome de usuário.
+📝 Nome de exibição (Apelido).
+🆔 ID do usuário.
+📅 Data de criação da conta do Discord.
+📥 Data de entrada no servidor.
+🎭 Lista de cargos.
+👑 Cargo mais alto.
+🤖 Indicação se a conta é um bot.
+
+🟢 Status atual (Online, Ausente, Ocupado
+ou Offline).
+🎙️ Canal de voz em que está conectado
+(caso esteja).
+🎨 Avatar em alta resolução.
+🖼️ Banner do perfil (quando disponível).
+
+✨ Insígnias públicas da conta (Badges do
+Discord).
+🚀 Impulsionador do servidor (caso possua
+Boost).
+
+Informações do ODISSEIA ARCANA
+Caso o usuário possua uma conta registrada no
+bot, também serão exibidas informações como:
+
+💰 Saldo atual de Almas.
+⭐ Nível.
+📈 Experiência (XP).
+🏆 Quantidade de conquistas.
+🎮 Jogos disputados.
+📊 Estatísticas gerais.
+📅 Data de criação da conta no bot.
+Botões interativos
+O painel poderá incluir botões para facilitar a
+navegação:
+
+👤 Perfil do ODISSEIA ARCANA.
+🖼️ Ver Avatar.
+🎨 Ver Banner.
+📊 Estatísticas.
+💰 Economia.
+Recursos do sistema
+
+👤 Consulta de qualquer membro do
+servidor.
+📊 Informações atualizadas em tempo real.
+🎨 Interface moderna e organizada.
+💰 Integração com o perfil do ODISSEIA
+ARCANA.
+🖼️ Exibição do avatar e banner em alta
+resolução.
+📱 Compatível com /userinfo e O.userinfo.
+🔒 Respeita as permissões e exibe apenas
+informações públicas disponíveis.
+
+O UserInfo será uma ferramenta completa para
+conhecer melhor os membros do servidor,
+reunindo em um único painel informações do
+Discord e do ODISSEIA ARCANA. Conforme o
+bot evoluir, o comando poderá incluir novas
+estatísticas, medalhas, títulos e outros dados
+relacionados à participação do usuário na
+comunidade.
+
+16.Comando Avatar — ODISSEIA
+
+ARCANA
+O comando Avatar foi desenvolvido para
+permitir que qualquer usuário visualize e baixe a
+foto de perfil de um membro do servidor em sua
+máxima qualidade. Ele oferece uma forma
+rápida e elegante de acessar o avatar de
+qualquer pessoa, seja o próprio usuário ou outro
+
+membro.
+Ao utilizar o comando, o bot exibirá um painel
+moderno contendo o avatar em alta resolução,
+além de informações básicas sobre o usuário
+selecionado. Caso nenhum membro seja
+informado, o comando mostrará
+automaticamente o avatar de quem executou o
+comando.
+O sistema será compatível com avatares
+estáticos e animados (GIF), preservando a
+qualidade original da imagem disponibilizada
+pelo Discord.
+Informações exibidas
+
+👤 Nome do usuário.
+🆔 ID do usuário.
+🖼️ Avatar em alta resolução.
+📅 Data de criação da conta do Discord.
+🎨 Tipo do avatar (Estático ou Animado).
+
+Botões interativos
+O painel poderá incluir botões para facilitar o
+acesso à imagem:
+
+🖼️ Abrir Avatar — Abre a imagem em
+tamanho original.
+📥 Baixar Avatar — Permite salvar a imagem
+no dispositivo.
+🎨 Ver Banner — Caso o usuário possua um
+banner.
+
+👤 Ver Perfil — Abre o perfil do usuário
+dentro do ODISSEIA ARCANA.
+📊 UserInfo — Exibe informações
+detalhadas do usuário.
+Recursos do sistema
+
+🖼️ Exibição do avatar em alta qualidade.
+✨ Suporte para imagens estáticas e
+animadas.
+
+👥 Consulta do próprio avatar ou do avatar
+de qualquer membro.
+🎨 Interface moderna com embed
+personalizado.
+
+⚡ Carregamento rápido e atualizado em
+tempo real.
+📱 Compatível com /avatar e O.avatar.
+🔒 Exibe apenas informações públicas
+disponíveis no Discord.
+
+O comando Avatar será uma ferramenta
+simples, útil e integrada ao restante do
+ODISSEIA ARCANA. No futuro, ele poderá
+oferecer recursos adicionais, como comparação
+entre avatares antigos e atuais (quando
+disponíveis), histórico de alterações,
+visualização em diferentes formatos e
+integração com outros comandos de perfil e
+informações do usuário.
+
+17.Comando Banner — ODISSEIA
+
+ARCANA
+O comando Banner foi desenvolvido para
+permitir que os usuários visualizem o banner de
+perfil de qualquer membro do servidor em sua
+máxima qualidade. Caso o usuário possua um
+banner configurado em sua conta do Discord, o
+bot exibirá a imagem em um painel moderno e
+organizado.
+Se nenhum usuário for informado no comando,
+o bot mostrará automaticamente o banner de
+quem executou o comando. Caso o membro
+não possua um banner personalizado, o sistema
+informará isso de forma clara e amigável.
+O comando será compatível com banners
+estáticos e animados (GIF), sempre preservando
+a qualidade original disponibilizada pelo Discord.
+
+Informações exibidas
+
+👤 Nome do usuário.
+🆔 ID do usuário.
+🖼️ Banner em alta resolução.
+📅 Data de criação da conta.
+🎨 Tipo do banner (Estático ou Animado).
+Botões interativos
+O painel poderá incluir botões para facilitar a
+navegação e o acesso ao conteúdo:
+
+🖼️ Abrir Banner — Exibe o banner em
+tamanho original.
+📥 Baixar Banner — Permite salvar a
+imagem em alta qualidade.
+
+👤 Ver Avatar — Mostra o avatar do usuário.
+📊 UserInfo — Exibe as informações
+detalhadas do usuário.
+
+🌌 Perfil ODISSEIA ARCANA — Abre o perfil
+
+do usuário dentro do bot.
+Recursos do sistema
+Visualização do banner em alta
+resolução.
+Suporte para banners estáticos e
+animados.
+Consulta do próprio banner ou do banner
+de qualquer membro.
+Interface moderna com embeds
+personalizados.
+Carregamento rápido e atualização em
+tempo real.
+Compatível com /banner e O.banner.
+Exibe apenas informações públicas
+disponibilizadas pelo Discord.
+Caso o usuário não possua um banner
+configurado, o comando informará isso sem
+gerar erros e poderá sugerir a visualização do
+
+avatar como alternativa.
+No futuro, o comando poderá receber novos
+recursos, como integração com o perfil do
+ODISSEIA ARCANA, histórico de banners
+(quando possível), comparação entre avatar e
+banner, temas personalizados e outras opções
+de personalização, tornando-se uma ferramenta
+completa para visualizar a identidade visual dos
+membros do servidor.
+
+18.O próximo comando de informações
+recomendado é o Rank.
+───
+
+Comando Rank — ODISSEIA
+ARCANA
+
+O comando Rank é responsável por exibir o
+ranking global da economia do ODISSEIA
+ARCANA, mostrando os usuários que possuem
+a maior quantidade de Almas. Seu objetivo é
+incentivar a competição saudável entre os
+jogadores e destacar aqueles que mais
+evoluíram dentro da economia do bot.
+Ao utilizar o comando, o bot exibirá um painel
+moderno com os usuários mais ricos,
+organizados em ordem decrescente de
+patrimônio. O sistema será atualizado em
+tempo real, garantindo que o ranking reflita
+sempre os valores mais recentes.
+O ranking contará com paginação automática,
+permitindo navegar entre todas as posições por
+meio de botões interativos. Cada página exibirá
+uma quantidade fixa de usuários, facilitando a
+consulta mesmo em servidores com muitos
+participantes.
+Os três primeiros colocados receberão destaque
+
+especial com medalhas:
+
+🥇 1º Lugar
+🥈 2º Lugar
+🥉 3º Lugar
+Além da posição, cada usuário terá informações
+importantes exibidas ao lado do nome.
+Informações exibidas
+
+🏆 Posição no ranking.
+👤 Nome do usuário.
+💰 Quantidade de Almas.
+⭐ Nível do jogador.
+📈 Experiência (XP).
+🎖️ Cargo especial (caso possua).
+📊 Diferença de Almas para o jogador acima.
+O comando também mostrará a posição do
+usuário que executou o comando, mesmo que
+ele não esteja na página atual do ranking.
+
+Botões interativos
+O painel contará com botões para facilitar a
+navegação:
+
+⬅️ Página anterior.
+➡️ Próxima página.
+🏠 Primeira página.
+🔚 Última página.
+👤 Minha posição.
+Recursos do sistema
+
+🌍 Ranking global da economia.
+💰 Atualização automática em tempo real.
+🥇 Destaque especial para o Top 3.
+📄 Paginação com navegação por botões.
+👤 Exibição da posição do usuário.
+🎨 Interface moderna e organizada.
+📱 Compatível com /rank e O.rank.
+⚡ Sistema otimizado para milhares de
+
+usuários.
+No futuro, o Rank poderá incluir filtros por
+período (diário, semanal, mensal e geral),
+rankings por jogos, nível, reputação, conquistas,
+Work, Daily e outras categorias. Assim, ele se
+tornará um dos principais sistemas
+competitivos do ODISSEIA ARCANA,
+incentivando os usuários a evoluírem
+constantemente dentro da economia do bot.
+
+19.Comando Rank Local —
+
+ODISSEIA ARCANA
+O comando Rank Local exibe o ranking
+econômico exclusivo do servidor onde ele foi
+executado. Diferente do Rank Global, que
+considera todos os usuários cadastrados no
+ODISSEIA ARCANA, o Rank Local mostra apenas
+
+os membros do servidor atual, tornando a
+competição mais próxima e divertida entre
+amigos e comunidade.
+Ao utilizar o comando, o bot organizará
+automaticamente todos os membros do
+servidor que possuem uma conta registrada no
+ODISSEIA ARCANA, classificando-os de acordo
+com a quantidade de Almas que possuem.
+O ranking será atualizado em tempo real sempre
+que ocorrer uma alteração na economia, como
+ganhos em jogos, resgate do Daily, uso do Work,
+transferências ou qualquer outra movimentação
+financeira.
+Assim como o ranking global, o Rank Local
+utilizará paginação automática para facilitar a
+navegação em servidores com muitos membros.
+Os três primeiros colocados receberão destaque
+especial:
+
+🥇 1º Lugar
+
+🥈 2º Lugar
+🥉 3º Lugar
+Informações exibidas
+
+🏆 Posição no ranking do servidor.
+👤 Nome do usuário.
+💰 Quantidade de Almas.
+⭐ Nível.
+📈 Experiência (XP).
+🎖️ Cargo especial (caso possua).
+📊 Diferença de Almas para o jogador acima.
+🏰 Nome do servidor.
+O comando também destacará
+automaticamente a posição do usuário que
+executou o comando, mesmo que ele não esteja
+visível na página atual.
+Botões interativos
+O painel contará com botões para facilitar a
+
+navegação:
+
+⬅️ Página anterior.
+➡️ Próxima página.
+🏠 Primeira página.
+🔚 Última página.
+👤 Minha posição.
+Recursos do sistema
+
+🏰 Ranking exclusivo do servidor atual.
+💰 Atualização em tempo real.
+🥇 Destaque especial para o Top 3.
+📄 Paginação com navegação por botões.
+👤 Exibição da posição do usuário.
+🎨 Interface moderna e organizada.
+📱 Compatível com /ranklocal e O.ranklocal.
+⚡ Sistema otimizado para servidores
+grandes.
+
+No futuro, o Rank Local poderá incluir filtros por
+
+período (diário, semanal, mensal e geral),
+rankings específicos de jogos, Work, Daily,
+reputação, nível e conquistas. Também poderá
+oferecer recompensas automáticas para os
+primeiros colocados ao final de cada
+temporada, incentivando ainda mais a
+competição saudável entre os membros do
+servidor e fortalecendo a comunidade do
+ODISSEIA ARCANA.
+
+20.Comando Leaderboard —
+
+ODISSEIA ARCANA
+O comando Leaderboard reúne os principais
+rankings do ODISSEIA ARCANA em um único
+painel. Diferente dos comandos Rank e Rank
+Local, que mostram apenas a economia, o
+Leaderboard permite alternar entre diversas
+
+classificações do bot, destacando os melhores
+jogadores em diferentes categorias.
+Ao utilizar o comando, o usuário verá um painel
+moderno e interativo, podendo trocar de ranking
+através de botões ou menus de seleção, sem
+precisar executar vários comandos diferentes.
+Todos os rankings serão atualizados em tempo
+real, garantindo que as posições reflitam os
+dados mais recentes do banco de dados.
+Rankings disponíveis
+
+💰 Economia — Usuários com mais Almas.
+⭐ Nível — Maior nível e experiência.
+🎮 Jogos — Quem mais venceu partidas.
+💼 Work — Usuários que mais trabalharam.
+🎁 Daily — Maior sequência de Dailies.
+🏆 Conquistas — Maior número de
+conquistas desbloqueadas.
+❤️ Reputação — Usuários com mais
+
+reputações.
+Transferências — Quem mais enviou e
+recebeu Almas.
+Sequência — Maiores sequências de
+vitórias em jogos.
+Cada ranking exibirá os melhores jogadores da
+categoria selecionada, com destaque especial
+para os três primeiros colocados.
+Informações exibidas
+Posição no ranking.
+Nome do usuário.
+Valor correspondente à categoria.
+Cargo especial (quando houver).
+Nível do usuário.
+Evolução em relação à última atualização.
+Sua posição no ranking.
+Botões interativos
+
+O painel contará com diversos controles para
+facilitar a navegação:
+
+⬅️ Página anterior.
+➡️ Próxima página.
+📑 Selecionar categoria.
+🔄 Atualizar ranking.
+
+👤 Mostrar minha posição.
+Recursos do sistema
+
+🌍 Rankings globais.
+🏰 Opção de visualizar apenas o servidor
+atual.
+📄 Paginação automática.
+🥇 Destaque especial para o Top 3.
+📊 Atualização em tempo real.
+🎨 Interface moderna com embeds
+personalizados.
+📱 Compatível com /leaderboard e
+
+O.leaderboard.
+Sistema otimizado para milhares de
+usuários.
+No futuro, o Leaderboard poderá incluir
+temporadas competitivas, rankings diários,
+semanais e mensais, recompensas automáticas
+para os primeiros colocados, filtros
+personalizados e estatísticas históricas. Dessa
+forma, ele se tornará o principal centro de
+competição do ODISSEIA ARCANA, incentivando
+os usuários a evoluírem em todos os sistemas
+do bot, e não apenas na economia.
+
+21. Comando Estatísticas —
+
+ODISSEIA ARCANA
+O comando Estatísticas foi desenvolvido para
+apresentar um resumo completo da atividade do
+usuário dentro do ODISSEIA ARCANA. Diferente
+
+do Perfil, que foca na identidade e
+personalização do jogador, este comando é
+totalmente voltado para desempenho, evolução
+e histórico de utilização do bot.
+Ao executar o comando, o usuário visualizará
+um painel moderno com todas as suas
+estatísticas organizadas por categorias. Caso
+um membro seja mencionado, o bot exibirá as
+estatísticas desse usuário.
+Todas as informações serão atualizadas
+automaticamente em tempo real conforme o
+usuário utilizar comandos, participar de jogos,
+ganhar Almas, concluir desafios e desbloquear
+conquistas.
+
+Estatísticas Gerais
+
+📅 Data de criação da conta no bot.
+⏳ Tempo utilizando o ODISSEIA ARCANA.
+📈 Nível atual.
+
+⭐ Experiência total.
+💰 Total de Almas acumuladas.
+🏆 Total de conquistas desbloqueadas.
+❤️ Reputações recebidas.
+🎖️ Cargo ou título atual.
+Economia
+
+💰 Total de Almas ganhas.
+💸 Total de Almas gastas.
+📤 Total enviado via Pay/Pix.
+📥 Total recebido via Pay/Pix.
+💼 Ganhos através do Work.
+🎁 Ganhos através do Daily.
+🛒 Total gasto na loja.
+💎 Maior patrimônio já alcançado.
+Jogos
+Para cada jogo serão registradas estatísticas
+
+individuais, como:
+
+🎮 Partidas disputadas.
+🏆 Vitórias.
+❌ Derrotas.
+📊 Taxa de vitória.
+💰 Maior prêmio conquistado.
+📈 Maior multiplicador alcançado.
+🔥 Sequência de vitórias.
+Jogos suportados:
+
+💣 Mines.
+🃏 Blackjack.
+🪙 Cara ou Coroa.
+🎡 Roleta.
+🎰 Slots.
+📈 Crash.
+⚔️ Rinha.
+
+E todos os futuros jogos do bot.
+
+Botões interativos
+O painel contará com diferentes abas para
+facilitar a navegação:
+
+📊 Geral.
+💰 Economia.
+🎮 Jogos.
+🏆 Conquistas.
+📈 Evolução.
+Recursos do sistema
+
+📊 Atualização em tempo real.
+🎨 Interface moderna e organizada.
+📱 Compatível com /estatisticas e
+O.estatisticas.
+
+👤 Consulta das próprias estatísticas ou das
+de outro usuário.
+
+⚡ Navegação por botões e páginas.
+
+💾 Integração com todos os sistemas do
+bot.
+
+O comando Estatísticas será o painel mais
+completo de desempenho do ODISSEIA
+ARCANA, permitindo que os usuários
+acompanhem toda a sua evolução desde a
+criação da conta. Conforme novos jogos,
+sistemas e eventos forem adicionados ao bot,
+suas estatísticas serão integradas
+automaticamente, tornando este comando um
+verdadeiro histórico da jornada de cada jogador
+dentro do universo do ODISSEIA ARCANA.
+
+22.Você estava seguindo a sequência de
+descrições dos comandos do bot. O último que
+fizemos foi comandos de informações um por
+um. Vou continuar com o próximo:
+
+📌 Comando: Perfil (O.perfil / /perfil)
+Descrição: O comando Perfil mostra todas as
+informações principais do usuário dentro do
+servidor, criando uma identidade visual própria
+para cada membro.
+Como funciona:
+O usuário executa O.perfil ou /perfil.
+O bot busca os dados salvos no banco de
+dados.
+Gera um cartão de perfil personalizado.
+Exibe informações como:
+
+🧑 Nome e avatar do usuário
+💰 Quantidade de Almas (moeda do bot)
+⭐ XP e nível
+🏆 Conquistas desbloqueadas
+💎 Status VIP
+🎮 Quantidade de jogos realizados
+📅 Data de entrada ou registro
+
+📝 Biografia personalizada (quando
+configurada)
+
+Visual: O perfil terá um estilo de cartão moderno:
+Moldura dourada para destaque
+Avatar em evidência
+Fundo personalizado
+Informações organizadas em campos
+Design semelhante a sistemas de perfil de
+bots grandes
+Objetivo: Criar uma página de identidade do
+usuário dentro do ODISSEIA ARCANA,
+permitindo que cada membro acompanhe sua
+evolução, saldo e conquistas.
+Implementação:
+Feito usando geração de imagem com
+Canvas.
+Os dados vêm do arquivo/banco de usuários.
+Pode ser integrado ao painel para editar
+
+molduras, cores, banners e informações
+exibidas.
+
+23.Agora vamos para os Sistemas Automáticos
+do ODISSEIA ARCANA.
+
+Sistema Automático de Economia
+Descrição: O sistema de economia controla
+automaticamente o dinheiro virtual do servidor,
+chamado Almas, gerenciando ganhos, perdas e
+movimentações dos usuários.
+Como funciona:
+Cada usuário possui uma carteira própria.
+O bot salva automaticamente o saldo no
+banco de dados.
+As Almas podem ser ganhas através de:
+Daily
+Work
+
+🎮 Jogos
+💰 Eventos automáticos
+🏆 Recompensas
+Funções automáticas:
+Atualização de saldo após comandos.
+Registro de transações.
+Proteção contra saldo negativo.
+Histórico de movimentações.
+Integração com apostas e jogos.
+Objetivo: Criar uma economia completa dentro
+do servidor, onde os usuários possam acumular,
+gastar e disputar Almas.
+Implementação:
+Banco de dados de usuários.
+Sistema central de carteira.
+Todos os comandos de economia usam o
+mesmo sistema.
+
+───
+
+⏰ Sistema Automático de Daily
+
+Descrição: O Daily é uma recompensa diária
+automática que entrega Almas para os usuários
+que acessarem o comando uma vez por dia.
+Como funciona:
+O usuário usa O.daily ou /daily.
+O bot verifica se já recebeu a recompensa
+nas últimas 24 horas.
+Caso esteja disponível:
+Entrega uma quantidade aleatória de
+Almas.
+Atualiza o saldo.
+Registra a data do recebimento.
+Funções automáticas:
+
+Controle de tempo de espera.
+Reinício automático após 24 horas.
+Mensagem privada (DM) avisando a
+recompensa.
+Registro no perfil do usuário.
+Objetivo: Manter os usuários entrando no
+servidor todos os dias.
+───
+
+Sistema Automático de XP por
+💬Mensagem
+Descrição: Sistema que recompensa usuários
+pela participação no servidor.
+Como funciona:
+O bot acompanha mensagens enviadas.
+A cada mensagem válida, o usuário recebe
+
+XP.
+Ao atingir o limite necessário, sobe de nível.
+Funções automáticas:
+Ganho de XP configurável.
+Sistema de níveis.
+Recompensas por nível.
+Ranking de usuários.
+Integração com cargos automáticos.
+
+───
+
+Sistema Automático de Boasvindas
+Descrição: Sistema responsável por receber
+novos membros automaticamente.
+Como funciona:
+
+Quando alguém entra no servidor:
+O bot envia uma mensagem de boasvindas.
+Mostra informações do servidor.
+Pode criar um perfil inicial.
+Configurações pelo painel:
+Canal de boas-vindas.
+Mensagem personalizada.
+Imagem de entrada.
+Cargo automático.
+
+───
+
+🛡️ Sistema Automático de Moderação
+Descrição: Sistema que ajuda a equipe a manter
+o servidor organizado.
+Funções automáticas:
+
+Detectar spam.
+Controle de mensagens.
+Registro de punições.
+Logs de ações.
+Proteção contra abusos.
+Integração: Tudo pode ser configurado pelo
+painel administrativo.
+───
+
+📊 Sistema Automático de Logs
+
+Descrição: Registra tudo que acontece no
+servidor.
+Registra:
+Entradas e saídas de membros.
+Mensagens apagadas.
+Comandos usados.
+
+Punições.
+Alterações importantes.
+Objetivo: Permitir que administradores
+acompanhem o funcionamento do servidor.
+───
+Próximo posso continuar com ou .
+
+24.
+
+🎉 Sistema Automático de Eventos
+
+Descrição: O Sistema Automático de Eventos
+
+cria atividades programadas dentro do servidor
+para manter os membros ativos e aumentar a
+interação com o ODISSEIA ARCANA.
+Como funciona:
+O bot executa eventos automaticamente em
+horários definidos.
+
+Os administradores podem configurar os
+eventos pelo painel.
+Os usuários participam e recebem
+recompensas ao completar objetivos.
+Tipos de eventos:
+
+🎁 Evento de Recompensa
+O bot libera uma recompensa para os
+participantes.
+Pode entregar:
+
+💰 Almas
+⭐ XP
+🏆 Conquistas
+🎖️ Cargos especiais
+
+🎲 Evento de Jogos
+Cria competições automáticas usando os
+jogos do bot.
+
+Exemplos:
+Quem conseguir maior pontuação.
+Quem ganhar mais partidas.
+Ranking temporário.
+
+🏆 Evento de Ranking
+Cria disputas entre usuários.
+Pode ser baseado em:
+Maior saldo de Almas.
+Mais jogos realizados.
+Mais XP ganho.
+Maior sequência de atividades.
+
+🌙 Eventos Especiais
+Eventos temáticos criados pela
+administração.
+Podem ter:
+Nome personalizado.
+Banner.
+
+Regras próprias.
+Recompensas únicas.
+
+───
+
+⚙️ Funções Automáticas:
+
+⏰ Agendamento de eventos por data e
+horário.
+🔔 Avisos automáticos no servidor.
+🎁 Entrega automática de prêmios.
+📊 Ranking dos participantes.
+📝 Registro de participação.
+🛡️ Controle contra abuso ou múltiplas
+contas.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar novos eventos.
+Ativar ou desativar eventos.
+Definir duração.
+Escolher recompensas.
+Escolher canal de anúncio.
+Ver participantes.
+Acompanhar resultados em tempo real.
+
+───
+
+🎯 Objetivo:
+
+Transformar o ODISSEIA ARCANA em um
+servidor mais ativo, criando desafios e
+competições automáticas que incentivam os
+
+usuários a participar diariamente.
+Implementação:
+Sistema separado de eventos.
+Banco de dados para salvar participantes e
+resultados.
+Integração com economia, XP, cargos e
+painel administrativo.
+
+Sistema Automático de Cargos
+🏷️
+(Rank e Recompensas)
+25.
+
+Descrição: O Sistema Automático de Cargos
+gerencia a entrega de cargos aos usuários de
+acordo com suas conquistas, nível, participação
+ou configurações definidas pelos
+administradores.
+Como funciona:
+
+O bot acompanha automaticamente o
+progresso dos usuários.
+Quando um membro atinge um requisito, o
+bot libera o cargo correspondente.
+Os cargos podem representar evolução,
+benefícios ou status dentro do servidor.
+
+───
+
+⚙️ Tipos de cargos automáticos:
+⭐ Cargo por Nível (XP)
+
+Usuário ganha XP participando do servidor.
+Ao alcançar determinado nível:
+O bot entrega um cargo automaticamente.
+Pode remover o cargo antigo ou manter
+histórico.
+
+Exemplo:
+
+🥉 Iniciante
+Nível 10 → 🥈 Experiente
+Nível 20 → 🥇 Veterano
+Nível 5 →
+
+───
+
+💰 Cargo por Economia
+Baseado na quantidade de Almas
+acumuladas.
+Exemplo:
+
+💎 Rico
+100.000 Almas → 👑 Elite
+1.000.000 Almas → 🌌 Lendário
+10.000 Almas →
+
+───
+
+🏆 Cargo por Conquistas
+Entregue após completar objetivos.
+Exemplos:
+Primeiro jogo realizado.
+Primeiro prêmio recebido.
+Participação em eventos.
+Sequência de Daily.
+
+───
+
+🎖️ Cargo VIP
+Cargos especiais para usuários VIP.
+Pode oferecer:
+Benefícios exclusivos.
+Acesso a canais.
+
+Bônus em sistemas.
+
+───
+
+🔄 Funções automáticas:
+Verificação de requisitos em tempo real.
+Entrega automática de cargos.
+Registro de mudanças.
+Remoção de cargos antigos (opcional).
+Integração com XP, economia e eventos.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar regras de cargos.
+
+Definir requisitos.
+Escolher o cargo de recompensa.
+Ativar/desativar sistemas.
+Ver histórico de cargos entregues.
+
+───
+
+🎯 Objetivo:
+
+Criar uma progressão automática no ODISSEIA
+ARCANA, fazendo os usuários sentirem
+evolução e reconhecimento conforme
+participam do servidor.
+Implementação:
+Sistema conectado ao banco de dados de
+usuários.
+Verificação automática por eventos do bot.
+Integração com XP, Almas, perfil e painel
+administrativo.
+
+Sistema Automático de Ranking
+📈
+(Leaderboard)
+26.
+
+Descrição: O Sistema Automático de Ranking
+organiza os usuários do servidor em posições
+de destaque, mostrando quem possui maior
+evolução, participação ou conquistas dentro do
+ODISSEIA ARCANA.
+───
+
+⚙️ Como funciona:
+O bot coleta automaticamente os dados dos
+usuários.
+Calcula a posição de cada membro.
+Atualiza os rankings conforme novas
+
+atividades acontecem.
+Os usuários podem consultar suas posições
+através de comandos.
+
+───
+
+Tipos de Ranking:
+Ranking de Almas
+Mostra os usuários com maior quantidade de
+moeda.
+Exemplo:
+
+Jogador 1 — 500.000 Almas
+
+Jogador 2 — 300.000 Almas
+Jogador 3 — 150.000 Almas
+───
+
+Ranking de XP
+
+Mostra os membros mais ativos do servidor.
+Baseado em:
+Mensagens enviadas.
+Participação.
+Níveis alcançados.
+
+───
+
+🎮 Ranking de Jogos
+
+Mostra os melhores jogadores.
+Pode considerar:
+Vitórias.
+Partidas realizadas.
+Maior prêmio conquistado.
+Melhor sequência.
+
+───
+
+🎉 Ranking de Eventos
+
+Mostra os usuários que mais participam dos
+eventos automáticos.
+───
+
+🔄 Funções automáticas:
+Atualização em tempo real.
+Destaque dos Top 3:
+
+🥇 Primeiro lugar
+🥈 Segundo lugar
+🥉 Terceiro lugar
+
+Paginação para grandes servidores.
+Registro histórico de posições.
+Integração com perfil dos usuários.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Escolher quais rankings ficam ativos.
+Definir período do ranking:
+Diário
+Semanal
+Mensal
+Permanente
+Criar recompensas para posições.
+Configurar canais de exibição.
+
+───
+
+🎯 Objetivo:
+
+servidor, incentivando os usuários a
+participarem mais, acumularem Almas,
+ganharem XP e participarem dos sistemas do
+ODISSEIA ARCANA.
+Implementação:
+Sistema conectado ao banco de dados.
+Atualização automática após ações dos
+usuários.
+Integração com comandos como:
+O.rank
+O.rankxp
+O.ranklocal
+O.perfil
+Painel administrativo.
+
+27.
+28.
+
+Sistema Automático de
+🔔Notificações
+Descrição: O Sistema Automático de
+Notificações é responsável por enviar avisos e
+informações importantes automaticamente para
+os usuários do ODISSEIA ARCANA.
+───
+
+⚙️ Como funciona:
+O bot monitora eventos que acontecem no
+servidor.
+Quando uma ação importante ocorre, ele
+envia uma notificação automaticamente.
+As mensagens podem ser enviadas em
+canais públicos ou por mensagem privada
+(DM).
+
+───
+
+📌 Tipos de notificações:
+
+🎁 Notificação de Recompensas
+
+Envia avisos quando o usuário recebe algo.
+Exemplos:
+Daily recebido.
+Prêmio de evento.
+Cargo desbloqueado.
+Bônus especial.
+
+───
+
+🎮 Notificação de Jogos
+
+Informa acontecimentos relacionados aos jogos.
+
+Exemplos:
+Resultado de partida.
+Vitória ou derrota.
+Premiação recebida.
+Ranking atualizado.
+
+───
+
+🏆 Notificação de Conquistas
+
+Avisos quando o usuário alcança novos
+objetivos.
+Exemplos:
+Novo nível alcançado.
+Nova conquista desbloqueada.
+Novo cargo recebido.
+
+───
+
+🛠️ Notificação Administrativa
+
+Envia informações para a equipe de moderação.
+Exemplos:
+Usuário punido.
+Sistema com erro.
+Alerta de segurança.
+Relatórios automáticos.
+
+───
+
+🔄 Funções automáticas:
+Mensagens personalizadas.
+Embeds com informações.
+Envio em canais configurados.
+Mensagens privadas automáticas.
+Controle de notificações ativadas/
+
+desativadas.
+Histórico de avisos enviados.
+
+───
+
+Configuração pelo Painel:
+O administrador poderá:
+Escolher quais notificações ficam ativas.
+Definir canais de envio.
+Personalizar mensagens.
+Ativar notificações por evento.
+Configurar avisos para membros e equipe.
+
+───
+
+Objetivo:
+
+Manter os usuários informados sobre tudo que
+acontece no ODISSEIA ARCANA, aumentando a
+interação e evitando que eventos importantes
+sejam perdidos.
+Implementação:
+Sistema conectado aos eventos internos do
+bot.
+Integração com economia, jogos, XP, cargos,
+eventos e painel administrativo.
+
+Sistema Automático de Logs e
+📝
+Auditoria
+29.
+
+Descrição: O Sistema Automático de Logs
+registra todas as ações importantes que
+acontecem no servidor, permitindo que
+administradores acompanhem o funcionamento
+do ODISSEIA ARCANA e identifiquem problemas
+
+ou abusos.
+───
+
+⚙️ Como funciona:
+O bot monitora eventos do servidor
+automaticamente.
+Cada ação importante é registrada.
+As informações são enviadas para canais de
+logs configurados ou armazenadas no
+banco de dados.
+
+───
+
+📌 Tipos de Logs:
+👤 Logs de Usuários
+
+Registra atividades dos membros:
+Entrada no servidor.
+Saída do servidor.
+Alteração de apelido.
+Alteração de cargos.
+Atualização de perfil.
+
+───
+
+💬 Logs de Mensagens
+Monitora mensagens:
+
+Mensagens apagadas.
+Mensagens editadas.
+Autor da mensagem.
+Canal onde ocorreu.
+Horário da ação.
+
+───
+
+🛡️ Logs de Moderação
+
+Registra ações da equipe:
+Banimentos.
+Expulsões.
+Mutes/Timeouts.
+Advertências.
+Limpeza de mensagens.
+Informações salvas:
+Moderador responsável.
+Usuário afetado.
+Motivo.
+Data e horário.
+
+───
+
+💰 Logs de Economia
+
+Controla movimentações financeiras:
+Ganhos de Almas.
+Perdas em jogos.
+Transferências entre usuários.
+Recompensas recebidas.
+
+───
+
+🎮 Logs de Jogos e Eventos
+Registra:
+
+Partidas realizadas.
+Resultados.
+Participações em eventos.
+Prêmios entregues.
+
+───
+
+🔄 Funções automáticas:
+Criação de registros em tempo real.
+Histórico de ações.
+Filtros por categoria.
+Proteção contra alterações suspeitas.
+Relatórios para administradores.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Escolher quais logs ativar.
+Definir canais de registro.
+Pesquisar eventos antigos.
+
+Visualizar estatísticas.
+Exportar relatórios.
+
+───
+
+🎯 Objetivo:
+
+Criar transparência e segurança no servidor,
+permitindo que a equipe tenha controle total
+sobre o que acontece no ODISSEIA ARCANA.
+Implementação:
+Sistema conectado aos eventos do Discord.
+Banco de dados de registros.
+Integração com painel administrativo em
+tempo real.
+Compatível com sistemas de moderação,
+economia, jogos e eventos.
+
+Sistema Automático de
+🛡️
+Segurança e Proteção
+30.
+
+Descrição: O Sistema Automático de Segurança
+protege o servidor contra abusos, ataques e
+comportamentos suspeitos, mantendo o
+ODISSEIA ARCANA organizado e seguro.
+───
+
+⚙️ Como funciona:
+O bot monitora automaticamente as
+atividades do servidor.
+Identifica ações fora do padrão.
+Executa respostas automáticas conforme as
+regras configuradas.
+
+───
+
+📌 Tipos de proteção:
+🚫 Proteção Anti-Spam
+
+Detecta usuários enviando muitas mensagens
+rapidamente.
+Ações possíveis:
+Apagar mensagens automaticamente.
+Aplicar aviso.
+Aplicar timeout temporário.
+Registrar no sistema de logs.
+
+───
+
+🔗 Proteção Anti-Link
+
+Controla links enviados pelos usuários.
+Pode:
+
+Bloquear links não autorizados.
+Permitir links de sites confiáveis.
+Registrar tentativas.
+
+───
+
+🤖 Proteção Anti-Bot/Fake
+Ajuda a identificar:
+
+Contas suspeitas.
+Entrada em massa de usuários.
+Comportamentos automatizados.
+
+───
+
+🛡️ Proteção de Administração
+Monitora ações importantes:
+
+Alterações de cargos.
+Alterações de permissões.
+Exclusão de canais.
+Mudanças críticas no servidor.
+
+───
+
+🔄 Funções automáticas:
+Detecção em tempo real.
+Aplicação de punições configuráveis.
+Alertas para moderadores.
+Registro completo nos logs.
+Sistema de níveis de segurança.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Ativar ou desativar proteções.
+Definir regras.
+Escolher punições automáticas.
+Configurar cargos protegidos.
+Ver alertas de segurança.
+
+───
+
+🎯 Objetivo:
+
+Garantir que o ODISSEIA ARCANA tenha uma
+proteção automática contra problemas comuns,
+reduzindo o trabalho da equipe de moderação e
+mantendo o servidor seguro.
+Implementação:
+
+Sistema conectado aos eventos do Discord.
+Integração com logs, moderação e painel
+administrativo.
+Banco de dados para salvar regras e
+históricos de segurança.
+
+Sistema Automático de
+📅
+Agendamento
+31.
+
+Descrição: O Sistema Automático de
+Agendamento permite que o ODISSEIA ARCANA
+execute ações programadas automaticamente,
+sem precisar de comandos manuais dos
+administradores.
+───
+
+⚙️ Como funciona:
+
+O administrador configura uma ação com
+data e horário.
+O bot salva o agendamento.
+Quando chegar o momento definido, o
+sistema executa automaticamente a tarefa.
+
+───
+
+📌 Tipos de agendamentos:
+🎉 Agendamento de Eventos
+
+Permite criar eventos com início e fim
+programados.
+Exemplos:
+Torneios.
+Competições.
+Eventos de recompensa.
+
+Desafios especiais.
+
+───
+
+🔔 Avisos Programados
+
+O bot envia mensagens automaticamente.
+Exemplos:
+Anúncios importantes.
+Lembretes.
+Avisos de manutenção.
+Divulgação de eventos.
+
+───
+
+🎁 Recompensas Programadas
+
+Entrega prêmios em horários definidos.
+
+Exemplos:
+Bônus diário.
+Recompensas semanais.
+Prêmios de eventos.
+
+───
+
+🔄 Tarefas Automáticas do Sistema
+Executa processos internos:
+
+Atualização de rankings.
+Limpeza de dados temporários.
+Atualização de estatísticas.
+Geração de relatórios.
+
+───
+
+🔧 Funções automáticas:
+⏰ Controle de horários.
+🔁 Repetição de tarefas:
+Diária.
+
+Semanal.
+Mensal.
+
+📢 Envio automático de mensagens.
+📝 Registro de execuções.
+⚠️ Alertas caso alguma tarefa falhe.
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar novos agendamentos.
+Escolher data e horário.
+
+Definir o canal de envio.
+Escolher a ação executada.
+Ativar ou desativar tarefas.
+Ver histórico de execuções.
+
+───
+
+🎯 Objetivo:
+
+Criar um servidor mais independente, onde o
+ODISSEIA ARCANA consegue administrar
+rotinas, eventos e avisos automaticamente,
+reduzindo a necessidade de intervenção manual
+da equipe.
+Implementação:
+Sistema baseado em tarefas programadas.
+Integrado com eventos, notificações,
+economia, rankings e painel administrativo.
+Banco de dados para armazenar
+
+configurações e histórico.
+
+Sistema Automático de
+Configuração Inteligente
+32.
+
+Descrição: O Sistema Automático de
+Configuração Inteligente permite que o
+ODISSEIA ARCANA ajuste e gerencie suas
+funções automaticamente conforme as
+configurações definidas pelo administrador no
+painel.
+───
+
+Como funciona:
+O bot carrega as configurações salvas no
+banco de dados.
+
+Cada sistema verifica suas próprias regras.
+Alterações feitas no painel são aplicadas
+automaticamente sem precisar editar
+código.
+
+───
+
+📌 Configurações automáticas:
+🎮 Sistemas de Jogos
+Permite controlar:
+
+Ativar ou desativar jogos.
+Definir valores mínimos e máximos de
+apostas.
+Ajustar recompensas.
+Configurar canais permitidos.
+
+───
+
+💰 Sistema de Economia
+Controla:
+
+Nome da moeda (Almas).
+Valores de recompensas.
+Limites de saldo.
+Taxas e transferências.
+Bônus automáticos.
+
+───
+
+⭐ Sistema de XP
+Gerencia:
+
+XP recebido por mensagem.
+Tempo entre ganhos de XP.
+
+Recompensas por evolução.
+
+───
+
+🛡️ Sistema de Moderação
+Configura:
+
+Cargos de moderadores.
+Canais de logs.
+Punições automáticas.
+Permissões de comandos.
+
+───
+
+🔄 Funções automáticas:
+Carregamento de configurações ao iniciar o
+bot.
+
+Atualização em tempo real pelo painel.
+Aplicação de regras sem reiniciar o bot
+(quando possível).
+Controle de permissões.
+Organização dos sistemas ativos.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Ativar/desativar módulos.
+Alterar valores dos sistemas.
+Personalizar mensagens.
+Gerenciar permissões.
+Visualizar o status de cada sistema.
+
+───
+
+🎯 Objetivo:
+
+Tornar o ODISSEIA ARCANA um bot totalmente
+personalizável, onde o administrador consegue
+controlar praticamente tudo pelo painel sem
+precisar mexer no código.
+Implementação:
+Sistema central de configurações.
+Banco de dados para salvar preferências.
+Integração com todos os módulos do bot.
+Comunicação direta com o painel
+administrativo.
+
+Sistema Automático de Status e
+🌐Monitoramento
+33.
+
+Descrição: O Sistema Automático de Status e
+
+Monitoramento acompanha o funcionamento do
+ODISSEIA ARCANA em tempo real, mostrando a
+saúde do bot e dos sistemas ativos.
+───
+
+⚙️ Como funciona:
+O bot monitora automaticamente seus
+próprios serviços.
+Verifica se comandos, banco de dados e
+sistemas estão funcionando.
+Envia informações para o painel
+administrativo.
+
+───
+
+📌 Informações monitoradas:
+
+🤖 Status do Bot
+Mostra:
+
+Bot online/offline.
+Tempo ligado (uptime).
+Latência de resposta.
+Conexão com o Discord.
+
+───
+
+🗄️ Status do Banco de Dados
+Verifica:
+
+Conexão com o banco.
+Salvamento de usuários.
+Registros de economia.
+Histórico de sistemas.
+
+───
+
+⚙️ Status dos Sistemas
+Acompanha:
+
+🎮 Jogos ativos.
+💰 Economia funcionando.
+🎁 Daily disponível.
+⭐ XP e níveis.
+🛡️ Moderação ativa.
+📊 Rankings atualizados.
+───
+
+🚨 Alertas Automáticos:
+
+Caso aconteça algum problema:
+Envia aviso para administradores.
+
+Registra erro nos logs.
+Mostra sistema afetado.
+Informa horário do problema.
+
+───
+
+🖥️ No Painel Administrativo:
+O administrador poderá visualizar:
+
+🟢 Sistemas online.
+
+🟡 Sistemas com alerta.
+🔴 Sistemas offline.
+Uso de recursos.
+
+Histórico de problemas.
+
+───
+
+🎯 Objetivo:
+
+Garantir que o ODISSEIA ARCANA esteja sempre
+acompanhado, permitindo identificar problemas
+rapidamente e manter o bot funcionando com
+estabilidade.
+Implementação:
+Sistema integrado ao painel web.
+Monitoramento em tempo real.
+Conexão com logs, banco de dados e
+eventos do bot.
+Relatórios automáticos de funcionamento.
+
+34.Sim, ainda existem alguns sistemas
+automáticos que podemos adicionar ao
+ODISSEIA ARCANA. Continuando a lista:
+───
+
+Sistema Automático de Backup e
+🔄Recuperação
+Descrição: O Sistema Automático de Backup
+protege os dados do bot criando cópias de
+segurança dos usuários, economia,
+configurações e sistemas.
+───
+
+⚙️ Como funciona:
+O bot cria backups automaticamente em
+períodos definidos.
+Salva informações importantes.
+Permite restaurar dados caso aconteça
+algum problema.
+
+───
+
+📌 Dados protegidos:
+👤 Usuários
+
+Saldo de Almas.
+XP e níveis.
+Perfil.
+Conquistas.
+Histórico.
+
+⚙️ Configurações
+Prefixo do bot.
+Canais configurados.
+Sistemas ativos.
+Permissões.
+
+🎮 Sistemas
+
+Dados de jogos.
+Ranking.
+Eventos.
+Recompensas.
+
+───
+
+🔄 Funções automáticas:
+Backup diário/semanal.
+Armazenamento seguro.
+Histórico de versões.
+Restauração rápida.
+Aviso quando um backup é concluído.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Escolher frequência dos backups.
+Fazer backup manual.
+Restaurar uma versão anterior.
+Ver tamanho e data dos backups.
+
+───
+
+🎯 Objetivo:
+
+Evitar perda de dados e garantir que o ODISSEIA
+ARCANA consiga continuar funcionando mesmo
+após erros, atualizações ou problemas técnicos.
+Implementação:
+Sistema conectado ao banco de dados.
+Rotina automática de cópias.
+
+Integração com painel administrativo.
+
+───
+Próximos sistemas que ainda podemos
+descrever:
+
+🔄 Sistema Automático de Atualizações
+🧠 Sistema de Inteligência do Bot
+(respostas e automações)
+📩 Sistema de Tickets Automáticos
+🎫 Sistema de Recompensas e Conquistas
+📊 Sistema de Estatísticas Avançadas
+🔐 Sistema de Permissões e Hierarquia
+🧹 Sistema de Limpeza Automática
+
+🌍 Sistema Multi-Servidor (configuração por
+servidor)
+.
+
+Sistema Automático de
+🔄
+Atualizações
+35.
+
+Descrição: O Sistema Automático de
+Atualizações permite que o ODISSEIA ARCANA
+mantenha seus sistemas organizados e
+atualizados, aplicando melhorias, correções e
+novas funções de forma controlada.
+───
+
+⚙️ Como funciona:
+O bot verifica versões dos seus módulos e
+sistemas.
+Identifica quando existem mudanças ou
+melhorias disponíveis.
+Registra alterações realizadas.
+Mantém o administrador informado sobre
+
+novas atualizações.
+
+───
+
+Tipos de atualizações:
+Atualizações de Sistemas
+Melhorias nos módulos do bot:
+Economia.
+Jogos.
+Perfil.
+XP.
+Eventos.
+Moderação.
+
+───
+
+🐛 Correções Automáticas
+
+Corrige problemas encontrados:
+Erros de comandos.
+Falhas de sistemas.
+Problemas de conexão.
+Ajustes de desempenho.
+
+───
+
+✨ Novos Recursos
+
+Adiciona novas funcionalidades:
+Novos comandos.
+Novos jogos.
+Novos sistemas automáticos.
+Melhorias no painel.
+
+───
+
+🔄 Funções automáticas:
+Controle de versão do bot.
+Registro de mudanças (changelog).
+Avisos de atualização.
+Verificação de compatibilidade.
+Histórico de versões instaladas.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Ver a versão atual do bot.
+Visualizar novidades da atualização.
+Ativar modo de manutenção.
+
+Acompanhar atualizações aplicadas.
+Escolher quando aplicar mudanças
+importantes.
+
+───
+
+🚨 Sistema de Manutenção:
+Quando necessário:
+
+O bot entra em modo manutenção.
+Alguns comandos podem ser
+temporariamente desativados.
+Usuários recebem aviso automático.
+Após finalizar, o bot retorna ao
+funcionamento normal.
+
+───
+
+🎯 Objetivo:
+
+Manter o ODISSEIA ARCANA sempre evoluindo,
+adicionando melhorias e corrigindo problemas
+sem perder organização ou estabilidade.
+Implementação:
+Sistema de controle de versões.
+Registro de alterações.
+Integração com painel administrativo.
+Conexão com logs e monitoramento.
+Estrutura preparada para futuras expansões
+do bot.
+
+36.
+
+🎫 Sistema Automático de Tickets
+
+Descrição: O Sistema Automático de Tickets
+
+permite que os usuários criem atendimentos
+
+privados dentro do servidor para tirar dúvidas,
+pedir suporte, fazer denúncias ou solicitar ajuda
+da equipe do ODISSEIA ARCANA.
+───
+
+⚙️ Como funciona:
+O usuário clica em um botão ou usa um
+comando para abrir um ticket.
+O bot cria automaticamente um canal
+privado.
+Apenas o usuário e a equipe autorizada
+conseguem visualizar o atendimento.
+A equipe pode responder, gerenciar e
+finalizar o ticket.
+
+───
+
+📌 Tipos de Tickets:
+🆘 Suporte Geral
+
+Para dúvidas e problemas:
+Exemplos:
+Ajuda com comandos.
+Problemas com saldo de Almas.
+Dúvidas sobre sistemas.
+
+───
+
+💰 Suporte de Economia
+
+Para assuntos relacionados a:
+Erros em apostas.
+Problemas com recompensas.
+Transferências.
+
+Sistema de Almas.
+
+───
+
+🛡️ Denúncias
+
+Permite enviar denúncias privadas.
+Pode incluir:
+Usuário denunciado.
+Motivo.
+Provas.
+Data do ocorrido.
+
+───
+
+🤝 Atendimento VIP
+
+Para usuários com benefícios especiais.
+
+Exemplos:
+Solicitações exclusivas.
+Suporte prioritário.
+Ajuda personalizada.
+
+───
+
+🔄 Funções automáticas:
+Criação automática de canais.
+Controle de permissões.
+Número de ticket único.
+Registro de atendimentos.
+Histórico de conversas.
+Fechamento automático.
+Mensagem de encerramento.
+Salvamento de transcript (registro da
+conversa).
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar categorias de tickets.
+Escolher cargos atendentes.
+Definir canais de abertura.
+Personalizar mensagens.
+Ativar/desativar tipos de atendimento.
+Ver tickets abertos e fechados.
+Consultar histórico.
+
+───
+
+📋 Sistema de Gerenciamento:
+
+A equipe poderá:
+Abrir atendimento.
+Adicionar membros ao ticket.
+Remover usuários.
+Fechar ticket.
+Reabrir atendimento.
+Marcar como resolvido.
+
+───
+
+🤖 Automações extras:
+Mensagem automática de boas-vindas no
+ticket.
+Perguntas iniciais para organizar o
+atendimento.
+Aviso quando um ticket fica parado.
+Fechamento automático após determinado
+
+tempo.
+Avaliação do atendimento após
+encerramento.
+
+───
+
+Objetivo:
+Criar um sistema profissional de atendimento
+dentro do ODISSEIA ARCANA, permitindo que os
+usuários recebam ajuda de forma organizada e
+privada, enquanto a administração mantém
+controle total dos atendimentos.
+Implementação:
+Sistema baseado em botões e menus.
+Banco de dados para armazenar tickets.
+Integração com logs, permissões, painel
+administrativo e notificações.
+
+37.Sim, ainda temos alguns sistemas
+automáticos que podem complementar o
+ODISSEIA ARCANA. Continuando:
+───
+
+Sistema Automático de
+🏆
+Conquistas
+Descrição: O Sistema Automático de Conquistas
+recompensa usuários por realizarem ações
+importantes dentro do servidor, criando uma
+sensação de progresso e evolução.
+───
+
+⚙️ Como funciona:
+
+O bot monitora as atividades dos usuários.
+Quando uma meta é alcançada, uma
+conquista é desbloqueada automaticamente.
+O usuário recebe uma notificação e a
+conquista fica registrada no perfil.
+
+───
+
+📌 Tipos de conquistas:
+💬 Conquistas de Atividade
+Baseadas na participação:
+
+Enviar determinada quantidade de
+mensagens.
+Permanecer ativo no servidor.
+Atingir níveis de XP.
+
+───
+
+💰 Conquistas de Economia
+Relacionadas às Almas:
+
+Primeiro ganho de Almas.
+Primeiro pagamento.
+Maior saldo alcançado.
+Maior prêmio em jogos.
+
+───
+
+🎮 Conquistas de Jogos
+
+Relacionadas aos minigames:
+Primeira vitória.
+Sequência de vitórias.
+Participação em torneios.
+
+───
+
+🎉 Conquistas de Eventos
+Baseadas em eventos:
+
+Participar de eventos especiais.
+Ficar no Top Ranking.
+Completar desafios.
+
+───
+
+🔄 Funções automáticas:
+Verificação de objetivos.
+Desbloqueio automático.
+Registro no perfil.
+Sistema de raridade:
+
+🟤 Comum
+🔵 Rara
+
+🟣 Épica
+
+🟡 Lendária
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar novas conquistas.
+Definir requisitos.
+Escolher recompensas.
+Ativar/desativar conquistas.
+Ver usuários que desbloquearam.
+
+───
+
+🎯 Objetivo:
+
+Aumentar a participação dos membros, criando
+metas e recompensas que incentivam os
+usuários a explorar todos os sistemas do
+ODISSEIA ARCANA.
+Implementação:
+Banco de dados de conquistas.
+Integração com perfil, XP, economia, jogos e
+eventos.
+Sistema de notificações automáticas.
+
+───
+Ainda podemos continuar com:
+
+🧹 Sistema Automático de Limpeza
+🔐
+📩
+
+🌍
+
+📊
+🧠
+O próximo da lista seria o .
+
+38.
+
+🧹 Sistema Automático de Limpeza
+
+Descrição: O Sistema Automático de Limpeza
+mantém o servidor ODISSEIA ARCANA
+organizado, removendo automaticamente
+mensagens antigas, conteúdos indesejados e
+dados temporários conforme as regras
+definidas pelos administradores.
+───
+
+⚙️ Como funciona:
+
+O bot monitora os canais configurados.
+Verifica regras de limpeza automaticamente.
+Executa ações programadas sem precisar
+de comandos manuais.
+Registra todas as limpezas realizadas nos
+logs.
+
+───
+
+📌 Tipos de Limpeza:
+
+💬 Limpeza de Mensagens
+
+Remove mensagens conforme configurações:
+Mensagens antigas após determinado
+tempo.
+Mensagens de canais específicos.
+Mensagens de spam.
+
+Mensagens de bots.
+Mensagens com palavras bloqueadas.
+Exemplo:
+Canal de comandos → limpar mensagens
+antigas a cada 24 horas.
+Canal de spam → limpeza automática a
+cada 1 hora.
+
+───
+
+🚫 Limpeza Anti-Spam
+
+Trabalha junto com o sistema de segurança:
+Detecta:
+Muitas mensagens em pouco tempo.
+Repetição de textos.
+Envio excessivo de links.
+
+Flood de comandos.
+Ações:
+Apagar mensagens automaticamente.
+Avisar usuário.
+Aplicar punição configurada.
+
+───
+
+🎮 Limpeza de Sistemas
+Remove dados temporários:
+Partidas encerradas.
+Sessões de jogos finalizadas.
+Eventos antigos.
+Arquivos temporários.
+Cache do bot.
+
+───
+
+🗄️ Limpeza de Banco de Dados
+Organiza informações internas:
+
+Remove registros temporários.
+Arquiva históricos antigos.
+Otimiza arquivos de usuários.
+Reduz dados desnecessários.
+
+───
+
+🔄
+
+Funções Automáticas:
+
+⏰ Agendamento de limpeza.
+🧹 Limpeza por canal.
+📝 Registro no sistema de logs.
+
+⚠️ Aviso antes de ações importantes.
+
+🔒 Proteção contra apagar mensagens
+importantes.
+📊 Relatórios de limpeza.
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Escolher canais para limpeza.
+Definir intervalo de tempo.
+Escolher o que será apagado.
+Criar regras personalizadas.
+Ativar/desativar o sistema.
+Visualizar histórico de limpezas.
+
+───
+
+🎯 Objetivo:
+
+Manter o ODISSEIA ARCANA limpo, rápido e
+organizado, reduzindo o trabalho da equipe e
+evitando acúmulo de mensagens e dados
+desnecessários.
+───
+
+🛠️ Implementação:
+Sistema separado de tarefas automáticas.
+Uso de eventos do Discord.
+Integração com:
+
+🛡️ Sistema de Segurança.
+📝 Sistema de Logs.
+🎫 Sistema de Tickets.
+🖥️ Painel Administrativo.
+
+⚙️ Sistema de Agendamento.
+
+───
+Próximo sistema da lista:
+
+🔐 Sistema Automático de Permissões e
+Hierarquia.
+
+Sistema Automático de
+🔐
+Permissões e Hierarquia
+39.
+
+Descrição: O Sistema Automático de
+Permissões e Hierarquia controla
+automaticamente o acesso dos usuários aos
+recursos do ODISSEIA ARCANA, garantindo
+organização e segurança dentro do servidor.
+───
+
+⚙️ Como funciona:
+O bot identifica os cargos e níveis de
+permissão dos usuários.
+Cada função possui regras definidas.
+O acesso a comandos, canais e sistemas é
+liberado ou bloqueado automaticamente.
+
+───
+
+📌 Sistemas de Permissão:
+👑 Hierarquia da Equipe
+Define níveis administrativos:
+
+🟣 Dono
+
+Permissão total:
+
+Configuração completa.
+Controle do painel.
+Gerenciamento de sistemas.
+
+🔴 Administrador
+Pode:
+
+Gerenciar membros.
+Configurar sistemas.
+Acessar logs.
+
+🟠 Moderador
+Pode:
+
+Aplicar punições.
+Controlar mensagens.
+Resolver tickets.
+
+🟢 Suporte
+
+Pode:
+Atender usuários.
+Gerenciar tickets.
+Auxiliar membros.
+
+───
+
+🎮 Permissões de Comandos
+
+Controla quem pode usar comandos específicos.
+Exemplos:
+O.ban → somente equipe autorizada.
+O.config → somente administradores.
+Jogos → liberados para membros.
+Comandos VIP → apenas usuários com
+cargo VIP.
+
+───
+
+🏷️ Permissões por Cargo
+O administrador pode definir:
+
+Cargos que podem executar comandos.
+Cargos que recebem benefícios.
+Cargos protegidos.
+Cargos que ganham acesso a canais.
+
+───
+
+🛡️ Proteção de Hierarquia
+O sistema impede:
+
+Usuários comuns gerenciando cargos
+importantes.
+Alterações não autorizadas.
+
+Uso indevido de comandos administrativos.
+
+───
+
+🔄 Funções Automáticas:
+Verificação de permissões em tempo real.
+Bloqueio automático de comandos
+proibidos.
+Registro de alterações.
+Atualização de acessos quando cargos
+mudam.
+Proteção contra abuso administrativo.
+
+───
+
+🖥️ Configuração pelo Painel:
+
+O administrador poderá:
+Criar níveis de acesso.
+Escolher cargos autorizados.
+Configurar permissões por comando.
+Gerenciar equipe.
+Ver histórico de alterações.
+
+───
+
+🎯 Objetivo:
+
+Criar uma estrutura organizada de
+administração, onde cada membro possui
+exatamente o nível de acesso necessário,
+mantendo o ODISSEIA ARCANA seguro e fácil
+de gerenciar.
+───
+
+🛠️ Implementação:
+Sistema integrado ao Discord Roles.
+Banco de dados de permissões.
+Integração com:
+
+🛡️ Moderação.
+🎫 Tickets.
+📝 Logs.
+🖥️ Painel administrativo.
+
+⚙️ Configurações automáticas.
+───
+Próximo sistema da lista:
+
+📩 Sistema Automático de Mensagens Privadas.
+
+Sistema Automático de
+📩
+Mensagens Privadas (DM)
+40.
+
+Descrição: O Sistema Automático de
+Mensagens Privadas permite que o ODISSEIA
+ARCANA envie mensagens personalizadas
+diretamente aos usuários, criando uma
+comunicação mais próxima e automática com
+os membros do servidor.
+───
+
+⚙️ Como funciona:
+O bot identifica determinados eventos ou
+ações.
+Envia uma mensagem privada
+automaticamente para o usuário.
+As mensagens podem ser personalizadas
+
+pelo administrador através do painel.
+
+───
+
+Tipos de Mensagens
+Automáticas:
+Mensagem de Boas-vindas Privada
+Quando um usuário entra no servidor:
+O bot pode enviar:
+Apresentação do servidor.
+Regras importantes.
+Como usar os comandos.
+Informações sobre sistemas.
+
+───
+
+🎁 Mensagem de Recompensas
+Quando o usuário recebe algo:
+Exemplos:
+Daily coletado.
+Prêmio de evento.
+Novo cargo desbloqueado.
+Conquista alcançada.
+
+───
+
+🏆 Mensagem de Progressão
+Envia avisos quando o usuário evolui:
+Novo nível alcançado.
+Nova conquista.
+Entrada no ranking.
+Meta concluída.
+
+───
+
+🛡️ Mensagens de Segurança
+Usadas para avisos importantes:
+Punições aplicadas.
+Alertas de segurança.
+Informações administrativas.
+
+───
+
+🎫 Mensagens de Tickets
+Automatiza atendimento:
+
+Confirmação de abertura.
+Aviso de resposta da equipe.
+Aviso de fechamento.
+
+Pesquisa de satisfação.
+
+───
+
+🔄 Funções Automáticas:
+
+📬 Envio de mensagens por eventos.
+📝 Mensagens personalizadas.
+🎨 Suporte a embeds.
+⏰ Mensagens programadas.
+🔕 Controle de notificações.
+📊 Registro de mensagens enviadas.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar mensagens automáticas.
+Escolher quando serão enviadas.
+Personalizar título e descrição.
+Escolher imagem e botões.
+Ativar ou desativar notificações.
+
+───
+
+🎯 Objetivo:
+
+Criar uma comunicação inteligente dentro do
+ODISSEIA ARCANA, mantendo os usuários
+informados sobre recompensas, eventos,
+novidades e ações importantes sem depender
+de avisos manuais.
+───
+
+🛠️ Implementação:
+Sistema conectado aos eventos internos do
+bot.
+Banco de dados para salvar modelos de
+mensagens.
+Integração com:
+
+🎁 Daily.
+💰 Economia.
+🎮 Jogos.
+🏆 Conquistas.
+🎫 Tickets.
+🖥️ Painel Administrativo.
+
+───
+Próximo sistema da lista:
+
+🌍 Sistema Automático Multi-Servidor
+(Configuração por Servidor).
+
+Automático Multi🌍ServidorSistema
+(Configuração por Servidor)
+41.
+
+Descrição: O Sistema Automático Multi-Servidor
+permite que o ODISSEIA ARCANA funcione em
+vários servidores do Discord ao mesmo tempo,
+mantendo configurações, dados e sistemas
+separados para cada comunidade.
+───
+
+⚙️ Como funciona:
+O bot identifica cada servidor onde está
+instalado.
+Cria uma configuração própria para cada
+servidor.
+Mantém usuários, economia e sistemas
+independentes.
+
+O administrador de cada servidor controla
+apenas suas próprias configurações.
+
+───
+
+Sistemas separados por
+📌
+servidor:
+
+⚙️ Configurações Individuais
+Cada servidor poderá definir:
+Prefixo do bot.
+Canais de comandos.
+Canais de logs.
+Mensagens personalizadas.
+Sistemas ativados.
+Exemplo:
+
+Servidor A usa prefixo O.
+Servidor B usa prefixo personalizado.
+
+───
+
+💰 Economia Independente
+Cada servidor terá:
+
+Banco de dados próprio.
+Saldo de Almas separado.
+Rankings próprios.
+Recompensas configuráveis.
+Um usuário pode ter:
+50.000 Almas em um servidor.
+10.000 Almas em outro.
+
+───
+
+🎮 Jogos Personalizados
+
+Cada servidor poderá configurar:
+Jogos ativos.
+Limites de apostas.
+Recompensas.
+Canais permitidos.
+
+───
+
+⭐ XP e Níveis Individuais
+O sistema permite:
+
+XP separado por servidor.
+Cargos por nível personalizados.
+Rankings diferentes.
+
+───
+
+🛡️ Administração Separada
+Cada servidor terá:
+
+Equipe própria.
+Permissões próprias.
+Tickets próprios.
+Logs próprios.
+
+───
+
+🔄 Funções Automáticas:
+Detecção automática de novos servidores.
+Criação de configuração inicial.
+Separação de dados.
+
+Sincronização com painel.
+Controle de permissões por servidor.
+
+───
+
+🖥️ No Painel Administrativo:
+O administrador poderá:
+
+Selecionar o servidor que deseja gerenciar.
+Alterar configurações.
+Ver estatísticas.
+Gerenciar sistemas ativos.
+Controlar usuários e cargos.
+
+───
+
+🎯 Objetivo:
+
+Transformar o ODISSEIA ARCANA em um bot
+profissional capaz de atender diversas
+comunidades, permitindo que cada servidor
+tenha sua própria experiência personalizada.
+───
+
+🛠️ Implementação:
+Banco de dados separado por guildId (ID do
+servidor).
+Sistema de configurações dinâmicas.
+Painel com gerenciamento por servidor.
+Integração com:
+
+💰 Economia.
+🎮 Jogos.
+🏆 Rankings.
+🎫 Tickets.
+🛡️ Moderação.
+
+📊 Estatísticas.
+───
+Próximo sistema da lista:
+
+📊 Sistema Automático de Estatísticas
+Avançadas.
+
+Sistema Automático de
+📊
+Estatísticas Avançadas
+42.
+
+Descrição: O Sistema Automático de
+Estatísticas Avançadas coleta e organiza
+informações sobre o funcionamento do
+ODISSEIA ARCANA, mostrando dados
+importantes sobre usuários, economia, jogos e
+atividades do servidor.
+
+───
+
+⚙️ Como funciona:
+O bot registra automaticamente as ações
+realizadas.
+Os dados são processados e organizados.
+As informações são exibidas no painel
+administrativo e em comandos de consulta.
+
+───
+
+📌
+
+Estatísticas de Usuários:
+
+Mostra informações individuais:
+
+👤 Usuários mais ativos.
+💬 Quantidade de mensagens enviadas.
+⭐ XP ganho.
+
+📈 Evolução de nível.
+💰 Almas acumuladas.
+🎮 Quantidade de jogos realizados.
+🏆 Conquistas desbloqueadas.
+───
+
+📌 Estatísticas de Economia:
+Analisa o funcionamento das Almas:
+Total de Almas em circulação.
+Maiores saldos.
+Maiores ganhos.
+Maiores perdas.
+Transferências realizadas.
+Recompensas distribuídas.
+
+───
+
+📌 Estatísticas de Jogos:
+Mostra dados dos minigames:
+Jogos mais utilizados.
+Quantidade de partidas.
+Taxa de vitórias e derrotas.
+Maiores prêmios.
+Usuários mais ativos nos jogos.
+
+───
+
+📌 Estatísticas do Servidor:
+Monitora:
+
+Quantidade de membros.
+Crescimento do servidor.
+Usuários online.
+
+Comandos mais usados.
+Horários de maior atividade.
+Participação em eventos.
+
+───
+
+🔄 Funções Automáticas:
+Coleta de dados em tempo real.
+Atualização automática dos gráficos.
+Criação de relatórios.
+Comparação de períodos.
+Identificação de tendências.
+Histórico de crescimento.
+
+───
+
+🖥️ No Painel Administrativo:
+O administrador poderá visualizar:
+
+📈 Gráficos de crescimento.
+👥 Atividade dos usuários.
+💰 Economia do servidor.
+🎮 Desempenho dos jogos.
+🏆 Rankings.
+📋 Relatórios automáticos.
+───
+
+🎯 Objetivo:
+
+Permitir que a administração entenda como o
+ODISSEIA ARCANA está sendo utilizado,
+identificando o que funciona melhor e quais
+áreas precisam de melhorias.
+
+───
+
+🛠️ Implementação:
+Sistema de coleta de eventos.
+Banco de dados de estatísticas.
+Processamento automático de informações.
+Integração com:
+
+🖥️ Painel administrativo.
+📊 Rankings.
+💰 Economia.
+🎮 Jogos.
+🏆 Conquistas.
+📝 Logs.
+
+───
+Próximo sistema da lista:
+
+🧠 Sistema Automático de Inteligência do Bot
+(Assistente e Respostas Inteligentes).
+
+Sistema Automático de
+🧠
+Inteligência do Bot (Assistente e
+43.
+
+Respostas Inteligentes)
+Descrição: O Sistema Automático de
+Inteligência do Bot torna o ODISSEIA ARCANA
+mais interativo, permitindo que o bot responda,
+auxilie usuários e execute ações inteligentes
+conforme o contexto do servidor.
+───
+
+⚙️ Como funciona:
+O bot analisa mensagens e comandos.
+
+Identifica perguntas, dúvidas ou situações
+específicas.
+Responde automaticamente conforme
+regras e configurações.
+Aprende padrões de uso do servidor através
+de dados permitidos.
+
+───
+
+📌 Funções do Sistema:
+💬 Assistente Inteligente
+Ajuda os usuários com:
+
+Informações sobre comandos.
+Explicação dos sistemas.
+Regras do servidor.
+Dúvidas frequentes.
+
+Exemplo: Usuário:
+"Como pego Almas?"
+Bot:
+"Você pode ganhar Almas usando o Daily,
+Work, jogos e participando de eventos."
+───
+
+📚 Sistema de Respostas Automáticas
+O administrador pode criar respostas para
+perguntas comuns.
+Exemplos:
+"Qual o prefixo do bot?"
+"Como abrir ticket?"
+"Como funciona o Daily?"
+"Quais são os comandos?"
+
+───
+
+🔍 Detecção Inteligente
+Pode identificar:
+
+Perguntas frequentes.
+Mensagens de ajuda.
+Solicitações de suporte.
+Comandos escritos incorretamente.
+Exemplo:
+Usuário: O.daly
+Bot: "Você quis dizer O.daily?"
+───
+
+🎫 Integração com Atendimento
+O sistema pode auxiliar nos tickets:
+
+Responder dúvidas simples.
+Sugerir soluções.
+Encaminhar para equipe quando necessário.
+
+───
+
+🛡️ Auxílio na Moderação
+Pode ajudar identificando:
+Spam.
+Comportamentos suspeitos.
+Mensagens fora das regras.
+
+───
+
+🔄 Funções Automáticas:
+
+Respostas personalizadas.
+Sugestão de comandos.
+Sistema de perguntas frequentes.
+Assistência 24 horas.
+Registro de interações.
+Integração com painel.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar respostas automáticas.
+Definir palavras-chave.
+Ativar ou desativar inteligência.
+Escolher canais onde funciona.
+Configurar nível de autonomia.
+
+───
+
+🎯 Objetivo:
+
+Criar um bot mais próximo dos usuários,
+reduzindo dúvidas repetidas e tornando o
+ODISSEIA ARCANA mais fácil de usar.
+───
+
+🛠️ Implementação:
+Sistema de eventos de mensagens.
+Banco de dados de respostas.
+Módulo de inteligência separado.
+Integração com:
+
+📩 Mensagens privadas.
+🎫 Tickets.
+
+📝 Ajuda/Help.
+🖥️ Painel administrativo.
+📊 Estatísticas.
+───
+Próximo sistema da lista:
+
+🎁 Sistema Automático de Recompensas e
+Bônus.
+
+Sistema Automático de
+🎁
+Recompensas e Bônus
+44.
+
+Descrição: O Sistema Automático de
+Recompensas e Bônus distribui prêmios
+automaticamente aos usuários por participação,
+conquistas e atividades realizadas dentro do
+ODISSEIA ARCANA.
+
+───
+
+⚙️ Como funciona:
+O bot acompanha as ações dos usuários.
+Identifica quando um requisito é cumprido.
+Entrega a recompensa automaticamente.
+Registra tudo no histórico do usuário.
+
+───
+
+📌 Tipos de Recompensas:
+
+🎉 Recompensa por Atividade
+Premia usuários ativos:
+
+Envio de mensagens.
+
+Participação no servidor.
+Tempo online.
+Interação com sistemas.
+Exemplo:
+Usuário ativo por determinado período →
+recebe bônus de Almas.
+
+───
+
+💰 Bônus de Economia
+
+Relacionado ao sistema de Almas:
+Pode entregar:
+Almas extras.
+Multiplicadores de ganhos.
+Bônus temporários.
+Recompensas especiais.
+
+───
+
+⭐ Recompensa por Nível
+Quando o usuário sobe de nível:
+Entrega Almas.
+Libera cargos.
+Desbloqueia benefícios.
+Registra conquista.
+
+───
+
+🎮 Recompensas de Jogos
+Baseadas nos minigames:
+
+Primeiro jogo realizado.
+Sequência de vitórias.
+
+Maiores pontuações.
+Participação em campeonatos.
+
+───
+
+🏆 Recompensas de Eventos
+Durante eventos automáticos:
+
+Prêmios para participantes.
+Premiação de ranking.
+Bônus exclusivos.
+Cargos temporários.
+
+───
+
+🔄 Funções Automáticas:
+Entrega instantânea de recompensas.
+
+Controle de requisitos.
+Sistema anti-abuso.
+Histórico de prêmios recebidos.
+Notificação ao usuário.
+Integração com perfil.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar novas recompensas.
+Definir requisitos.
+Escolher o prêmio.
+Configurar duração.
+Criar bônus temporários.
+Ver histórico de entregas.
+
+───
+
+🎯 Objetivo:
+
+Incentivar os usuários a participarem mais do
+ODISSEIA ARCANA, criando uma experiência de
+evolução onde cada atividade pode gerar
+benefícios.
+───
+
+🛠️ Implementação:
+Sistema conectado ao banco de dados.
+Verificação automática de metas.
+Integração com:
+
+💰 Economia de Almas.
+⭐ XP e níveis.
+🎮 Jogos.
+
+🏆 Conquistas.
+🎉 Eventos.
+🖥️ Painel administrativo.
+───
+Próximo sistema da lista:
+
+📢 Sistema Automático de Anúncios e
+Divulgação.
+
+Sistema Automático de
+📢
+Anúncios e Divulgação
+45.
+
+Descrição: O Sistema Automático de Anúncios e
+Divulgação permite que o ODISSEIA ARCANA
+envie mensagens importantes automaticamente
+para manter os usuários informados sobre
+novidades, eventos, atualizações e atividades do
+
+servidor.
+───
+
+⚙️ Como funciona:
+O administrador cria anúncios pelo painel ou
+comandos.
+O bot agenda ou publica automaticamente
+as mensagens.
+Os anúncios podem ser enviados em canais
+específicos.
+O sistema registra todos os anúncios
+enviados.
+
+───
+
+📌 Tipos de Anúncios:
+
+🎉 Anúncios de Eventos
+Divulga:
+
+Início de eventos.
+Competições.
+Torneios.
+Desafios especiais.
+Recompensas disponíveis.
+
+───
+
+🛠️ Anúncios de Atualizações
+Informa sobre:
+
+Novos comandos.
+Novos jogos.
+Melhorias no bot.
+Alterações nos sistemas.
+
+───
+
+🎁 Anúncios de Recompensas
+Pode avisar:
+
+Bônus ativos.
+Prêmios liberados.
+Promoções temporárias.
+Recompensas de participação.
+
+───
+
+📢 Divulgação Automática
+Pode enviar:
+
+Mensagens de convite.
+Informações do servidor.
+
+Apresentação dos sistemas.
+Notícias internas.
+
+───
+
+🔄 Funções Automáticas:
+
+⏰ Publicação programada.
+📌 Mensagens fixadas automaticamente.
+🎨 Suporte a embeds personalizados.
+🖼️ Imagens e banners.
+🔘 Botões interativos.
+📊 Registro de visualizações e interações.
+
+───
+
+🖥️ Configuração pelo Painel:
+
+O administrador poderá:
+Criar modelos de anúncios.
+Escolher canais.
+Programar horários.
+Definir frequência.
+Personalizar aparência.
+Ativar ou desativar anúncios.
+
+───
+
+🎯 Objetivo:
+
+Manter a comunidade sempre informada e
+aumentar a participação dos usuários, fazendo
+com que eventos, novidades e sistemas do
+ODISSEIA ARCANA tenham maior alcance.
+───
+
+🛠️ Implementação:
+Sistema integrado ao agendador automático.
+Banco de dados para armazenar anúncios.
+Integração com:
+
+🎉 Eventos.
+🎁 Recompensas.
+🔄 Atualizações.
+📝 Logs.
+🖥️ Painel administrativo.
+
+───
+Próximo sistema da lista:
+
+📌 Sistema Automático de Sugestões e
+Feedback dos Usuários.
+
+Sistema Automático de
+💡
+Sugestões e Feedback dos Usuários
+46.
+
+Descrição: O Sistema Automático de Sugestões
+e Feedback permite que os membros do
+ODISSEIA ARCANA enviem ideias, opiniões e
+avaliações, ajudando a administração a
+melhorar o servidor e o bot.
+───
+
+⚙️ Como funciona:
+O usuário envia uma sugestão através de
+comando, botão ou painel.
+O bot registra automaticamente a ideia.
+A equipe pode analisar, aprovar, recusar ou
+colocar em votação.
+O usuário recebe atualizações sobre sua
+
+sugestão.
+
+───
+
+Tipos de Feedback:
+Sugestões de Sistemas
+Usuários podem sugerir:
+Novos comandos.
+Novos jogos.
+Melhorias no bot.
+Novas funções do painel.
+
+───
+
+Sugestões do Servidor
+
+Podem enviar ideias sobre:
+Canais.
+Eventos.
+Regras.
+Organização da comunidade.
+
+───
+
+🐛 Relatórios de Problemas
+Permite informar:
+
+Erros em comandos.
+Falhas em sistemas.
+Problemas de funcionamento.
+
+───
+
+⭐ Avaliação de Sistemas
+Usuários podem avaliar:
+Jogos.
+Atendimento de tickets.
+Eventos.
+Novas atualizações.
+
+───
+
+🔄 Funções Automáticas:
+
+📥 Recebimento de sugestões.
+🗳️ Sistema de votação.
+🔔 Notificação de mudanças de status.
+📝 Histórico de sugestões.
+📊 Estatísticas de aprovação.
+🏆 Recompensas para boas ideias
+
+(opcional).
+
+───
+
+Configuração pelo Painel:
+O administrador poderá:
+Criar categorias de sugestões.
+Escolher canal de envio.
+Ativar votação da comunidade.
+Definir cargos responsáveis.
+Ver sugestões pendentes.
+Marcar como:
+Aceita
+Em análise
+Recusada
+Em desenvolvimento
+
+───
+
+🎯 Objetivo:
+
+Criar uma comunidade participativa, onde os
+usuários ajudam na evolução do ODISSEIA
+ARCANA e acompanham o desenvolvimento de
+novas funções.
+───
+
+🛠️ Implementação:
+Sistema com botões e menus interativos.
+Banco de dados para armazenar sugestões.
+Integração com:
+
+🧠 Sistema de Inteligência do Bot.
+🎫 Tickets.
+📢 Anúncios.
+
+📝 Logs.
+🖥️ Painel administrativo.
+───
+Próximo sistema da lista:
+
+📜 Sistema Automático de Regras e Termos de
+Uso.
+
+Sistema Automático de Regras
+📜
+e Termos de Uso
+48.
+
+Descrição: O Sistema Automático de Regras e
+Termos de Uso organiza as regras do servidor e
+garante que os usuários tenham acesso às
+informações importantes do ODISSEIA ARCANA
+antes de participar dos sistemas.
+
+───
+
+⚙️ Como funciona:
+O bot apresenta as regras automaticamente
+para novos membros.
+Usuários podem consultar as regras através
+de comandos.
+O sistema registra confirmações de leitura
+quando ativado.
+Atualizações nas regras são divulgadas
+automaticamente.
+
+───
+
+📌
+
+Funções do Sistema:
+
+👋 Regras para Novos Usuários
+
+Quando alguém entra no servidor:
+O bot pode enviar:
+
+📜 Regras gerais.
+⚔️ Normas da comunidade.
+💰 Regras da economia de Almas.
+🎮 Regras dos jogos.
+🛡️ Informações de punições.
+───
+
+✅ Sistema de Aceitação de Regras
+Permite criar um sistema onde o usuário:
+Lê as regras.
+Clica em um botão de confirmação.
+Recebe acesso aos canais principais.
+Exemplo:
+
+📜 Leia as regras
+⬇️
+✅ Aceitar regras
+⬇️
+🎉 Acesso liberado
+───
+
+🔄 Atualização Automática de Regras
+Quando a administração altera uma regra:
+O bot atualiza a mensagem oficial.
+Envia aviso aos membros.
+Registra a alteração nos logs.
+
+───
+
+🛡️ Integração com Moderação
+
+O sistema ajuda a equipe:
+Registrar regras quebradas.
+Mostrar qual regra foi violada.
+Facilitar aplicação de punições.
+
+───
+
+🔄 Funções Automáticas:
+
+📢 Divulgação de novas regras.
+📝 Histórico de alterações.
+🔔 Avisos importantes.
+🔒 Controle de acesso por aceitação.
+📊 Registro de membros que aceitaram.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Criar categorias de regras.
+Editar textos.
+Escolher canal de regras.
+Ativar confirmação obrigatória.
+Configurar mensagens automáticas.
+Ver registros de aceitação.
+
+───
+
+🎯 Objetivo:
+
+Criar uma comunidade mais organizada,
+garantindo que todos os usuários conheçam as
+regras do ODISSEIA ARCANA e reduzindo
+problemas de moderação.
+
+───
+
+🛠️ Implementação:
+Sistema baseado em botões e menus.
+Banco de dados para salvar confirmações.
+Integração com:
+
+🛡️ Moderação.
+📝 Logs.
+🎫 Tickets.
+📩 Mensagens privadas.
+🖥️ Painel administrativo.
+
+───
+Próximo sistema da lista:
+
+🎖️ Sistema Automático de Reputação e Pontos
+Sociais.
+
+Sistema Automático de
+🎖️
+Reputação e Pontos Sociais
+48.
+
+Descrição: O Sistema Automático de Reputação
+e Pontos Sociais cria uma forma de
+reconhecimento dentro do ODISSEIA ARCANA,
+permitindo que usuários ganhem pontos por
+participação, ajuda à comunidade e boas ações
+no servidor.
+───
+
+⚙️ Como funciona:
+O bot acompanha ações positivas dos
+usuários.
+Pontos de reputação são adicionados
+
+automaticamente.
+O nível de reputação aparece no perfil do
+usuário.
+A reputação pode liberar benefícios e
+reconhecimentos.
+
+───
+
+Formas de ganhar reputação:
+Participação na Comunidade
+O usuário ganha pontos por:
+Conversar no servidor.
+Ajudar outros membros.
+Participar de discussões.
+Contribuir com sugestões.
+
+───
+
+🎫 Atendimento e Suporte
+
+Usuários podem ganhar reputação por:
+Ajudar em tickets.
+Resolver dúvidas.
+Receber boas avaliações de atendimento.
+
+───
+
+🎉 Participação em Eventos
+Recompensas por:
+
+Participar de eventos.
+Completar desafios.
+Ajudar equipes em competições.
+
+───
+
+🏆 Reconhecimento Especial
+
+A administração pode dar reputação por:
+Atitudes positivas.
+Contribuições importantes.
+Ajuda no crescimento do servidor.
+
+───
+
+🔄
+
+Funções Automáticas:
+
+⭐ Pontuação de reputação.
+📈 Níveis sociais.
+🏅 Medalhas e títulos.
+📊 Ranking de reputação.
+📝 Histórico de alterações.
+
+🔔 Avisos quando subir de nível.
+───
+
+🏷️ Exemplos de níveis:
+
+🥉 Novato
+→ Primeiro nível de participação.
+🥈 Membro Ativo
+→ Usuário frequente e participativo.
+🥇 Membro Destaque
+→ Reconhecido pela comunidade.
+👑 Lenda da Comunidade
+
+→ Usuário com grande contribuição.
+
+───
+
+🖥️ Configuração pelo Painel:
+
+O administrador poderá:
+Definir formas de ganhar reputação.
+Criar níveis personalizados.
+Criar recompensas.
+Configurar cargos automáticos.
+Ver ranking de reputação.
+
+───
+
+🎯 Objetivo:
+
+Valorizar usuários que ajudam a comunidade e
+criar uma experiência onde participação e
+colaboração sejam reconhecidas dentro do
+ODISSEIA ARCANA.
+───
+
+🛠️ Implementação:
+Banco de dados de reputação.
+Sistema conectado ao perfil.
+Integração com:
+
+⭐ XP.
+🏆 Conquistas.
+🎫 Tickets.
+🎉 Eventos.
+🏷️ Cargos automáticos.
+🖥️ Painel administrativo.
+
+───
+Próximo sistema da lista:
+
+📦 Sistema Automático de Inventário e Itens
+Virtuais.
+
+Sistema Automático de
+🎒
+Inventário e Itens Virtuais
+49.
+
+Descrição: O Sistema Automático de Inventário
+e Itens Virtuais permite que os usuários
+coletem, armazenem e utilizem itens dentro do
+ODISSEIA ARCANA, criando uma camada extra
+de interação e personalização.
+───
+
+⚙️ Como funciona:
+Cada usuário possui um inventário próprio.
+O bot registra automaticamente os itens
+adquiridos.
+Os itens podem ser recebidos através de:
+
+🎁 Recompensas.
+🎉 Eventos.
+
+🎮 Jogos.
+🛒 Loja.
+🏆 Conquistas.
+───
+
+📌 Tipos de Itens:
+💎 Itens Especiais
+
+Itens raros que representam conquistas:
+Exemplos:
+Cristais.
+Medalhas.
+Relíquias.
+Troféus.
+
+───
+
+🎮 Itens de Jogos
+
+Podem ser usados nos sistemas de jogos:
+Bônus de sorte.
+Multiplicadores.
+Proteções.
+Recompensas especiais.
+
+───
+
+🎨 Itens Cosméticos
+
+Usados para personalização:
+Molduras de perfil.
+Banners.
+Efeitos visuais.
+Títulos especiais.
+
+───
+
+🎁 Itens Temporários
+
+Possuem duração limitada:
+Exemplos:
+Bônus de ganho de Almas por 24 horas.
+Aumento de XP.
+Benefícios de evento.
+
+───
+
+🔄 Funções Automáticas:
+
+📦 Armazenamento de itens.
+🎁 Entrega automática de recompensas.
+🛒 Integração com loja.
+
+🔄 Uso automático de itens quando
+configurado.
+📊 Histórico de aquisição e utilização.
+🔒 Controle contra duplicações e erros.
+───
+
+🛒 Integração com Loja:
+O usuário poderá:
+
+Comprar itens usando Almas.
+Visualizar itens disponíveis.
+Usar itens adquiridos.
+Trocar itens por recompensas.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+Criar novos itens.
+Definir raridade.
+Configurar preços.
+Escolher efeitos.
+Ativar ou remover itens.
+Ver inventários dos usuários.
+
+───
+
+🎯 Objetivo:
+
+Criar um sistema de coleção e progressão
+dentro do ODISSEIA ARCANA, dando mais valor
+às recompensas e permitindo que os usuários
+tenham itens únicos.
+
+───
+
+🛠️ Implementação:
+Banco de dados de inventário.
+Sistema de itens separado.
+Integração com:
+
+💰 Economia de Almas.
+🛒 Loja.
+🎁 Recompensas.
+🏆 Conquistas.
+🎮 Jogos.
+👤 Perfil.
+🖥️ Painel administrativo.
+
+───
+Próximo sistema da lista:
+
+🛒 Sistema Automático de Loja e Mercado.
+Sistema Automático de Loja e
+🛒
+Mercado
+50.
+
+Descrição: O Sistema Automático de Loja e
+Mercado permite que os usuários comprem,
+vendam e gerenciem itens utilizando a moeda
+do ODISSEIA ARCANA, as Almas.
+───
+
+⚙️ Como funciona:
+O usuário acessa a loja através de comando
+ou painel.
+O bot mostra os itens disponíveis.
+O usuário compra utilizando suas Almas.
+
+O sistema atualiza automaticamente o saldo
+e o inventário.
+
+───
+
+📌 Tipos de Loja:
+🛒 Loja Principal
+
+Disponibiliza itens comuns:
+
+🎁 Recompensas.
+🎨 Itens cosméticos.
+🏷️ Títulos.
+💎 Itens especiais.
+───
+
+⭐ Loja VIP
+
+Exclusiva para usuários com benefícios:
+Itens raros.
+Bônus especiais.
+Personalizações.
+Recompensas únicas.
+
+───
+
+🎉 Loja de Eventos
+Itens temporários:
+
+Itens de eventos.
+Edições limitadas.
+Recompensas comemorativas.
+Colecionáveis.
+
+───
+
+📌 Funções do Mercado:
+💰 Compra de Itens
+O sistema verifica:
+
+Saldo de Almas.
+Disponibilidade do item.
+Limite de compra.
+Após a compra:
+Remove Almas do usuário.
+Adiciona item ao inventário.
+Registra a transação.
+
+───
+
+🔄 Venda e Troca
+Permite:
+
+Vender itens adquiridos.
+Trocar itens entre usuários (se permitido).
+Converter itens em Almas.
+
+───
+
+🔄 Funções Automáticas:
+Atualização de estoque.
+Registro de compras.
+Controle de preços.
+Histórico de transações.
+Proteção contra erros.
+Aviso de novas ofertas.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+Criar produtos.
+Definir preços em Almas.
+Alterar estoque.
+Criar promoções.
+Ativar/desativar itens.
+Ver histórico de vendas.
+
+───
+
+🎯 Objetivo:
+
+Criar uma economia mais completa no
+
+ODISSEIA ARCANA, dando aos usuários motivos
+para juntar Almas e participar dos sistemas para
+conseguir itens exclusivos.
+───
+
+🛠️ Implementação:
+Banco de dados de produtos.
+Sistema integrado ao inventário.
+Controle de saldo de Almas.
+Registro de compras.
+Integração com:
+
+💰 Economia.
+🎒 Inventário.
+🎁 Recompensas.
+🏆 Conquistas.
+👤 Perfil.
+
+🖥️ Painel administrativo.
+───
+Próximo sistema da lista:
+
+🎫 Sistema Automático de Leilões e Trocas
+entre Usuários.
+
+Sistema Automático de Leilões
+🎫
+e Trocas entre Usuários
+51.
+
+Descrição: O Sistema Automático de Leilões e
+Trocas permite que os usuários do ODISSEIA
+ARCANA negociem itens, colecionáveis e
+recursos entre si de forma segura, utilizando as
+Almas como moeda de negociação.
+───
+
+⚙️ Como funciona:
+O usuário coloca um item ou recurso à
+venda.
+Define um valor inicial ou preço fixo.
+Outros usuários podem participar da
+negociação.
+O bot controla automaticamente as
+transações.
+
+───
+
+📌 Sistema de Leilão:
+🏷️ Criar Leilão
+O usuário pode:
+
+Escolher o item.
+
+Definir preço inicial.
+Definir duração.
+Adicionar descrição.
+Exemplo:
+
+🎒 Item:
+
+Moldura Lendária
+
+💰 Lance inicial:
+
+50.000 Almas
+
+⏰ Duração:
+24 horas
+
+───
+
+🏆 Participação no Leilão
+Os usuários podem:
+Fazer lances.
+Acompanhar maior oferta.
+
+Receber atualizações.
+Disputar itens raros.
+Quando termina:
+O maior lance vence.
+O item é transferido.
+As Almas são entregues ao vendedor.
+
+───
+
+🔄 Sistema de Trocas:
+Permite usuários negociarem:
+
+🎒 Itens.
+💎 Colecionáveis.
+💰 Almas.
+🎁 Recompensas.
+O sistema cria uma confirmação:
+
+Usuário A:
+Item X
+Usuário B:
+Item Y + Almas
+Ambos confirmam → troca realizada.
+───
+
+🛡️ Segurança das Trocas:
+Funções automáticas:
+
+Confirmação dupla.
+Bloqueio contra alterações após
+confirmação.
+Registro da negociação.
+Proteção contra golpes.
+Histórico de transações.
+
+───
+
+📊 Funções Automáticas:
+Atualização de ofertas.
+Encerramento automático de leilões.
+Entrega de itens.
+Transferência de Almas.
+Notificações aos participantes.
+Registro nos logs.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Ativar ou desativar leilões.
+
+Definir limites de negociação.
+Criar taxas de mercado.
+Monitorar transações.
+Bloquear usuários suspeitos.
+Ver histórico de trocas.
+
+───
+
+🎯 Objetivo:
+
+Criar uma economia mais dinâmica no
+ODISSEIA ARCANA, permitindo que os usuários
+negociem, colecionem itens raros e interajam
+entre si.
+───
+
+🛠️ Implementação:
+
+Banco de dados de itens e transações.
+Sistema integrado ao inventário.
+Controle de saldo de Almas.
+Logs de negociações.
+Integração com:
+
+🛒 Loja.
+🎒 Inventário.
+💰 Economia.
+🏆 Conquistas.
+🛡️ Segurança.
+🖥️ Painel administrativo.
+───
+Próximo sistema da lista:
+
+📈 Sistema Automático de Mercado e Economia
+Dinâmica.
+
+Sistema Automático de
+📈
+Mercado e Economia Dinâmica
+52.
+
+Descrição: O Sistema Automático de Mercado e
+Economia Dinâmica controla a movimentação
+econômica do ODISSEIA ARCANA, fazendo com
+que os valores, ofertas e recursos possam se
+adaptar conforme a atividade dos usuários.
+───
+
+⚙️ Como funciona:
+O bot monitora a circulação de Almas.
+Analisa compras, vendas, jogos e
+recompensas.
+Ajusta determinados valores
+automaticamente conforme regras definidas.
+
+Mantém a economia equilibrada e evita
+inflação.
+
+───
+
+📌 Funções do Mercado Dinâmico:
+💰 Controle de Inflação
+O sistema acompanha:
+
+Quantidade total de Almas existentes.
+Quantas Almas entram no servidor.
+Quantas Almas são gastas.
+Crescimento da economia.
+Pode ajustar:
+Recompensas.
+Preços da loja.
+
+Bônus temporários.
+
+───
+
+🛒 Preços Variáveis
+
+Os itens podem ter valores que mudam:
+Exemplo:
+
+🎒 Item raro:
+Alta procura → preço aumenta.
+Baixa procura → preço reduz.
+
+───
+
+📊 Análise de Movimentações
+O sistema registra:
+
+Itens mais comprados.
+Itens mais vendidos.
+Usuários com maior movimentação.
+Períodos de maior atividade.
+
+───
+
+🎉 Eventos Econômicos
+Pode criar automaticamente:
+Bônus de ganhos.
+Promoções na loja.
+Descontos especiais.
+Recompensas temporárias.
+
+───
+
+🔄 Funções Automáticas:
+Atualização de preços.
+Controle de estoque.
+Relatórios econômicos.
+Alertas de desequilíbrio.
+Monitoramento de transações.
+Histórico do mercado.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Definir regras econômicas.
+Controlar limites de preços.
+Ativar mercado dinâmico.
+Criar eventos econômicos.
+
+Visualizar gráficos da economia.
+Ajustar taxas e recompensas.
+
+───
+
+🎯 Objetivo:
+
+Criar uma economia mais realista dentro do
+ODISSEIA ARCANA, mantendo o valor das
+Almas equilibrado e tornando o mercado mais
+interessante para os usuários.
+───
+
+🛠️ Implementação:
+Sistema conectado ao banco de dados
+econômico.
+Análise automática de transações.
+
+Integração com:
+
+💰 Economia de Almas.
+🛒 Loja.
+🎒 Inventário.
+🎫 Leilões e Trocas.
+📊 Estatísticas.
+🖥️ Painel Administrativo.
+
+───
+Próximo sistema da lista:
+
+Sistema Automático de Clãs,
+🤝
+Equipes e Comunidades
+53.
+
+Descrição: O Sistema Automático de Clãs,
+Equipes e Comunidades permite que os
+
+usuários do ODISSEIA ARCANA criem grupos
+próprios dentro do servidor, formando equipes
+para competir, participar de eventos e
+conquistar recompensas coletivas.
+───
+
+⚙️ Como funciona:
+Usuários podem criar ou entrar em um clã.
+Cada clã possui membros, líder e
+estatísticas próprias.
+O bot acompanha automaticamente o
+progresso do grupo.
+As atividades dos membros contribuem
+para o crescimento do clã.
+
+───
+
+📌 Funções dos Clãs:
+🏰 Criação de Clãs
+O usuário poderá:
+
+Criar nome do clã.
+Escolher símbolo ou banner.
+Definir descrição.
+Convidar membros.
+Gerenciar participantes.
+
+───
+
+👑 Hierarquia do Clã
+
+Cada grupo poderá ter cargos internos:
+
+👑 Líder
+
+Controle total do clã.
+Gerenciamento de membros.
+Configuração do grupo.
+
+🛡️ Oficiais
+Ajudam na administração.
+Organizam atividades.
+
+👤 Membros
+Participam dos desafios.
+Ganham pontos para o clã.
+
+───
+
+🏆 Sistema de Pontos de Clã
+Os clãs ganham pontos através de:
+
+🎮 Jogos realizados.
+🎉 Participação em eventos.
+⭐ XP dos membros.
+💰 Contribuições de Almas.
+🏅 Conquistas coletivas.
+───
+
+⚔️ Competições entre Clãs
+O sistema pode criar:
+
+Rankings de clãs.
+Torneios.
+Desafios semanais.
+Eventos especiais.
+Exemplo:
+
+🥇 Clã com mais pontos da semana
+
+→ Recompensa coletiva.
+───
+
+🎁 Recompensas de Clã
+Os membros podem receber:
+Almas.
+XP extra.
+Cargos especiais.
+Itens exclusivos.
+Conquistas.
+
+───
+
+🔄 Funções Automáticas:
+Registro de membros.
+
+Atualização de pontos.
+Ranking de clãs.
+Convites automáticos.
+Histórico de atividades.
+Notificações de conquistas.
+
+───
+
+🖥️ Configuração pelo Painel:
+O administrador poderá:
+
+Ativar ou desativar clãs.
+Definir limites.
+Criar recompensas.
+Configurar rankings.
+Gerenciar clãs existentes.
+Visualizar estatísticas.
+
+───
+
+🎯 Objetivo:
+
+Criar uma experiência mais social no ODISSEIA
+ARCANA, incentivando usuários a trabalharem
+juntos, competirem e criarem comunidades
+dentro do servidor.
+───
+
+🛠️ Implementação:
+Banco de dados de clãs.
+Sistema de membros e permissões.
+Integração com:
+
+🎮 Jogos.
+🏆 Eventos.
+⭐ XP.
+
+💰 Economia de Almas.
+🏷️ Cargos automáticos.
+📊 Rankings.
+🖥️ Painel administrativo.
+───
+Faça cada sistema e comandos dele.
+
+Painel Administrativo Web —
+🖥️
+ODISSEIA ARCANA
+54.
+
+🌌 Descrição:
+
+O Painel Administrativo Web do ODISSEIA
+ARCANA é uma plataforma online criada para
+permitir que os administradores controlem,
+configurem e acompanhem todos os sistemas
+
+do bot de forma visual, sem precisar alterar
+códigos manualmente.
+O painel funciona como a central de controle do
+bot, reunindo economia, jogos, usuários,
+moderação, eventos, automações e estatísticas
+em um único lugar.
+───
+
+⚙️ Como funciona:
+O administrador acessa o painel pelo
+navegador.
+Faz login utilizando sua conta do Discord.
+O painel identifica suas permissões.
+Mostra apenas as funções liberadas para
+aquele cargo.
+Todas as alterações são sincronizadas
+automaticamente com o bot.
+
+Exemplo:
+Administrador altera o valor do Daily no painel:
+
+➡️ Painel salva a configuração
+➡️ Banco de dados atualiza
+➡️ Bot aplica a mudança automaticamente no
+Discord
+───
+
+🏠 Dashboard Principal
+
+A página inicial mostra uma visão geral do
+servidor:
+
+📊 Informações em tempo real:
+Usuários online.
+Total de membros.
+Mensagens enviadas.
+Comandos utilizados.
+
+Jogos realizados.
+Almas em circulação.
+Tickets abertos.
+Eventos ativos.
+
+───
+
+💰 Gerenciamento da Economia
+Controle completo das Almas.
+
+Funções:
+Definir recompensa do Daily.
+Configurar Work.
+Ajustar ganhos e perdas.
+Ver saldo dos usuários.
+Criar bônus.
+Controlar inflação da economia.
+
+───
+
+👤 Gerenciamento de Usuários
+Área para visualizar membros:
+Informações:
+Nome.
+Avatar.
+ID Discord.
+Saldo de Almas.
+XP.
+Nível.
+Reputação.
+Conquistas.
+Inventário.
+Histórico de atividades.
+Ações:
+
+Adicionar/remover Almas.
+Ajustar XP.
+Dar itens.
+Aplicar recompensas.
+
+───
+
+🎮 Gerenciamento de Jogos
+Controle dos minigames:
+
+Configurações:
+Ativar/desativar jogos.
+Definir apostas mínimas.
+Definir apostas máximas.
+Ajustar recompensas.
+Ver estatísticas.
+
+Jogos:
+Mines.
+Blackjack.
+Cara ou Coroa.
+Pedra, Papel e Tesoura.
+Rinha.
+Futuros jogos.
+
+───
+
+🛒 Loja e Inventário
+Controle do mercado:
+
+Loja:
+Criar produtos.
+Definir preços.
+Criar promoções.
+
+Controlar estoque.
+
+Inventário:
+Criar itens.
+Definir raridade.
+Criar efeitos.
+Visualizar itens dos usuários.
+
+───
+
+🏆 Sistema de Progressão
+Gerenciamento de:
+
+XP:
+XP por mensagem.
+XP por atividade.
+Requisitos de nível.
+
+Conquistas:
+Criar conquistas.
+Definir objetivos.
+Criar recompensas.
+
+Reputação:
+Configurar pontos sociais.
+Criar títulos.
+Criar rankings.
+
+───
+
+🎫 Sistema de Tickets
+Controle dos atendimentos:
+Funções:
+
+Acompanhar atendimentos.
+Definir equipe de suporte.
+Configurar categorias.
+Visualizar históricos.
+
+───
+
+🛡️ Sistema de Moderação
+Controle administrativo:
+Configurar:
+Cargos autorizados.
+Comandos de moderação.
+Punições automáticas.
+Sistema de avisos.
+Anti-spam.
+
+───
+
+🤖 Sistemas Automáticos
+Gerenciamento de automações:
+
+Ativar/configurar:
+Mensagens automáticas.
+Boas-vindas.
+Anúncios.
+Eventos.
+Limpeza automática.
+Atualizações.
+Recompensas.
+Notificações privadas.
+
+───
+
+📢 Sistema de Eventos
+Criar e controlar eventos:
+
+Eventos temporários.
+Desafios.
+Rankings.
+Premiações.
+Participação dos usuários.
+
+───
+
+📈 Estatísticas Avançadas
+Painel de análise:
+Mostra:
+Crescimento do servidor.
+Usuários ativos.
+
+Economia.
+Jogos populares.
+Comandos mais usados.
+Histórico de atividades.
+
+───
+
+📝 Sistema de Logs
+Registro completo:
+
+Alterações no painel.
+Comandos administrativos.
+Transferências.
+Compras.
+Punições.
+Tickets fechados.
+Eventos realizados.
+
+───
+
+🌍 Sistema Multi-Servidor
+
+Caso o bot esteja em vários servidores:
+O painel permite:
+Escolher servidor.
+Gerenciar configurações individuais.
+Separar economias.
+Administrar equipes diferentes.
+
+───
+
+🔐 Segurança do Painel
+Proteções:
+
+Login pelo Discord OAuth2.
+
+Registro de acessos.
+Proteção contra alterações não autorizadas.
+Histórico administrativo.
+
+───
+
+📱 Interface do Painel
+O design será:
+
+Responsivo para celular e computador.
+Tema escuro medieval/moderno.
+Cards de informações.
+Gráficos interativos.
+Menus organizados.
+Atualizações em tempo real.
+
+───
+
+🛠️ Tecnologias planejadas:
+Front-end:
+HTML/CSS/JavaScript ou React.
+Interface responsiva.
+
+Back-end:
+Node.js + Express.
+
+Banco de dados:
+Sistema de usuários, configurações e
+estatísticas.
+
+Integração:
+Discord OAuth2.
+
+API do bot.
+WebSockets para dados em tempo real.
+
+───
+
+🎯 Objetivo Final:
+
+Transformar o painel do ODISSEIA ARCANA em
+uma central profissional de gerenciamento,
+onde o administrador consegue controlar todo o
+ecossistema do bot: economia, jogos,
+comunidade, segurança e automações em um
+único lugar.
+
+55.Sim. O painel do ODISSEIA ARCANA já está
+bem completo, mas ainda dá para adicionar
+alguns sistemas profissionais que deixariam ele
+parecido com painéis de bots grandes.
+
+Algumas ideias:
+───
+
+1. Central de Extensões e
+🧩Módulos
+Descrição: Permite instalar, ativar e desativar
+sistemas do bot pelo próprio painel.
+Funções:
+Ativar novos jogos.
+Ativar novos comandos.
+Desativar sistemas temporariamente.
+Ver versão de cada módulo.
+Atualizar componentes.
+Exemplo:
+
+Mines
+🎮
+Status: ✅ Ativo
+Versão: 1.0.5
+[Desativar] [Configurar]
+
+───
+
+🎨 2. Personalização Visual do Bot
+Permite alterar a aparência das mensagens.
+Configurar:
+Nome do bot.
+Avatar.
+Cores dos embeds.
+Banners.
+Emojis personalizados.
+
+Mensagens padrão.
+Exemplo:
+Criar uma identidade própria para cada servidor.
+───
+
+🧪 3. Sistema de Testes (Sandbox)
+Descrição: Um ambiente para testar comandos
+antes de liberar.
+Funções:
+Testar recompensas.
+Testar jogos.
+Simular eventos.
+Ver respostas do bot.
+Exemplo:
+"Simular Daily"
+Resultado:
+
+Usuário teste recebeu:
+15.000 Almas
+
+───
+
+📌 4. Gerenciador de Comandos
+Controle total dos comandos:
+Funções:
+Ativar/desativar comandos.
+Alterar descrição.
+Alterar permissões.
+Criar aliases.
+Exemplo:
+
+Comando:
+O.daily
+Status:
+Ativo
+
+✅
+
+Permissão:
+Todos
+
+───
+
+🌐 5. Página Pública do Servidor
+
+Uma página externa mostrando informações do
+servidor.
+Pode mostrar:
+Ranking.
+Eventos ativos.
+
+Estatísticas.
+Usuários destaque.
+Notícias.
+Exemplo:
+
+ODISSEIA ARCANA
+membros
+👥 5.000
+Almas em circulação
+💰 500M
+🏆 Evento ativo
+
+───
+
+6. Sistema de Notificações do
+🔔
+Painel
+O administrador recebe avisos:
+
+Exemplos:
+
+⚠️ Economia desequilibrada.
+🚨 Muitas tentativas de spam.
+🎫 Muitos tickets abertos.
+📈 Servidor crescendo rapidamente.
+───
+
+🤖 7. Gerenciamento da IA do Bot
+Controle da inteligência:
+Configurar:
+Respostas automáticas.
+Perguntas frequentes.
+Canais onde a IA funciona.
+Limites de respostas.
+
+───
+
+🔄 8. Sistema de Backup
+Proteção dos dados:
+Faz backup de:
+Usuários.
+Almas.
+Inventários.
+Configurações.
+Logs.
+Funções:
+Backup automático.
+Restaurar versão anterior.
+Exportar dados.
+
+───
+
+🧾 9. Sistema de Relatórios
+Cria relatórios automáticos:
+Exemplo semanal:
+
+Relatório ODISSEIA ARCANA
+Novos membros: +250
+Almas distribuídas:
+15.000.000
+Jogos realizados:
+8.500
+Tickets resolvidos:
+120
+
+───
+
+🔑 10. Gerenciamento de Equipe
+Controle dos administradores:
+Mostrar:
+Quem tem acesso ao painel.
+Cargo.
+Último acesso.
+Ações realizadas.
+
+───
+
+⚔️ 11. Sistema de Temporadas
+Para criar ciclos no servidor:
+Exemplo:
+Temporada 1 — Ascensão Arcana
+Duração: 30 dias
+
+Recompensas:
+Cargos.
+Almas.
+Itens exclusivos.
+
+───
+
+🛍️ 12. Marketplace Administrativo
+Um mercado interno para criar:
+Pacotes.
+Itens especiais.
+Promoções.
+Eventos pagos com Almas.
+
+───
+
+📱 13. Aplicativo Mobile Futuro
+Uma versão do painel para celular:
+Ver estatísticas.
+Receber alertas.
+Administrar rapidamente.
+
+───
+Com esses sistemas, o painel do ODISSEIA
+ARCANA ficaria dividido em áreas:
+
+🏠 Dashboard
+👥 Usuários
+💰 Economia
+🎮 Jogos
+🛒 Loja
+🎒 Inventário
+🏆 Progressão
+
+🎫 Tickets
+🛡️ Moderação
+IA
+
+🤖 Sistemas
+⚙️ Estatísticas
+📊 Logs
+📝 Backup
+💾 Equipe
+👑 Página Pública
+🌐
+
+Com tudo isso, ele deixa de ser apenas um
+"painel de configuração" e vira uma central
+completa de gerenciamento do ecossistema
+ODISSEIA ARCANA.
+
+56.Sim. Ainda existem alguns sistemas
+avançados que poderiam deixar o Painel
+Administrativo do ODISSEIA ARCANA em um
+nível ainda mais profissional.
+
+───
+
+14. Sistema de Automação
+🧠
+Personalizada (Workflow)
+Descrição: Permite que o administrador crie
+regras automáticas sem precisar programar.
+Exemplo:
+Quando: Usuário alcançar nível 10
+Então:
+Dar cargo "Membro Experiente".
+Entregar 50.000 Almas.
+Enviar mensagem privada.
+Outros exemplos:
+Quando alguém entrar → enviar boas-vindas.
+Quando um ticket abrir → avisar suporte.
+Quando um evento começar → anunciar.
+
+───
+
+📅 15. Calendário de Eventos
+
+Descrição: Um calendário dentro do painel para
+organizar atividades.
+Funções:
+Criar eventos.
+Definir datas.
+Programar anúncios.
+Ver eventos futuros.
+Registrar participantes.
+Exemplo:
+Evento: Torneio Mines
+🎉
+Data: 15/08
+Participantes: 250
+
+Prêmio: 1.000.000 Almas
+
+───
+
+16. Monitoramento em Tempo
+Real
+Descrição: Uma central para acompanhar o bot
+ao vivo.
+Mostrar:
+Status do bot.
+Ping.
+Uso de memória.
+Processos ativos.
+Erros recentes.
+Servidores conectados.
+Exemplo:
+
+Bot:
+🤖Online
+✅
+Ping:
+42ms
+Sistema:
+Normal
+
+───
+
+17. Sistema de Alertas
+🚨
+Inteligentes
+Descrição: O painel avisa automaticamente
+problemas importantes.
+Exemplos:
+
+⚠️ Economia crescendo rápido demais.
+
+⚠️ Muitos erros no comando Mines.
+
+⚠️ Servidor perdeu muitos membros.
+⚠️ Banco de dados cheio.
+───
+
+🔍 18. Pesquisa Global
+
+Descrição: Uma busca rápida dentro do painel.
+Pesquisar:
+Usuários.
+Comandos.
+Logs.
+Tickets.
+Transações.
+Itens.
+Exemplo:
+Pesquisar:
+
+José
+Resultado:
+Perfil.
+Histórico.
+Saldo.
+Atividades.
+
+───
+
+19. Sistema de Perfil
+🧬Administrativo
+Cada administrador teria seu próprio painel:
+Mostrar:
+Nome.
+
+Cargo.
+Permissões.
+Últimas ações.
+Histórico.
+
+───
+
+20. Sistema de Impostos e
+🪙
+Taxas
+Descrição: Ajuda a controlar a economia de
+Almas.
+Exemplos:
+Taxa de transferência:
+
+Enviar 100.000 Almas
+Taxa:
+2%
+
+Recebido:
+98.000
+Pode controlar:
+Mercado.
+Trocas.
+Leilões.
+Economia geral.
+
+───
+
+21. Sistema de Missões e
+Desafios
+Descrição: Criar objetivos automáticos para
+usuários.
+Exemplos:
+Missão diária:
+
+Enviar 50 mensagens
+Recompensa:
+10.000 Almas
+Missão semanal:
+
+Vencer 20 jogos
+Recompensa:
+Item raro
+
+───
+
+22. Sistema de Temporadas e
+🏅
+Ranking Global
+
+Criar temporadas:
+Exemplo:
+
+Temporada 01:
+Ascensão Arcana
+Duração:
+90 dias
+Ao finalizar:
+Premiar melhores jogadores.
+Resetar rankings.
+Criar histórico.
+
+───
+
+🔗
+
+23. Integração com Serviços
+
+Externos
+Possíveis integrações:
+YouTube.
+Twitch.
+GitHub.
+Redes sociais.
+APIs externas.
+Exemplo:
+Novo vídeo no YouTube:
+
+➡️ Bot anuncia automaticamente no Discord.
+───
+
+24. Gerenciador de
+📜
+Documentação
+Dentro do painel:
+Criar:
+
+Guias.
+Tutoriais.
+FAQs.
+Regras.
+Manual da equipe.
+
+───
+
+25. Sistema Anti-Abuso
+🛡️
+Administrativo
+Protege o próprio painel.
+Detecta:
+Alterações suspeitas.
+Muitas ações em pouco tempo.
+Tentativas de acesso.
+Mudanças perigosas.
+
+Pode:
+Bloquear ação.
+Pedir confirmação.
+Avisar o dono.
+
+───
+
+🏗️ 26. Modo Desenvolvimento
+Para o criador do bot:
+Permite:
+Ver erros completos.
+Ativar logs avançados.
+Testar sistemas.
+Ver banco de dados.
+Monitorar eventos.
+
+───
+Com esses adicionais, o painel do ODISSEIA
+ARCANA teria praticamente uma estrutura de
+plataforma completa:
+
+🏠 Dashboard
+👥 Usuários
+💰 Economia
+🎮 Jogos
+🛒 Loja
+🎒 Inventário
+🏆 Conquistas
+⭐ XP
+🎫 Tickets
+🛡️ Moderação
+IA
+
+🤖 Automações
+⚙️ Eventos
+📅 Estatísticas
+📊 Logs
+📝 Backup
+💾
+
+🔔 Alertas
+🔍 Pesquisa
+👑 Equipe
+Integrações
+
+🌐 Desenvolvimento
+🧪
+
+Nesse ponto ele já estaria mais próximo de um
+painel SaaS de gerenciamento de comunidades,
+não apenas um painel de bot.
+
+57.Sim. Ainda dá para adicionar mais alguns
+sistemas avançados ao Painel Administrativo do
+ODISSEIA ARCANA. Esses seriam mais focados
+em profissionalização, segurança e crescimento
+do projeto.
+───
+
+27. Sistema de Marketplace
+
+Global
+Descrição: Um mercado geral onde usuários
+podem vender e comprar itens entre si.
+Funcionamento:
+Usuário coloca item à venda.
+Outros usuários compram.
+O bot faz a transferência automática.
+O painel acompanha todas as vendas.
+Funções:
+Histórico de vendas.
+Ranking de vendedores.
+Itens mais populares.
+Controle de taxas.
+
+───
+
+28. Sistema de Replay e
+🎥
+Histórico de Ações
+Descrição: Permite visualizar tudo que
+aconteceu no servidor.
+Registra:
+Jogos realizados.
+Compras.
+Trocas.
+Punições.
+Eventos.
+Alterações administrativas.
+Exemplo:
+
+Usuário: João
+15:30
+Jogou Mines
+
+15:35
+Comprou item raro
+15:40
+Recebeu recompensa
+
+───
+
+29. Sistema de Simulação
+Econômica
+Descrição: Permite testar mudanças antes de
+aplicar.
+Exemplo:
+Administrador quer aumentar o Daily:
+Simulação:
+
+Daily atual:
+
+10.000 Almas
+Novo Daily:
+20.000 Almas
+Impacto estimado:
++35% inflação
+
+───
+
+30. Editor Visual de Embeds
+Descrição: Criar mensagens bonitas sem mexer
+no código.
+Permite:
+Escolher título.
+Descrição.
+Imagem.
+Banner.
+
+Botões.
+Campos.
+Emojis.
+Usado para:
+Anúncios.
+Tickets.
+Eventos.
+Regras.
+
+───
+
+31. Construtor de Comandos
+🧱Personalizados
+Descrição: Criar comandos simples pelo painel.
+Exemplo:
+Criar:
+
+/regras
+Resposta:
+
+Confira nossas regras no canal #regras.
+Sem precisar programar.
+───
+
+32. Sistema de Auditoria
+🕵️Avançada
+Descrição: Uma área para investigar problemas.
+Mostra:
+Quem alterou configurações.
+
+Quem adicionou Almas.
+Quem removeu itens.
+Quem executou comandos administrativos.
+
+───
+
+🌎 33. Sistema de Idiomas
+
+Descrição: Permite o bot funcionar em vários
+idiomas.
+Idiomas:
+Português.
+Inglês.
+Espanhol.
+Cada servidor escolhe seu idioma.
+───
+
+34. Sistema de Importação e
+📦
+Exportação
+Descrição: Permite salvar ou transferir
+configurações.
+Exportar:
+Configurações.
+Economia.
+Cargos.
+Sistemas.
+Importar:
+Outro servidor.
+Backup antigo.
+
+───
+
+🧑‍💻 35. Área de Desenvolvedor
+
+Descrição: Área exclusiva para o criador do bot.
+Funções:
+Gerenciar versões.
+Ver erros.
+Acessar métricas.
+Controlar atualizações.
+Ver servidores conectados.
+
+───
+
+🔌 36. Sistema de API Própria
+
+Descrição: Cria uma API do ODISSEIA ARCANA.
+Permite:
+Aplicativos externos.
+
+Sites.
+Integrações.
+Estatísticas públicas.
+
+───
+
+📱 37. Aplicativo Administrativo
+Descrição: Uma versão mobile do painel.
+Permite:
+Receber alertas.
+Ver estatísticas.
+Gerenciar usuários.
+Aprovar ações.
+
+───
+
+🏪 38. Sistema de Assinaturas VIP
+Descrição: Controle de benefícios VIP.
+Funções:
+Criar planos VIP.
+Definir vantagens.
+Controlar validade.
+Renovação automática.
+Exemplo:
+
+VIP Ouro
++20% ganhos
+Cargo especial
+Itens exclusivos
+
+───
+
+39. Sistema de
+🧠
+Recomendações Inteligentes
+Descrição: O painel analisa dados e sugere
+melhorias.
+Exemplo:
+
+Sugestão:
+O jogo Mines teve 80% menos uso.
+Recomendação:
+Criar evento ou bônus.
+
+───
+
+40. Sistema de Governança da
+🏛️
+Comunidade
+Descrição: Permite decisões da comunidade.
+Funções:
+Votações.
+Enquetes.
+Aprovações.
+Propostas.
+Exemplo:
+"Novo jogo deve ser adicionado?"
+Usuários votam:
+
+✅ Sim
+❌ Não
+───
+
+Com isso, o Painel ODISSEIA ARCANA teria:
+
+Administração completa.
+Economia própria.
+Sistema social.
+Jogos.
+Segurança.
+Automações.
+Inteligência.
+Ferramentas de desenvolvedor.
+Escalabilidade para milhares de servidores.
+A partir daqui, os próximos sistemas seriam
+mais de nível empresarial, como:
+
+☁️ Sistema de nuvem e servidores
+distribuídos.
+
+🤖 IA administrativa avançada.
+📡 Monitoramento global.
+🏢 Sistema de organização para grandes
+comunidades.
+
+Sistema de Sorteios —
+🎉
+ODISSEIA ARCANA
+58.
+
+📌 Descrição:
+
+O Sistema de Sorteios permite que
+administradores criem sorteios dentro do
+Discord, distribuindo prêmios automaticamente
+para os participantes.
+O sistema será integrado ao painel e terá
+controle completo de criação, gerenciamento,
+participação e entrega de prêmios.
+───
+
+⚙️ Como funciona:
+1. Administrador cria um sorteio.
+
+2. Define:
+Prêmio.
+Duração.
+Quantidade de vencedores.
+Requisitos para participar.
+Canal onde será publicado.
+3. O bot cria uma mensagem com botão de
+participação.
+4. Usuários clicam para entrar.
+5. Quando o tempo acabar:
+O bot escolhe os vencedores
+automaticamente.
+Entrega o prêmio.
+Anuncia o resultado.
+
+───
+
+🎁 Tipos de Prêmios:
+
+Pode sortear:
+
+💰 Almas.
+🎒 Itens.
+🏆 Cargos.
+🎫 VIP.
+🎮 Jogos.
+🎟️ Cupons.
+🎁 Prêmios personalizados.
+───
+
+📜 Comandos de Usuário:
+🎉 /sorteio
+
+Mostra os sorteios ativos.
+Exemplo:
+
+🎉 Sorteios ativos:
+
+Almas
+1️⃣ 1.000.000
+⏰ Termina em 2 horas
+VIP
+2️⃣ Cargo
+⏰ Termina amanhã
+───
+
+🎟️ /participar
+
+Participa de um sorteio.
+Também poderá ser feito pelo botão:
+
+🎉 Participar
+
+───
+
+🔍 /sorteio-info
+
+Mostra informações:
+Prêmio.
+Participantes.
+Tempo restante.
+Chances.
+
+───
+
+🏆 /meus-sorteios
+Mostra:
+
+Sorteios ganhos.
+Participações.
+
+Histórico.
+
+───
+
+🛡️ Comandos Administrativos:
+🎉 /sorteio-criar
+Cria um sorteio.
+Opções:
+
+Prêmio:
+100.000 Almas
+Duração:
+24h
+Vencedores:
+3
+
+Canal:
+#sorteios
+
+───
+
+/sorteio-finalizar
+Encerra manualmente.
+───
+
+/sorteio-refazer
+Refaz o sorteio caso necessário.
+───
+
+/sorteio-cancelar
+
+Cancela um sorteio ativo.
+───
+
+✏️ /sorteio-editar
+Altera:
+
+Prêmio.
+Tempo.
+Número de vencedores.
+Requisitos.
+
+───
+
+⭐ Requisitos de Participação:
+O administrador pode exigir:
+
+Cargo:
+Exemplo:
+
+Somente membros VIP
+
+───
+
+Nível:
+Exemplo:
+
+Nível mínimo: 10
+
+───
+
+Economia:
+Exemplo:
+
+Possuir 50.000 Almas
+
+───
+
+Tempo no servidor:
+Exemplo:
+
+Conta com mais de 7 dias
+
+───
+
+🎯 Sistemas Avançados:
+🎲 Sorteio por Pontos
+Usuários ganham tickets:
+Exemplo:
+Mensagem enviada = +1 ticket
+Evento participado = +5 tickets
+Mais tickets = mais chances.
+───
+
+🔥 Sorteio Automático
+O bot pode criar:
+
+Sorteio diário.
+Sorteio semanal.
+Sorteio mensal.
+
+───
+
+🎁 Sorteio Surpresa
+
+O bot cria sorteios aleatórios:
+Exemplo:
+"Parabéns! Você recebeu uma chance de ganhar
+100.000 Almas."
+───
+
+🏆 Ranking de Participação
+Mostra:
+
+Usuários que mais participam.
+Quantidade de vitórias.
+Prêmios ganhos.
+
+───
+
+🖥️ No Painel Administrativo:
+Área:
+
+🎉 Gerenciador de Sorteios
+Permite:
+
+Criar sorteio.
+Ver participantes.
+Alterar regras.
+Sortear manualmente.
+Ver histórico.
+Configurar prêmios.
+Ver estatísticas.
+
+───
+
+📝 Logs:
+Registra:
+
+Quem criou.
+Quando começou.
+Participantes.
+Vencedores.
+Prêmios entregues.
+
+───
+
+🎯 Objetivo:
+
+Criar um sistema de sorteios completo, seguro e
+integrado ao ecossistema do ODISSEIA
+ARCANA, aumentando a participação dos
+membros e movimentando a comunidade.
+
+───
+Próximos sistemas de sorteio que podemos
+criar:
+
+🎟️
+🎰
+🎁
+🏆
+
+Sistema Automático de Rifas
+🎟️
+— ODISSEIA ARCANA
+59.
+
+📌 Descrição:
+
+O Sistema de Rifas permite que os usuários
+comprem números para concorrer a prêmios
+dentro do servidor. Diferente de um sorteio
+comum, a rifa funciona com bilhetes
+
+numerados, onde cada participante aumenta
+suas chances comprando mais números.
+O sistema será integrado com a economia de
+Almas, painel administrativo, logs e
+recompensas.
+───
+
+⚙️ Como funciona:
+1. Administrador cria uma rifa.
+2. Define:
+
+🎁 Prêmio.
+💰 Valor de cada número.
+🎟️ Quantidade de números disponíveis.
+⏰ Tempo de duração.
+🏆 Quantidade de vencedores.
+
+3. O bot publica a rifa.
+
+4. Usuários compram números.
+
+5. Quando finalizar:
+O bot realiza o sorteio.
+Escolhe os números vencedores.
+Entrega o prêmio automaticamente.
+
+───
+
+🎟️ Exemplo de Rifa:
+text
+
+🎟️ RIFA ODISSEIA ARCANA
+Prêmio:
+🎁
+1.000.000 Almas
+Valor:
+🎫
+10.000 Almas por número
+Números:
+🔢
+500 disponíveis
+
+Finaliza:
+⏰
+Em 3 dias
+
+👥127Participantes:
+───
+
+Comandos dos Usuários:
+/rifa
+Mostra rifas ativas.
+Exemplo:
+
+🎟️ Rifas disponíveis:
+Almas
+1️⃣ 1.000.000
+Cargo VIP Ouro
+
+3️⃣
+
+2️⃣ Item Lendário
+
+───
+
+/rifa-info
+Mostra informações da rifa.
+Exemplo:
+
+🎟️ Rifa #001
+Prêmio:
+1.000.000 Almas
+
+💰
+
+Números comprados:
+245/500
+Seu números:
+25, 87, 300
+
+───
+
+🛒 /rifa-comprar
+Compra números.
+Exemplo:
+
+/rifa-comprar número:5
+Resultado:
+
+✅ Compra realizada!
+Você adquiriu:
+5 números
+Seus números:
+101, 102, 103, 104, 105
+
+───
+
+🎫 /meus-numeros
+
+Mostra os números do usuário.
+Exemplo:
+
+🎟️ Seus números:
+Rifa #001
+15
+88
+245
+300
+
+───
+
+🏆 /rifas-ganhas
+Mostra histórico:
+
+Rifas vencidas.
+Prêmios recebidos.
+Data da vitória.
+
+───
+
+🛡️ Comandos Administrativos:
+🎟️ /rifa-criar
+
+Cria uma nova rifa.
+Configura:
+Nome.
+Prêmio.
+Quantidade de números.
+
+Preço.
+Duração.
+Canal.
+
+───
+
+✏️ /rifa-editar
+Altera:
+
+Prêmio.
+Valor.
+Tempo.
+Limite de números.
+
+───
+
+▶️ /rifa-iniciar
+
+Publica a rifa no servidor.
+───
+
+🛑 /rifa-finalizar
+
+Finaliza manualmente.
+O bot:
+Bloqueia compras.
+Realiza sorteio.
+Entrega prêmio.
+
+───
+
+🎲 /rifa-sortear
+
+Realiza o sorteio manual.
+Opções:
+
+Sorteio automático.
+Escolha de quantidade de vencedores.
+
+───
+
+❌ /rifa-cancelar
+Cancela uma rifa.
+Sistema:
+Devolve Almas dos participantes.
+Remove números.
+Registra no log.
+
+───
+
+⭐ Sistemas Avançados:
+
+🔥 Rifas Especiais
+Tipos:
+
+💰 Rifa de Almas
+Prêmio:
+
+500.000 Almas.
+
+───
+
+🎒 Rifa de Itens
+Prêmios:
+
+Itens raros.
+Skins.
+Molduras.
+Banners.
+
+───
+
+👑 Rifa VIP
+Prêmio:
+
+Cargo VIP.
+Benefícios temporários.
+
+───
+
+🎲 Sistema de Chances:
+O bot calcula:
+Exemplo:
+Usuário A:
+20 números.
+
+Usuário B:
+5 números.
+Usuário A terá maior chance, pois possui mais
+bilhetes.
+───
+
+🛡️ Segurança:
+O sistema terá:
+
+Bloqueio de compra após encerramento.
+Proteção contra números duplicados.
+Registro de todas as compras.
+Histórico de vencedores.
+Logs administrativos.
+
+───
+
+🖥️ No Painel Administrativo:
+Área:
+
+🎟️ Gerenciador de Rifas
+Funções:
+
+Criar rifas.
+Ver participantes.
+Ver números vendidos.
+Alterar configurações.
+Realizar sorteios.
+Entregar prêmios manualmente.
+Ver estatísticas.
+
+───
+
+📊 Estatísticas:
+
+Mostrar:
+Total arrecadado.
+Números vendidos.
+Usuário que mais participa.
+Prêmios entregues.
+Rifas concluídas.
+
+───
+
+🎯 Objetivo:
+
+Criar uma forma de movimentar a economia do
+ODISSEIA ARCANA, aumentar a participação
+dos usuários e criar eventos competitivos
+usando as Almas.
+───
+Próximos sistemas que combinam com a rifa:
+
+🎰 Roleta da Sorte
+📦 Caixas Misteriosas (Loot Boxes)
+🏆 Sistema de Campeonatos com Premiação
+Sistema Automático de
+📦
+Caixas Misteriosas (Loot Boxes)
+60.
+
+— ODISSEIA ARCANA
+
+📌 Descrição:
+
+O Sistema de Caixas Misteriosas permite que os
+usuários comprem, ganhem ou recebam caixas
+especiais que contêm recompensas aleatórias.
+Cada caixa possui diferentes níveis de raridade
+e pode entregar diversos prêmios, como Almas,
+itens, cargos, bônus e recompensas exclusivas.
+O sistema será integrado com:
+
+💰 Economia de Almas.
+🎒 Inventário.
+🛒 Loja.
+🎁 Eventos.
+🏆 Conquistas.
+🖥️ Painel administrativo.
+───
+
+⚙️ Como funciona:
+1. O usuário consegue uma caixa.
+2. Abre a caixa usando um comando.
+3. O sistema gera uma recompensa aleatória.
+4. A recompensa é entregue automaticamente.
+5. O histórico fica registrado.
+Exemplo:
+Usuário:
+
+/abrir-caixa
+Bot:
+
+📦 Abrindo Caixa Arcana...
+✨ Resultado:
+💰 50.000 Almas
+Raridade:
+Raro
+
+⭐
+───
+
+📦 Tipos de Caixas:
+
+🪵 Caixa Comum
+
+Recompensas básicas:
+Pequenas quantidades de Almas.
+Itens simples.
+Bônus pequenos.
+
+───
+
+🥈 Caixa Rara
+
+Possui recompensas melhores:
+Mais Almas.
+Itens especiais.
+Bônus temporários.
+
+───
+
+🥇 Caixa Épica
+Recompensas:
+
+Grandes quantias de Almas.
+Itens raros.
+Cargos especiais.
+
+───
+
+💎 Caixa Lendária
+
+Caixa de maior raridade:
+Pode conter:
+Milhões de Almas.
+Itens exclusivos.
+Cargos VIP.
+Recompensas únicas.
+
+───
+
+🎁 Tipos de Recompensas:
+💰 Economia:
+Almas.
+Multiplicadores de ganhos.
+Bônus de Daily.
+Bônus de Work.
+
+───
+
+🎒 Itens:
+Molduras de perfil.
+Banners.
+
+Itens colecionáveis.
+Chaves especiais.
+
+───
+
+🏆 Conquistas:
+Pode liberar:
+
+Medalhas.
+Títulos.
+Badges.
+
+───
+
+👑 Cargos:
+Exemplo:
+
+🎁 Você ganhou:
+Cargo:
+Usuário VIP
+Duração:
+30 dias
+
+⭐
+───
+
+👤 Comandos dos Usuários:
+📦 /caixas
+
+Mostra as caixas disponíveis.
+Exemplo:
+
+📦 Suas caixas:
+
+5
+🪵 Comum:
+2
+🥈 Rara:
+🥇 Épica: 1
+
+───
+
+/abrir-caixa
+Abre uma caixa.
+Opções:
+
+/abrir-caixa tipo:lendaria
+
+───
+
+/inventario
+
+Mostra:
+Caixas.
+Itens.
+Recompensas recebidas.
+
+───
+
+📜 /historico-caixas
+Mostra:
+
+Caixas abertas.
+Prêmios recebidos.
+Datas.
+
+───
+
+🎁 /caixa-info
+Mostra:
+
+Probabilidades.
+Recompensas possíveis.
+Raridades.
+Exemplo:
+
+📦 Caixa Lendária
+1.000.000 Almas
+💰
+Chance: 5%
+Item raro
+🎒
+Chance: 15%
+100.000 Almas
+💰
+Chance: 80%
+
+───
+
+🛡️ Comandos Administrativos:
+📦 /caixa-criar
+
+Cria uma nova caixa.
+Configura:
+Nome.
+Imagem.
+Raridade.
+Preço.
+Recompensas.
+Chances.
+
+───
+
+✏️ /caixa-editar
+Edita:
+
+Nome.
+Recompensas.
+Probabilidades.
+Disponibilidade.
+
+───
+
+🎁 /caixa-dar
+
+Entrega uma caixa para um usuário.
+Exemplo:
+
+/caixa-dar @José lendaria 1
+
+───
+
+❌ /caixa-remover
+
+Remove caixas de usuários.
+───
+
+📊 /caixa-estatisticas
+Mostra:
+
+Quantidade aberta.
+Recompensas entregues.
+Caixa mais usada.
+Valor distribuído.
+
+───
+
+🎲 Sistema de Raridade:
+
+Cada recompensa terá uma chance:
+Exemplo:
+
+📦 Caixa Épica:
+Comum: 60%
+Raro: 30%
+Épico: 9%
+Lendário: 1%
+
+───
+
+🔥 Sistemas Especiais:
+🎉 Caixa de Evento
+
+Disponível apenas durante eventos.
+Exemplo:
+
+🎃 Caixa Sombria
+Disponível:
+Evento de Halloween
+
+───
+
+⏰ Caixa Diária
+
+Usuário recebe uma caixa grátis por dia.
+───
+
+🔑 Sistema de Chaves
+
+Algumas caixas precisam de chave.
+Exemplo:
+
+📦 Caixa Lendária
+Necessário:
+Chave Arcana
+
+🔑
+───
+
+🏆 Ranking de Caixas
+Mostra:
+
+Quem abriu mais caixas.
+Quem ganhou os maiores prêmios.
+Maiores recompensas.
+
+───
+
+🖥️ No Painel Administrativo:
+Área:
+
+📦 Gerenciador de Loot Boxes
+Funções:
+
+Criar caixas.
+Configurar chances.
+Criar recompensas.
+Ver caixas abertas.
+Controlar eventos.
+Analisar estatísticas.
+
+───
+
+📝 Logs:
+Registra:
+
+Usuário que abriu.
+Tipo da caixa.
+Recompensa recebida.
+Data e hora.
+Valor entregue.
+
+───
+
+🎯 Objetivo:
+
+Criar um sistema de recompensa e
+entretenimento para o ODISSEIA ARCANA,
+incentivando usuários a participarem de
+eventos, juntarem Almas e explorarem novos
+conteúdos.
+───
+Próximos sistemas que combinam com esse:
+
+🎰 Sistema de Roleta da Sorte
+🏆 Sistema de Campeonatos e Torneios
+🎟️ Sistema de Tickets de Eventos
+🃏 Sistema de Cartas Colecionáveis
+Sistema Automático de
+🎰
+Roleta da Sorte — ODISSEIA
+61.
+
+ARCANA
+
+📌 Descrição:
+
+O Sistema de Roleta da Sorte é um sistema de
+entretenimento onde os usuários podem girar
+uma roleta para tentar ganhar recompensas
+aleatórias.
+A roleta utiliza a moeda do servidor (Almas) ou
+fichas especiais para realizar giros, podendo
+entregar prêmios como:
+
+💰 Almas.
+🎒 Itens.
+📦 Caixas Misteriosas.
+⭐ XP.
+👑 Cargos temporários.
+🎁 Recompensas exclusivas.
+O sistema será integrado com:
+
+💰 Economia.
+🎒 Inventário.
+📦 Loot Boxes.
+🏆 Conquistas.
+🎉 Eventos.
+🖥️ Painel administrativo.
+───
+
+⚙️ Como funciona:
+
+1. O usuário acessa a roleta.
+2. Escolhe o tipo de giro.
+3. O bot verifica se possui recursos suficientes.
+4. A roleta gira.
+5. O sistema seleciona uma recompensa
+aleatória.
+6. A recompensa é entregue automaticamente.
+Exemplo:
+Usuário:
+
+/roleta girar
+Bot:
+
+🎰 Girando Roleta Arcana...
+✨ Resultado:
+
+💰 100.000 Almas
+Raridade:
+Épico
+
+🥇
+───
+
+Tipos de Roleta:
+Roleta Comum
+Disponível para todos.
+Possíveis prêmios:
+1.000 Almas.
+5.000 Almas.
+XP.
+Pequenos bônus.
+
+───
+
+💎 Roleta Premium
+Necessita de:
+Almas.
+Ticket de roleta.
+Chave especial.
+Prêmios melhores:
+Grandes quantias de Almas.
+Itens raros.
+Caixas.
+
+───
+
+👑 Roleta Lendária
+
+Pode entregar:
+Milhões de Almas.
+VIP.
+Itens exclusivos.
+Recompensas únicas.
+
+───
+
+👤 Comandos dos Usuários:
+🎰 /roleta
+
+Mostra as roletas disponíveis.
+Exemplo:
+
+🎰 Roletas disponíveis:
+🪵 Comum
+
+💎 Premium
+👑 Lendária
+Seus tickets:
+5
+
+🎟️
+───
+
+/roleta-girar
+Realiza um giro.
+Exemplo:
+
+/roleta-girar tipo:premium
+Resultado:
+
+🎰 A roleta parou!
+
+Você ganhou:
+
+📦 Caixa Rara
+Parabéns!
+
+───
+
+/tickets-roleta
+Mostra seus tickets.
+Exemplo:
+
+🎟️ Seus tickets:
+Roleta Comum: 10
+Roleta Premium: 3
+Roleta Lendária: 0
+
+───
+
+📜 /historico-roleta
+Mostra:
+
+Giros realizados.
+Prêmios ganhos.
+Datas.
+Maiores prêmios.
+
+───
+
+📊 /roleta-chances
+
+Mostra as probabilidades.
+Exemplo:
+
+🎰 Roleta Premium
+500.000 Almas
+💰
+Chance: 5%
+Caixa Épica
+📦
+Chance: 15%
+50.000 Almas
+💰
+Chance: 80%
+
+───
+
+🛡️
+
+Comandos Administrativos:
+
+🎰 /roleta-criar
+
+Cria uma nova roleta.
+
+Configura:
+Nome.
+Imagem.
+Custo do giro.
+Recompensas.
+Chances.
+Duração.
+
+───
+
+✏️ /roleta-editar
+Permite alterar:
+Prêmios.
+Probabilidades.
+Preço.
+Disponibilidade.
+
+───
+
+🎁 /roleta-dar
+
+Entrega tickets de roleta.
+Exemplo:
+
+/roleta-dar @Usuário 10
+
+───
+
+🛑 /roleta-desativar
+Desativa uma roleta.
+───
+
+📊 /roleta-estatisticas
+Mostra:
+
+Total de giros.
+Prêmios entregues.
+Usuários participantes.
+Valor distribuído.
+
+───
+
+🎟️ Sistema de Tickets da Roleta:
+
+Os usuários podem conseguir tickets através de:
+
+🎁 Daily.
+🎉 Eventos.
+🏆 Conquistas.
+📦 Caixas Misteriosas.
+🛒 Loja.
+
+───
+
+🔥 Sistemas Especiais:
+🎉 Roleta de Evento
+
+Disponível por tempo limitado.
+Exemplo:
+
+🎃 Roleta Sombria
+Duração:
+7 dias
+Prêmio especial:
+VIP 30 dias
+
+👑
+
+───
+
+🔥 Sequência de Giros
+
+Usuários recebem bônus por sequência.
+Exemplo:
+
+10 giros realizados:
+Bônus:
+🎁
+1 Ticket Premium
+
+───
+
+🏆 Ranking da Roleta
+Mostra:
+
+Quem ganhou os maiores prêmios.
+Maiores sortudos.
+
+───
+
+🖥️ No Painel Administrativo:
+Área:
+
+🎰 Gerenciador de Roletas
+Funções:
+
+Criar roletas.
+Definir recompensas.
+Ajustar chances.
+Criar eventos.
+Ver histórico.
+Controlar tickets.
+Analisar estatísticas.
+
+───
+
+📝 Logs:
+Registra:
+
+Usuário.
+Tipo de roleta.
+Custo do giro.
+Resultado.
+Recompensa recebida.
+Data e hora.
+
+───
+
+🎯 Objetivo:
+
+Criar um sistema divertido para aumentar a
+
+participação dos usuários no ODISSEIA
+ARCANA, movimentando a economia,
+incentivando eventos e criando momentos de
+surpresa dentro da comunidade.
+───
+Próximo sistema da categoria de sorte e
+eventos:
+
+🏆 Sistema Automático de Campeonatos e
+Torneios.
+
+Sistema de Comandos de
+💬
+Mensagens — ODISSEIA ARCANA
+62.
+
+📌 Descrição:
+
+O Sistema de Mensagens permite que
+administradores e usuários autorizados enviem,
+
+criem e gerenciem mensagens personalizadas
+através do bot.
+Ele será usado para criar anúncios, avisos,
+mensagens automáticas, embeds profissionais
+e comunicações da comunidade.
+───
+
+⚙️ Como funciona:
+
+O administrador executa um comando, escolhe
+o tipo de mensagem e o bot envia
+automaticamente no canal escolhido.
+O sistema suporta:
+Mensagens simples.
+Embeds personalizados.
+Imagens.
+Botões.
+Menções.
+
+Mensagens programadas.
+Modelos salvos.
+
+───
+
+👤 Comandos de Usuários:
+💬 /mensagem
+
+Mostra informações do sistema.
+Exemplo:
+
+💬 Sistema de Mensagens
+Use este sistema para criar anúncios,
+avisos e mensagens personalizadas.
+
+───
+
+📌 /mensagem-info
+Mostra:
+
+Mensagens disponíveis.
+Modelos ativos.
+Configurações do servidor.
+
+───
+
+🛡️
+
+Comandos Administrativos:
+
+✉️ /mensagem-enviar
+
+Envia uma mensagem personalizada.
+Opções:
+
+Texto.
+Imagem.
+Embed.
+Exemplo:
+
+/mensagem-enviar
+Canal: #anuncios
+Mensagem:
+"Novo evento iniciado!"
+Resultado:
+
+📢 NOVO EVENTO
+O evento Roleta Arcana começou!
+Participe agora e concorra a prêmios.
+
+───
+
+/mensagem-embed
+Cria uma mensagem profissional em formato
+Embed.
+Configura:
+Título.
+Descrição.
+Cor.
+Imagem.
+Rodapé.
+Autor.
+Campos.
+Exemplo:
+
+🎉 EVENTO ESPECIAL
+
+Participe do torneio.
+Prêmio:
+🏆
+1.000.000 Almas
+
+───
+
+/mensagem-criar
+Cria modelos de mensagens salvos.
+Exemplo:
+Criar modelo:
+
+Nome:
+Boas-vindas
+Mensagem:
+Bem-vindo ao ODISSEIA ARCANA!
+
+Depois pode usar:
+
+/mensagem-usar boas-vindas
+
+───
+
+📋 /mensagem-modelos
+Mostra modelos criados:
+Exemplo:
+
+📋 Modelos:
+👋 Boas-vindas
+🎉 Evento
+📢 Anúncio
+🎫 Ticket
+
+───
+
+✏️ /mensagem-editar
+Edita mensagens salvas.
+Pode alterar:
+Texto.
+Imagem.
+Botões.
+Canal.
+Configuração.
+
+───
+
+❌ /mensagem-apagar
+
+Remove modelos de mensagens.
+
+───
+
+⏰ /mensagem-agendar
+Agenda mensagens automáticas.
+Exemplo:
+
+/mensagem-agendar
+Mensagem:
+"Daily disponível!"
+Horário:
+00:00
+
+───
+
+🔘 Sistema de Botões:
+Mensagens podem ter botões:
+Exemplo:
+
+🎉 Evento ativo!
+[Participar]
+[Ver Prêmios]
+Ações:
+Abrir ticket.
+Participar de evento.
+Abrir link.
+Executar comando.
+
+───
+
+Mensagens Automáticas
+🤖Integradas:
+O sistema também controla:
+
+👋 Boas-vindas
+
+Quando alguém entra.
+───
+
+🚪 Saída
+
+Quando alguém sai.
+───
+
+🎁 Recompensas
+
+Quando recebe prêmio.
+
+───
+
+🏆 Conquistas
+
+Quando desbloqueia algo.
+───
+
+🎟️ Tickets
+
+Quando abre ou fecha atendimento.
+───
+
+🖥️
+
+No Painel Administrativo:
+
+Área:
+
+💬 Gerenciador de Mensagens
+Funções:
+
+Criar mensagens.
+Editar modelos.
+Programar envios.
+Criar embeds.
+Adicionar botões.
+Escolher canais.
+Ver histórico.
+
+───
+
+📝 Logs:
+Registra:
+
+Quem criou a mensagem.
+Onde foi enviada.
+
+Data e horário.
+Alterações feitas.
+
+───
+
+🎯 Objetivo:
+
+Criar uma ferramenta completa para
+comunicação dentro do ODISSEIA ARCANA,
+permitindo que a equipe crie anúncios, eventos,
+avisos e mensagens profissionais sem precisar
+editar código. Os sistemas e comandos de
+ativar e desativar sorteios automáticos, so
+poderar ser feito por mim.
+
+Sistema PAY / PIX —
+💸
+ODISSEIA ARCANA
+63.
+
+📌 Descrição:
+
+O Sistema PAY / PIX é o sistema de
+transferência de Almas do ODISSEIA ARCANA,
+criado para permitir que os usuários enviem
+valores para outros membros do servidor de
+forma segura e organizada.
+O sistema funciona como uma transferência
+financeira interna, onde o usuário pode enviar a
+mesma quantidade de Almas para uma ou
+várias pessoas ao mesmo tempo.
+A transferência não é realizada imediatamente.
+Antes de concluir, o bot cria uma solicitação de
+pagamento onde o remetente e o destinatário
+precisam confirmar a operação.
+───
+
+⚙️ Funcionamento:
+
+O usuário utiliza os comandos:
+txt
+/pay
+/pix
+ou pelo prefixo:
+txt
+O.pay
+O.pix
+Exemplo:
+txt
+O.pix @Maria @João 200k
+O sistema interpreta:
+Maria receberá 200.000 Almas
+
+João receberá 200.000 Almas
+O valor informado será aplicado para cada
+destinatário marcado.
+───
+
+🔐 Sistema de Confirmação:
+
+Cada transferência criada terá uma confirmação
+própria.
+O bot envia uma mensagem individual para cada
+destinatário informando:
+Quem está enviando.
+Quem irá receber.
+Valor da transferência.
+Avisos de segurança.
+Estado da confirmação.
+A transferência só será concluída quando:
+
+O remetente confirmar.
+O destinatário confirmar.
+O botão de confirmação mostrará o progresso:
+txt
+
+💸 Transferir 0/2
+Depois:
+txt
+
+💸 Transferir 1/2
+E quando ambos aceitarem:
+txt
+
+💸 Transferir 2/2
+A transferência será concluída.
+
+───
+
+💰 Sistema de Valores:
+
+O comando aceitará valores usando números
+completos ou abreviações:
+Exemplos:
+txt
+1000
+10k
+500k
+1m
+5b
+O sistema converterá automaticamente para o
+valor correto em Almas.
+Não terá suporte para:
+all
+half
+
+metade
+O usuário sempre deverá informar o valor exato.
+───
+
+👥 Transferências em massa:
+
+O usuário poderá enviar para vários membros
+em uma única ação.
+Exemplo:
+txt
+O.pay @Maria @João @Pedro 1m
+O sistema criará três transferências separadas:
+Maria → 1.000.000 Almas
+João → 1.000.000 Almas
+Pedro → 1.000.000 Almas
+
+Cada uma terá sua própria confirmação e
+conclusão independente.
+───
+
+🛡️ Segurança:
+O sistema possui:
+
+Verificação de saldo antes da criação.
+Bloqueio de valores inválidos.
+Proteção contra envio para si mesmo.
+Expiração automática de solicitações
+pendentes.
+Registro completo das transações.
+Identificação única para cada transferência.
+
+───
+
+📜 Histórico de Transferências:
+O usuário poderá consultar suas
+
+movimentações através do comando:
+txt
+/transferencias
+ou:
+txt
+O.transferencias
+O comando mostrará:
+Almas enviadas.
+Almas recebidas.
+Usuários envolvidos.
+Datas das transferências.
+Histórico financeiro.
+
+───
+
+🎯 Objetivo:
+
+O Sistema PAY / PIX tem como objetivo criar
+uma forma simples, segura e interativa de
+movimentar a economia de Almas dentro do
+ODISSEIA ARCANA, permitindo negociações,
+pagamentos, recompensas e interações entre
+usuários com controle e segurança.
+
+64.Entendi. Então vamos ajustar o Sistema de
+Interações Sociais do jeito que você quer.
+
+Sistema de Interações Sociais
+🤝
+— ODISSEIA ARCANA (Versão
+Final)
+
+📌 Descrição:
+
+O Sistema de Interações Sociais permite que os
+usuários realizem ações divertidas entre si
+através de comandos como:
+
+🤗 Abraçar.
+💋 Beijar.
+👋 Tapa.
+💆 Cafuné.
+😈 Morder.
+🦵 Chute.
+👋 Cumprimento.
+💃 Dançar.
+Cada interação gera uma resposta única,
+contendo:
+Uma mensagem aleatória.
+Uma GIF aleatória.
+O nome de quem realizou a ação.
+
+O nome de quem recebeu a ação.
+Um botão para devolver a interação.
+O sistema será totalmente controlado pelo bot e
+não será gerenciado pelo painel.
+───
+
+⚙️ Como funciona:
+O usuário executa:
+txt
+O.abracar @Maria
+ou:
+txt
+/abraçar @Maria
+
+O bot escolhe automaticamente:
+1 mensagem entre mais de 200 disponíveis.
+1 GIF entre 100 GIFs cadastradas para
+aquele comando.
+Exemplo:
+txt
+
+🤗 José abraçou Maria!
+"Um abraço inesperado acabou de
+acontecer!
+Que momento especial entre vocês
+
+❤️"
+
+(GIF de abraço escolhido aleatoriamente)
+Botão:
+txt
+[
+
+🤗 Devolver abraço]
+
+───
+
+🔄 Sistema de Devolver:
+
+O usuário que recebeu a interação poderá
+responder usando o botão.
+Exemplo:
+Maria recebe:
+txt
+
+🤗 José abraçou Maria!
+[🤗 Devolver abraço]
+Maria clica:
+txt
+
+🤗 Maria devolveu o abraço para José!
+
+O bot gera:
+Nova mensagem aleatória.
+Nova GIF aleatória.
+
+───
+
+💬 Comandos disponíveis:
+🤗 Abraçar
+txt
+
+O.abracar @usuário
+Ação:
+Usuário abraça outro membro.
+───
+
+💋 Beijar
+txt
+
+O.beijar @usuário
+Ação:
+Usuário envia um beijo.
+───
+
+👋 Tapa
+txt
+
+O.tapa @usuário
+Ação:
+Interação de brincadeira.
+
+───
+
+💆 Cafuné
+txt
+
+O.cafune @usuário
+Ação:
+Faz carinho no usuário.
+───
+
+😈 Morder
+txt
+
+O.morder @usuário
+Ação:
+
+Interação divertida.
+───
+
+🦵 Chute
+txt
+
+O.chute @usuário
+Ação:
+Brincadeira entre usuários.
+───
+
+👋 Cumprimento
+txt
+
+O.cumprimento @usuário
+
+Ação:
+Cumprimenta outro membro.
+───
+
+💃 Dançar
+txt
+
+O.dancar @usuário
+Ação:
+Dança com outro usuário.
+───
+
+🎬 Sistema de GIFs:
+
+Cada comando terá seu próprio banco de
+animações.
+
+Exemplo:
+
+🤗 Abraçar:
+100 GIFs de abraço.
+
+💋 Beijar:
+100 GIFs de beijo.
+
+👋 Tapa:
+100 GIFs de tapa.
+E assim para todos os comandos.
+O bot nunca repete sempre a mesma animação,
+pois escolhe aleatoriamente.
+───
+
+📝 Sistema de mensagens:
+
+Cada interação terá mais de 200 mensagens
+diferentes.
+Exemplo para abraço:
+Mensagens carinhosas.
+Mensagens engraçadas.
+Mensagens aleatórias.
+Mensagens de amizade.
+O bot combina:
+200+ mensagens × 100 GIFs
+Criando milhares de possibilidades diferentes.
+───
+
+🛡️ Proteções:
+O sistema terá:
+
+Anti-spam.
+Limite de uso por usuário.
+Bloqueio de interações excessivas.
+Controle de menções inválidas.
+
+───
+
+❌ Painel:
+
+Esse sistema não terá gerenciamento pelo
+painel.
+O administrador não poderá:
+Alterar GIFs pelo painel.
+Criar mensagens pelo painel.
+Ativar/desativar comandos pelo painel.
+Ele funcionará diretamente pelo código e banco
+interno do bot.
+
+───
+
+🎯 Objetivo:
+
+Criar um sistema social completo para o
+ODISSEIA ARCANA, aumentando a interação
+dos membros através de comandos divertidos,
+respostas variadas, GIFs aleatórias e interações
+entre usuários.
+
+65.Perfeito. Vamos criar um Sistema Inteligente
+de Reconexão Automática para o ODISSEIA
+ARCANA.
+Esse sistema ficará funcionando 24 horas e será
+capaz de detectar quando a internet cair,
+aguardar o retorno da conexão e recuperar o
+funcionamento do bot automaticamente.
+
+🌐 Sistema Inteligente de Reconexão
+
+Automática
+
+📌 Descrição
+
+O sistema monitora continuamente a conexão
+do bot com a internet e com a API do Discord.
+Se a conexão for perdida por qualquer motivo
+(Wi-Fi, dados móveis ou instabilidade da
+operadora), o sistema entra em modo de espera
+e tenta reconectar automaticamente.
+Quando a internet voltar, o bot restabelece a
+conexão sem precisar ser iniciado manualmente.
+
+⚙️ Como funciona
+Fluxo do sistema:
+Bot Online
+│
+▼
+
+Monitorando conexão...
+│
+▼
+Internet caiu?
+│
+
+┌── Não ───────────────┐
+││
+▼│
+Continua monitorando │
+│
+Sim │
+││
+▼│
+Modo de Espera │
+││
+▼│
+Internet voltou? │
+││
+┌── Não ───────────────┘
+│
+▼
+Aguardar alguns segundos
+│
+▼
+Tentar novamente
+
+│
+▼
+Internet voltou?
+│
+Sim
+│
+▼
+Reconectar ao Discord
+│
+▼
+Bot Online novamente
+
+🔄 Tentativas automáticas
+Quando perder a conexão:
+
+⚠️ Internet perdida.
+Tentativa 1...
+Tentativa 2...
+Tentativa 3...
+...
+
+O sistema continuará tentando indefinidamente
+
+até conseguir reconectar.
+
+📝 Registro de eventos
+
+O sistema salva um histórico como:
+[20:30:15]
+Internet perdida.
+[20:31:00]
+Tentando reconectar...
+[20:31:18]
+Conexão restabelecida.
+[20:31:19]
+Bot online novamente.
+
+📢 Aviso no Discord
+Quando voltar:
+
+🌐 ODISSEIA ARCANA voltou ao ar!
+O bot ficou offline por 1 minuto e 4 segundos
+devido à perda de conexão com a internet.
+
+Todos os sistemas foram restaurados
+automaticamente.
+
+🛡️ Recuperação dos sistemas
+Após reconectar, o sistema verifica:
+✅ Banco MongoDB.
+✅ Slash Commands.
+✅ Sistemas automáticos.
+✅ Eventos.
+✅ Painel Web.
+✅ Cache.
+✅ Economia.
+✅ Jogos.
+
+Se algum sistema não responder, ele tenta
+reiniciá-lo sem derrubar o restante do bot.
+
+📊 Painel Web
+
+No painel poderá aparecer:
+
+🌐 Conexão
+Status:
+
+🟢 Online
+Última queda:
+Hoje às 20:30
+Tempo offline:
+1 minuto
+Reconexões:
+12
+Última reconexão:
+Sucesso
+
+66.Sistema de Drops — ODISSEIA
+
+ARCANA
+O sistema de Drops do ODISSEIA ARCANA foi
+
+desenvolvido para permitir que administradores,
+moderadores e usuários autorizados criem
+sorteios totalmente personalizados diretamente
+pelo bot ou pelo painel web. O sistema será
+altamente configurável, oferecendo recursos
+avançados para controlar quem pode participar,
+quantas chances cada usuário possui e como o
+sorteio será apresentado no servidor.
+Todo o gerenciamento dos Drops poderá ser
+feito através de uma área exclusiva no Painel
+ODISSEIA ARCANA, onde será possível criar
+modelos personalizados, configurar regras e
+reutilizar configurações sem precisar preencher
+tudo novamente.
+
+Painel de Configuração
+Dentro do painel haverá uma página exclusiva
+chamada Drops, onde o usuário poderá
+configurar:
+
+🎨 Mensagem personalizada do Drop.
+🏷️ Título do Drop.
+📝 Descrição.
+🎁 Tipo da recompensa.
+💰 Valor da recompensa.
+👥 Quantidade de vencedores.
+⏳ Tempo de duração.
+📍 Canal onde será enviado.
+🎨 Cor do Embed.
+🖼️ Imagem ou banner.
+👤 Quem poderá criar Drops.
+🔒 Quem poderá participar.
+🚫 Cargos proibidos.
+⭐ Cargos com entradas extras.
+✅ Requisitos mínimos para participar.
+💬 Mensagem final do sorteio.
+Depois de configurar tudo, o usuário poderá
+clicar em Criar Modelo, salvando aquele Drop
+para ser reutilizado sempre que desejar.
+
+───
+
+Criação pelo comando
+Após criar o modelo no painel, bastará utilizar:
+text
+d.s <tempo> <ganhadores> <valor>
+Exemplos:
+text
+d.s 30m 1 500000
+d.s 2h 3 1m
+d.s 7d 10 5m
+O comando localizará automaticamente o
+modelo criado no painel, utilizará todas as
+configurações salvas e enviará o Drop no canal.
+
+O tempo aceitará:
+m (minutos)
+h (horas)
+d (dias)
+Limites:
+
+⏱️ mínimo: 1 minuto
+⏱️ máximo: 7 dias
+───
+
+Interface do Drop
+O Drop será enviado em um Embed moderno.
+Na parte superior aparecerão:
+
+🎁 Nome do Drop.
+⏳ Quando terminará.
+
+👥 Quantidade de vencedores.
+
+Logo abaixo aparecerá uma mensagem
+aleatória.
+O sistema possuirá mais de 50 mensagens
+diferentes, escolhidas automaticamente sempre
+que um novo Drop for criado.
+Exemplos:
+
+🎉 Um Drop acabou de aparecer!
+💰 A sorte está lançada! Quem será o
+vencedor?
+
+🌌 Um presente atravessou os portais da
+ODISSEIA ARCANA!
+
+Depois aparecerão as informações principais:
+
+👤 Criado por.
+⏳ Duração.
+👥 Número de vencedores.
+🎁 Valor da recompensa.
+📊 Participantes atuais.
+
+───
+
+Botões
+O Drop possuirá apenas dois botões.
+
+🎉 Participar
+Ao clicar:
+
+o usuário entra automaticamente no sorteio;
+o botão atualizará mostrando a quantidade
+de participantes.
+Exemplo:
+
+🎉 Participar (57)
+Caso o usuário possua entradas extras por
+causa de cargos especiais, elas serão
+
+───
+
+👥 Participantes
+
+Ao clicar, apenas quem clicou verá uma
+mensagem privada (ephemeral).
+Nela aparecerá:
+
+Participantes
+João — 1 entrada
+
+⭐ VIP
+Pedro — 5 entradas 👑 Premium
+Maria — 3 entradas
+
+Lucas — 1 entrada
+Assim todos poderão verificar quem está
+
+participando e quantas entradas cada pessoa
+possui.
+───
+
+Entradas Extras
+No painel será possível configurar cargos que
+aumentam automaticamente as chances de
+ganhar.
+Exemplo:
+VIP
++2 entradas
+Premium
++5 entradas
+Equipe
++10 entradas
+Tudo será aplicado automaticamente durante o
+sorteio.
+
+───
+
+Restrições
+Também será possível configurar:
+cargos que não podem participar;
+idade mínima da conta;
+tempo mínimo no servidor;
+quantidade mínima de mensagens;
+nível mínimo do bot;
+possuir determinado cargo;
+outras regras futuras.
+Caso algum requisito não seja atendido, o
+usuário não conseguirá entrar no Drop.
+───
+
+Quando o tempo terminar, o bot realizará o
+sorteio automaticamente.
+Depois enviará um novo Embed informando o
+resultado.
+Exemplo:
+
+🎉 O Drop foi encerrado!
+🏆 Vencedores
+🥇 @Usuario1
+🥈 @Usuario2
+🥉 @Usuario3
+💰 Cada vencedor recebeu:500.000 Almas
+📦 No total foram distribuídas:1.500.000 Almas
+❤️ Agradeçam a @Criador pelo Drop!
+🆔 ID do Drop:DROP-8XJ4L9P2
+🔄 Reroll: Copie o ID acima e utilize o comando
+de reroll para realizar um novo sorteio.
+───
+
+Sistema de Reroll
+Todo Drop possuirá um ID único.
+Caso seja necessário sortear novos vencedores,
+bastará copiar esse ID e executar o comando de
+reroll.
+O sistema utilizará a mesma lista de
+participantes do sorteio original, respeitando
+todas as entradas extras e regras configuradas.
+───
+
+Recursos do sistema
+
+🎁 Drops totalmente personalizados.
+
+⚙️ Área exclusiva no Painel ODISSEIA
+ARCANA.
+💾 Modelos reutilizáveis.
+⏳ Tempo de 1 minuto até 7 dias.
+
+👥 Quantidade personalizada de vencedores.
+⭐ Sistema de entradas extras por cargos.
+🚫 Cargos bloqueados.
+✅ Requisitos para participação.
+🎨 Embed moderno.
+🎲 Mais de 50 mensagens aleatórias.
+🎉 Botão de participação com contador em
+tempo real.
+
+👥 Lista privada de participantes e entradas.
+🏆 Sorteio automático ao término.
+💰 Distribuição automática das
+recompensas.
+📝 Mensagem final personalizada.
+🆔 ID exclusivo para cada Drop.
+🔄 Sistema de reroll utilizando o ID do Drop.
+📊 Registro completo no banco de dados.
+🌐 Integração total com o Painel ODISSEIA
+ARCANA.
+
+Esse sistema fará com que os Drops do
+
+ODISSEIA ARCANA sejam muito mais
+completos do que um simples sorteio,
+oferecendo uma experiência altamente
+personalizável para administradores e uma
+participação transparente e interativa para todos
+os membros do servidor.
+
+67.Perfeito. Dessa forma o sistema fica mais
+limpo e diferente do Drop tradicional. A
+descrição atualizada seria:
+───
+
+Sistema de Drop Escolhas —
+ODISSEIA ARCANA
+O Drop Escolhas é um evento interativo do
+ODISSEIA ARCANA baseado em perguntas e
+
+respostas. Diferente do Drop tradicional, ele não
+possui botão de participação. Assim que o
+evento é criado, todos os usuários podem
+responder diretamente à pergunta escolhendo
+uma das alternativas disponíveis.
+Este sistema foi criado para incentivar a
+interação da comunidade e testar o
+conhecimento dos participantes em diferentes
+categorias.
+O Drop Escolhas será criado apenas por Slash
+Command (/) e não poderá ser configurado pelo
+Painel Web, pois utiliza um sistema próprio de
+perguntas cadastradas no bot.
+───
+
+Requisito para participar
+O único requisito será:
+
+🎁 Ter resgatado o Daily.
+Caso o usuário não tenha coletado seu Daily, ao
+clicar em qualquer alternativa, o bot exibirá uma
+mensagem privada informando que é
+necessário resgatar o Daily antes de participar.
+───
+
+Categorias
+O administrador poderá escolher uma das
+categorias disponíveis:
+
+🎌 Animes
+🎵 Música
+⚽ Futebol
+🎬 Filmes
+🧠 Conhecimento Geral
+
+Cada categoria possuirá um grande banco de
+perguntas diferentes, escolhidas aleatoriamente.
+───
+
+Interface
+O evento será enviado em um Embed moderno.
+Na parte superior aparecerão:
+
+📚 Categoria.
+⏳ Tempo restante.
+👥 Quantidade de vencedores.
+💰 Valor do prêmio.
+Logo abaixo aparecerá uma mensagem
+aleatória relacionada ao tema da pergunta.
+Exemplos:
+
+🎌 Será que você realmente conhece esse
+anime?
+
+⚽ Apenas os verdadeiros fãs acertam essa!
+🎵 Hora de testar seus conhecimentos
+musicais!
+🎬 Vamos descobrir quem é cinéfilo de
+verdade!
+🧠 Essa é para quem gosta de desafios!
+O sistema possuirá diversas mensagens
+diferentes para deixar cada evento único.
+Depois será exibida a pergunta.
+───
+
+Alternativas
+A pergunta possuirá entre 3 e 5 botões, cada um
+representando uma resposta.
+Exemplo:
+
+🟦 Naruto
+🟩 Luffy
+
+🟥 Ichigo
+🟨 Goku
+
+Os usuários poderão votar apenas uma vez.
+Depois de escolher uma alternativa, não será
+possível alterar a resposta.
+Durante o evento não será mostrado quantas
+pessoas escolheram cada alternativa, mantendo
+o resultado em segredo até o encerramento.
+───
+
+Encerramento
+Quando o tempo terminar, o evento será
+encerrado automaticamente.
+Os próprios botões serão atualizados
+mostrando quantas pessoas escolheram cada
+resposta.
+Exemplo:
+
+🟦 Naruto • 12 votos
+
+🟩 Luffy • 48 votos ✅
+🟥 Ichigo • 7 votos
+
+🟨 Goku • 19 votos
+
+A alternativa correta será destacada
+automaticamente.
+Todos os usuários que responderam
+corretamente serão considerados participantes
+válidos.
+Caso existam mais acertadores do que o
+número de vencedores definido, o sistema
+realizará um sorteio entre eles.
+As Almas serão entregues automaticamente
+aos vencedores.
+───
+
+Mensagem Final
+Após o encerramento, o bot enviará um novo
+Embed.
+
+🎉 O Drop Escolhas foi encerrado!
+✅ Resposta correta:Luffy
+🏆 Vencedores
+🥇 @Usuario1
+🥈 @Usuario2
+🥉 @Usuario3
+💰 Cada vencedor recebeu:250.000 Almas
+📦 No total foram distribuídas:750.000 Almas
+❤️ Agradeçam a @Criador por este Drop
+Escolhas!
+───
+
+Recursos do sistema
+
+❓ Sistema de perguntas e respostas.
+🎌 Categoria Anime.
+🎵 Categoria Música.
+⚽ Categoria Futebol.
+
+🎬 Categoria Filmes.
+🧠 Categoria Conhecimento Geral.
+🎲 Perguntas escolhidas aleatoriamente.
+🎨 Interface moderna em Embed.
+🔘 Entre 3 e 5 botões de resposta.
+🎁 Requisito obrigatório de ter resgatado o
+Daily.
+🚫 Sem botão de participar.
+🚫 Sem lista de participantes.
+📊 Os botões mostram a quantidade de
+votos somente quando o evento termina.
+✅ Destaque automático da resposta
+correta.
+🏆 Sorteio entre os usuários que acertaram
+a resposta.
+💰 Entrega automática das Almas aos
+vencedores.
+⏳ Tempo configurável.
+📈 Registro completo do evento no banco de
+dados.
+
+Esse sistema torna o Drop Escolhas um evento
+de conhecimento e interação, onde a
+recompensa depende de acertar a resposta
+correta. Como a quantidade de votos só é
+revelada no final, os participantes não são
+influenciados pelas escolhas dos demais,
+tornando cada evento mais justo e emocionante.
+
+68.Perfeito. Esse formato deixa o Drop Call bem
+diferente dos outros. Ficaria assim:
+───
+
+Sistema de Drop Call — ODISSEIA
+ARCANA
+O Drop Call é um sistema de sorteio instantâneo
+criado para recompensar automaticamente os
+
+membros que estiverem participando de canais
+de voz do servidor. Diferente dos outros tipos de
+Drops, ele não cria um evento, não possui tempo
+de duração, não utiliza botões e não permite
+entrada manual dos usuários.
+Todo o processo acontece imediatamente após
+a execução do comando.
+O administrador executa o comando e o bot
+procura automaticamente todos os usuários que
+estiverem conectados aos canais de voz
+permitidos. Em seguida, realiza o sorteio e
+entrega as recompensas instantaneamente aos
+vencedores.
+Este sistema não possui integração com o
+Painel Web e será utilizado apenas através de
+Slash Command (/).
+───
+
+Como funciona
+Ao utilizar o comando, o administrador poderá
+configurar:
+
+💰 Valor da recompensa.
+
+👥 Quantidade de vencedores.
+Após confirmar, o bot iniciará imediatamente o
+sorteio.
+Ele verificará automaticamente todos os
+membros que estiverem em canais de voz
+válidos e escolherá aleatoriamente os
+vencedores.
+As Almas serão entregues automaticamente
+assim que o sorteio terminar.
+───
+
+Quantidade de vencedores
+O administrador poderá escolher entre:
+1 vencedor
+2 vencedores
+3 vencedores
+4 vencedores
+5 vencedores
+6 vencedores
+O limite máximo será 50 vencedores.
+Esse mesmo limite poderá ser utilizado
+futuramente nos demais comandos de Drop do
+ODISSEIA ARCANA.
+───
+
+Interface
+
+Após executar o comando, o bot enviará um
+Embed moderno contendo:
+
+🎤 Drop Call
+💰 Valor da recompensa.
+👥 Quantidade de vencedores.
+📡 Quantidade de usuários elegíveis no
+momento.
+
+Depois do sorteio, o Embed será atualizado
+mostrando o resultado.
+───
+
+Mensagem Final
+
+🎉 O Drop Call foi finalizado!
+🏆 Vencedores
+🥇 @Usuario1
+🥈 @Usuario2
+
+🥉 @Usuario3
+💰 Cada vencedor recebeu:250.000 Almas
+📦 No total foram distribuídas:750.000 Almas
+❤️ Agradeçam a @Administrador pelo Drop Call!
+───
+
+Recursos do sistema
+
+🎤 Sorteio exclusivo para membros em
+chamadas de voz.
+
+⚡ Sorteio instantâneo.
+❌ Sem tempo de duração.
+❌ Sem botões.
+❌ Sem participação manual.
+❌ Sem configuração pelo Painel Web.
+👥 Até 6 vencedores por sorteio.
+💰 Valor da recompensa configurável.
+🎨 Embed moderno e organizado.
+
+🏆 Escolha automática dos vencedores.
+💸 Entrega automática das Almas.
+📊 Registro completo no banco de dados.
+O Drop Call foi criado para incentivar a
+permanência e a interação dos membros nos
+canais de voz do servidor. Com apenas um
+comando, o administrador pode recompensar
+rapidamente quem está participando da call,
+tornando as conversas mais movimentadas e
+aumentando o engajamento da comunidade no
+ODISSEIA ARCANA.
+
+69.Sistema de Dança das Cadeiras
+
+— ODISSEIA ARCANA
+O Dança das Cadeiras é um dos eventos mais
+interativos do ODISSEIA ARCANA, inspirado na
+
+clássica brincadeira. Nele, os participantes
+precisam estar atentos ao momento exato em
+que a música para para conseguir uma cadeira
+antes dos outros jogadores.
+O evento acontece em tempo real dentro de um
+canal de voz do servidor, onde o bot entra
+automaticamente para reproduzir a música e
+controlar toda a partida. A cada rodada, uma
+cadeira é removida, aumentando a dificuldade
+até restar apenas um único vencedor.
+O sistema foi desenvolvido para proporcionar
+uma experiência dinâmica, divertida e
+imprevisível, tornando cada partida única.
+───
+
+Criação do evento
+O evento será iniciado exclusivamente através
+de Slash Command (/).
+
+O administrador poderá configurar:
+
+🎤 Canal de voz onde a partida acontecerá.
+💰 Valor da recompensa.
+⏳ Tempo das inscrições.
+Após a confirmação, o bot entrará
+automaticamente no canal de voz escolhido e
+iniciará o período de inscrições.
+───
+
+Inscrições
+Durante esse período, será enviado um Embed
+contendo:
+
+💺 Nome do evento.
+💰 Valor da recompensa.
+🎤 Canal de voz.
+
+👥 Quantidade de participantes.
+
+⏳ Tempo restante para entrar.
+Haverá apenas um botão:
+
+🎉 Participar
+
+O contador será atualizado automaticamente
+conforme novos jogadores entrarem.
+Não existe limite de participantes. O evento
+poderá reunir dezenas ou até centenas de
+jogadores ao mesmo tempo.
+───
+
+Requisitos
+Para participar, o usuário deverá:
+
+🎤 Estar conectado ao canal de voz do
+evento.
+✅ Clicar no botão Participar antes do
+encerramento das inscrições.
+
+🔊 Permanecer na call durante toda a
+partida.
+
+Caso saia do canal de voz durante o jogo, será
+eliminado automaticamente.
+───
+
+Início da partida
+Quando as inscrições terminarem:
+O botão Participar desaparecerá.
+O bot permanecerá conectado ao canal de
+voz.
+Uma música será reproduzida para todos os
+participantes.
+O botão
+
+💺 Sentar permanecerá bloqueado
+
+enquanto a música estiver tocando.
+
+───
+
+Música
+O bot reproduzirá uma música apropriada para a
+brincadeira.
+O momento em que ela irá parar será totalmente
+aleatório.
+Nenhum participante conseguirá prever quando
+isso acontecerá.
+Assim que a música parar:
+
+💺 O botão Sentar será liberado
+imediatamente.
+
+Todos deverão clicar o mais rápido possível.
+O sistema registrará a ordem exata dos cliques.
+───
+
+Eliminações
+Os primeiros jogadores que clicarem
+conseguirão ocupar as cadeiras disponíveis.
+Quem clicar depois que todas as cadeiras forem
+ocupadas será eliminado.
+Também será eliminado quem clicar antes da
+música parar.
+Sempre que isso acontecer, o bot enviará uma
+nova mensagem informando a eliminação.
+Exemplo:
+
+❌ @Usuário tentou sentar antes da música
+parar e foi eliminado!
+
+ou
+
+💺 @Usuário não conseguiu uma cadeira
+nesta rodada e foi eliminado!
+
+───
+
+Rodadas
+Ao final de cada rodada:
+
+💺 Uma cadeira será removida.
+👥 O número de jogadores diminuirá.
+🎵 Uma nova música começará a tocar.
+🔊 O momento em que ela irá parar será
+novamente aleatório.
+
+O processo continuará automaticamente até
+restar apenas um participante.
+───
+
+Final da partida
+Quando restar apenas um jogador, o evento será
+encerrado automaticamente.
+O vencedor receberá as Almas imediatamente.
+
+───
+
+Mensagem Final
+
+🎉 A Dança das Cadeiras chegou ao fim!
+👑 Grande Campeão
+🥇 @Vencedor
+💰 Prêmio recebido:1.000.000 Almas
+❤️ Agradeçam a @Administrador por organizar
+esta Dança das Cadeiras!
+───
+
+Recursos do sistema
+
+🎤 Bot entra automaticamente no canal de
+voz.
+🎵 Reprodução automática de músicas
+
+durante as rodadas.
+A música para em momentos totalmente
+aleatórios.
+Botão Sentar liberado apenas quando a
+música parar.
+Registro dos cliques em tempo real.
+Eliminação de quem clicar antes da hora.
+Eliminação de quem não conseguir uma
+cadeira.
+Eliminação automática ao sair do canal
+de voz.
+Participação ilimitada.
+Recompensa configurável.
+Apenas um vencedor por partida.
+Entrega automática das Almas.
+Interface moderna com Embeds e botões.
+Registro completo da partida no banco
+de dados.
+O Dança das Cadeiras foi projetado para ser um
+
+dos eventos mais divertidos e competitivos do
+ODISSEIA ARCANA, recriando fielmente a
+brincadeira tradicional dentro do Discord. Com
+música em tempo real, rodadas imprevisíveis e
+eliminações instantâneas, o evento proporciona
+uma experiência emocionante do início ao fim,
+mantendo todos os participantes atentos até
+que apenas um grande campeão permaneça.
+
+70.Comando fim — ODISSEIA
+
+ARCANA
+O comando fim é um comando exclusivo de
+prefixo, utilizado para encerrar automaticamente
+
+eventos, chamadas, competições, atividades e
+qualquer outra situação no servidor através de
+uma mensagem personalizada. Seu principal
+objetivo é facilitar o trabalho da equipe de
+administração, permitindo anunciar o
+encerramento de eventos de forma rápida e
+padronizada.
+Toda a aparência e o funcionamento do
+comando poderão ser configurados pelo Painel
+ODISSEIA ARCANA, tornando-o totalmente
+personalizável para cada servidor.
+───
+
+Funcionamento
+O comando será utilizado apenas pelo prefixo.
+Exemplo:
+
+text
+O.fim
+Ao executá-lo, o bot enviará automaticamente a
+mensagem configurada no painel, sem que o
+administrador precise escrevê-la manualmente.
+───
+
+Painel de Configuração
+No Painel Web haverá uma página exclusiva
+chamada Fim, onde será possível configurar:
+
+📝 Mensagem principal.
+🎨 Cor do Embed.
+🖼️ Banner ou imagem.
+📌 Título da mensagem.
+📄 Rodapé (Footer).
+👤 Autor do Embed.
+
+🎭 Cargos que podem utilizar o comando.
+📢 Canais onde o comando poderá ser
+usado.
+🚫 Canais bloqueados.
+🔒 Cargos bloqueados.
+🌐 Idioma da mensagem.
+🔔 Menções automáticas (@everyone,
+@here ou cargos específicos).
+⏰ Exclusão automática da mensagem após
+um tempo (opcional).
+
+Todas as alterações feitas no painel serão
+aplicadas imediatamente ao comando.
+───
+
+Mensagens Personalizadas
+O administrador poderá escrever qualquer
+mensagem que desejar.
+
+Exemplo:
+
+🎉 O evento foi encerrado! Obrigado a todos
+que participaram. Nos vemos na próxima
+edição!
+
+Ou:
+
+⚔️ A guerra chegou ao fim! Parabéns aos
+
+vencedores e obrigado pela participação de
+todos.
+Ou qualquer outro texto definido pelo servidor.
+───
+
+Recursos do sistema
+
+⚙️ Configuração completa pelo Painel
+ODISSEIA ARCANA.
+📝 Mensagem totalmente personalizada.
+🎨 Embed moderno e personalizável.
+🖼️ Suporte a imagens e banners.
+
+👤 Autor e rodapé configuráveis.
+🎭 Restrição por cargos.
+📢 Restrição por canais.
+🔔 Suporte a menções automáticas.
+⏰ Exclusão automática opcional.
+⚡ Alterações aplicadas em tempo real.
+📊 Registro de utilização no banco de dados.
+🔒 Comando exclusivo de prefixo (O.fim).
+O comando fim foi desenvolvido para oferecer
+uma forma rápida, elegante e totalmente
+personalizável de encerrar atividades no
+servidor. Graças à integração com o Painel
+ODISSEIA ARCANA, cada comunidade poderá
+adaptá-lo às suas necessidades, criando
+mensagens de encerramento únicas e
+mantendo a identidade visual do servidor em
+todos os anúncios.
+
+71.Comando Mensagem —
+
+ODISSEIA ARCANA
+O comando Mensagem foi desenvolvido para
+permitir que administradores enviem
+mensagens através do ODISSEIA ARCANA de
+forma rápida, organizada e segura. Ele é
+exclusivo para membros da equipe autorizada e
+pode ser utilizado para anúncios, avisos,
+comunicados, eventos e qualquer outro tipo de
+informação importante para o servidor.
+O comando será compatível com textos simples
+e Embeds personalizados, permitindo
+mencionar canais, cargos e usuários quando
+necessário.
+───
+
+Funcionamento
+O comando estará disponível em Slash
+Command e Prefixo.
+Exemplos:
+text
+O.mensagem
+ou
+text
+/mensagem
+Ao executar o comando, o administrador poderá
+definir todas as informações da mensagem
+antes de enviá-la.
+───
+
+Opções disponíveis
+O comando permitirá configurar:
+
+📝 Título.
+📄 Conteúdo da mensagem.
+🎨 Cor do Embed.
+🖼️ Imagem.
+🌄 Thumbnail.
+📌 Rodapé.
+👤 Autor do Embed.
+📢 Canal onde será enviada.
+🎭 Cargos que serão mencionados.
+👤 Usuários que serão mencionados.
+📂 Categoria do anúncio (opcional).
+Também será possível escolher entre enviar
+uma mensagem simples ou um Embed.
+───
+
+Permissões
+Apenas usuários autorizados poderão utilizar o
+comando.
+As permissões poderão ser definidas por:
+
+👑 Administrador.
+🛡️ Cargos específicos.
+
+⚙️ Permissões configuradas pelo servidor.
+Caso um usuário sem permissão tente utilizar o
+comando, o bot bloqueará automaticamente a
+execução.
+───
+
+Interface
+Após preencher todas as informações, o bot
+
+enviará exatamente a mensagem configurada.
+Exemplo:
+
+📢 Aviso Importante
+
+O servidor ficará em manutenção hoje às 22:00.
+Pedimos desculpas pelo transtorno.
+@Eventos
+Ou em formato de Embed totalmente
+personalizado.
+───
+
+Recursos do sistema
+
+📝 Envio de mensagens pelo bot.
+🎨 Suporte a Embeds personalizados.
+📢 Escolha do canal de destino.
+🎭 Menção de cargos.
+👤 Menção de usuários.
+🖼️ Imagens, thumbnails e banners.
+
+📌 Rodapé e autor personalizados.
+🔒 Uso restrito para administradores e
+cargos autorizados.
+
+⚡ Envio instantâneo.
+📊 Registro de utilização no banco de dados.
+📱 Compatível com /mensagem e
+O.mensagem.
+
+O comando Mensagem será uma das principais
+ferramentas de comunicação do ODISSEIA
+ARCANA, permitindo que a equipe publique
+anúncios profissionais e padronizados
+diretamente pelo bot, mantendo a organização e
+a identidade visual do servidor.
+
+72.Comando Editar Saldo —
+
+ODISSEIA ARCANA
+O comando Editar Saldo foi desenvolvido
+
+exclusivamente para o proprietário do ODISSEIA
+ARCANA. Ele permite alterar diretamente a
+quantidade de Almas de qualquer usuário,
+sendo uma ferramenta administrativa destinada
+apenas para manutenção, testes,
+compensações e correções.
+Este comando será exclusivo do prefixo (O.) e
+não estará disponível como Slash Command.
+───
+
+Funcionamento
+Exemplos:
+text
+O.saldo adicionar @usuario 500000
+
+text
+O.saldo remover @usuario 100000
+text
+O.saldo definir @usuario 1000000
+
+text
+O.saldo zerar @usuario
+
+───
+
+Ações disponíveis
+
+➕ Adicionar Almas.
+➖ Remover Almas.
+✏️ Definir um saldo específico.
+🗑️ Zerar completamente o saldo.
+
+O comando aceitará números normais e
+abreviados, como:
+500000
+500k
+1m
+2.5m
+10b
+1.25t
+
+───
+
+Segurança
+Este comando será protegido por um sistema de
+segurança.
+Apenas o ID do proprietário do bot poderá
+executá-lo.
+Mesmo administradores do servidor não terão
+
+acesso.
+Caso outra pessoa tente utilizá-lo, o bot
+responderá informando que o comando é
+exclusivo do desenvolvedor.
+Todas as alterações serão registradas em um
+histórico contendo:
+
+👤 Quem executou.
+👤 Usuário afetado.
+💰 Valor alterado.
+📝 Tipo da alteração.
+📅 Data e hora.
+───
+
+Recursos do sistema
+
+➕ Adicionar Almas.
+➖ Remover Almas.
+
+✏️ Definir saldo.
+🗑️ Zerar saldo.
+🔒 Exclusivo do proprietário do bot.
+📜 Registro completo das alterações.
+
+⚡ Atualização instantânea do banco de
+dados.
+💰 Suporte a valores abreviados.
+📱 Compatível apenas com O.saldo.
+───
+
+Comando Painel — ODISSEIA
+ARCANA
+O comando Painel permite que qualquer usuário
+acesse rapidamente o Painel Web do ODISSEIA
+ARCANA, onde administradores podem
+configurar todos os sistemas do bot de forma
+intuitiva.
+
+O comando enviará um Embed moderno com
+uma imagem ilustrativa do painel, uma breve
+descrição de suas funcionalidades e um botão
+que direciona o usuário para o site oficial.
+───
+
+Funcionamento
+Disponível em:
+/painel
+O.painel
+Ao executar o comando, o bot enviará um
+Embed contendo:
+
+🌌 Nome do Painel ODISSEIA ARCANA.
+🖼️ Imagem do painel.
+📝 Descrição das funcionalidades.
+🌐 Link oficial para acesso.
+
+───
+
+Informações exibidas
+O Embed apresentará uma breve descrição,
+como:
+Gerencie todo o seu servidor em um só lugar!
+Configure economia, Drops, cargos,
+mensagens automáticas, comandos, eventos,
+sistema de moderação, jogos, níveis, Work,
+Daily, loja, logs e muito mais através do Painel
+ODISSEIA ARCANA.
+Também haverá uma imagem ilustrativa
+mostrando a interface do painel.
+───
+
+Botão
+O Embed contará com um botão:
+
+🌐 Acessar Painel
+
+Ao clicar, o usuário será redirecionado para o
+site oficial do painel.
+Exemplo de endereço:
+https://painel.odisseiaarcana.com
+───
+
+Recursos do sistema
+
+🌐 Acesso rápido ao Painel Web.
+🖼️ Imagem ilustrativa do painel.
+🔗 Botão com link direto.
+🎨 Embed moderno.
+⚡ Compatível com /painel e O.painel.
+📱 Funciona em computadores e
+
+dispositivos móveis.
+O comando Painel facilita o acesso às
+ferramentas de gerenciamento do ODISSEIA
+ARCANA, permitindo que administradores
+configurem praticamente todos os recursos do
+bot através de uma interface web moderna,
+rápida e intuitiva.
+
+72.Sistema de Música — ODISSEIA
+
+ARCANA
+O Sistema de Música do ODISSEIA ARCANA foi
+desenvolvido para oferecer uma experiência
+completa de reprodução de áudio nos canais de
+voz do Discord. Para utilizar os comandos, o
+usuário deverá estar conectado a um canal de
+
+voz. O bot entrará automaticamente no mesmo
+canal e iniciará a reprodução da música
+solicitada.
+O sistema permitirá reproduzir músicas e
+playlists do YouTube e do Spotify, organizando
+automaticamente uma fila de reprodução para
+que os membros possam ouvir suas músicas
+favoritas enquanto conversam.
+───
+
+Funcionamento
+Para utilizar qualquer comando de música, o
+usuário deverá:
+
+🎤 Estar conectado a um canal de voz.
+🎵 Solicitar uma música através do
+comando correspondente.
+
+Ao receber o comando, o bot:
+Entrará automaticamente no canal de voz do
+usuário.
+Procurará a música ou playlist.
+Iniciará a reprodução automaticamente.
+Criará uma fila caso existam outras músicas.
+Se o usuário não estiver conectado a uma call, o
+bot informará que é necessário entrar em um
+canal de voz antes de utilizar os comandos.
+───
+
+Plataformas suportadas
+O sistema será compatível com:
+
+▶️ YouTube.
+🎧 Spotify.
+
+Será possível tocar:
+Músicas individuais.
+Playlists completas.
+Álbuns (quando disponíveis).
+Caso um link do Spotify seja enviado, o bot
+localizará automaticamente a música
+correspondente e a reproduzirá.
+───
+
+Interface do Player
+Sempre que uma música começar, o bot enviará
+um Embed contendo:
+
+🎵 Nome da música.
+👤 Artista.
+⏱️ Duração.
+🎧 Plataforma de origem.
+
+👤 Usuário que solicitou a música.
+📃 Quantidade de músicas na fila.
+🖼️ Capa da música.
+───
+
+Botões do Player
+O painel contará com botões para:
+
+▶️ Reproduzir.
+⏸️ Pausar.
+⏭️ Próxima música.
+⏮️ Música anterior.
+🔀 Embaralhar.
+🔁 Repetir música.
+🔂 Repetir fila.
+📃 Ver fila.
+🔊 Ajustar volume.
+
+❌ Encerrar reprodução.
+───
+
+Fila de Reprodução
+Todas as músicas adicionadas serão
+organizadas automaticamente.
+Os usuários poderão:
+adicionar músicas;
+adicionar playlists;
+visualizar a fila;
+remover músicas;
+limpar a fila;
+reorganizar a ordem das músicas.
+
+───
+
+Desconexão Automática
+Quando todos os usuários saírem do canal de
+voz, ou quando o bot permanecer sozinho por
+um período configurado, ele encerrará a
+reprodução, limpará a fila e sairá
+automaticamente da call.
+───
+
+Recursos do sistema
+
+🎤 O usuário deve estar em um canal de voz.
+🤖 O bot entra automaticamente na call.
+▶️ Reprodução de músicas do YouTube.
+🎧 Reprodução de músicas e playlists do
+Spotify.
+📃 Fila inteligente de reprodução.
+🎛️ Botões interativos.
+
+🎵 Suporte a músicas individuais e playlists.
+🔀 Modo aleatório.
+🔁 Repetição de música e fila.
+🔊 Controle de volume.
+🖼️ Embed moderno com informações da
+música.
+💤 Desconexão automática quando a call
+ficar vazia.
+📱 Compatível com comandos de Prefixo e
+Slash Commands.
+
+O Sistema de Música do ODISSEIA ARCANA foi
+projetado para oferecer uma experiência
+simples e completa, permitindo que qualquer
+membro do servidor compartilhe músicas
+diretamente do YouTube ou do Spotify enquanto
+estiver em um canal de voz. Com fila
+automática, controles interativos e
+gerenciamento inteligente da reprodução, o bot
+garante uma experiência prática e agradável
+
+para toda a comunidade.
+
+73.Sistema de Notificações do
+
+YouTube — ODISSEIA ARCANA
+O Sistema de Notificações do YouTube foi
+desenvolvido para publicar automaticamente
+novos vídeos de um ou mais canais do YouTube
+diretamente no servidor do Discord. Sempre que
+um canal configurado publicar um novo vídeo, o
+ODISSEIA ARCANA detectará a publicação e
+enviará uma mensagem personalizada no canal
+escolhido, mantendo a comunidade sempre
+atualizada.
+Todo o sistema será configurado através de
+uma área exclusiva no Painel ODISSEIA
+ARCANA, sem a necessidade de utilizar
+
+comandos.
+───
+
+Painel de Configuração
+No Painel Web haverá uma página chamada
+Notificações do YouTube, onde será possível
+configurar:
+
+📺 Canal do YouTube.
+📢 Canal do Discord onde os vídeos serão
+publicados.
+🎨 Mensagem personalizada.
+🖼️ Cor do Embed.
+📝 Título da notificação.
+👤 Cargos que serão mencionados.
+🔔 Opção de mencionar @everyone ou
+@here.
+🖼️ Exibir miniatura (thumbnail) do vídeo.
+
+📸 Exibir banner/capa do vídeo.
+🌐 Ativar ou desativar notificações.
+➕ Adicionar vários canais do YouTube.
+🗑️ Remover canais configurados.
+Todas as alterações serão aplicadas
+automaticamente após serem salvas.
+───
+
+Funcionamento
+Depois que um canal do YouTube for adicionado
+ao painel, o bot começará a monitorá-lo
+automaticamente.
+Sempre que um novo vídeo for publicado, o
+ODISSEIA ARCANA enviará uma mensagem no
+canal configurado.
+Não será necessário utilizar nenhum comando.
+Todo o processo ocorrerá de forma automática.
+
+───
+
+Interface da Notificação
+Cada novo vídeo será enviado em um Embed
+moderno contendo:
+
+📺 Nome do canal.
+🎬 Título do vídeo.
+📝 Descrição (opcional).
+🖼️ Thumbnail oficial do vídeo.
+📅 Data de publicação.
+🔗 Link direto para assistir.
+Também poderá ser enviada uma mensagem
+personalizada, por exemplo:
+
+🎉 Vídeo novo no canal!
+
+Um novo vídeo acaba de ser publicado! Não
+perca essa novidade e assista agora mesmo.
+
+Se configurado, o bot também poderá
+mencionar cargos específicos ou todos os
+membros do servidor.
+───
+
+Gerenciamento
+Pelo painel será possível:
+
+➕ Adicionar novos canais do YouTube.
+✏️ Editar canais já configurados.
+
+⏸️ Pausar notificações.
+▶️ Reativar notificações.
+🗑️ Excluir canais da lista.
+👀 Visualizar todos os canais monitorados.
+───
+
+Recursos do sistema
+
+📺 Monitoramento automático de canais do
+YouTube.
+🔔 Publicação automática de novos vídeos.
+⚙️ Configuração completa pelo Painel
+ODISSEIA ARCANA.
+📢 Escolha do canal onde as notificações
+serão enviadas.
+📝 Mensagens totalmente personalizadas.
+🎨 Embeds modernos.
+🖼️ Thumbnail e capa do vídeo.
+👤 Menção de cargos.
+📣 Suporte a @everyone e @here.
+➕ Suporte para monitorar vários canais ao
+mesmo tempo.
+
+⏸️ Ativar ou desativar notificações a
+qualquer momento.
+📊 Registro das notificações enviadas.
+
+O Sistema de Notificações do YouTube facilita a
+divulgação de novos conteúdos dentro do
+servidor, permitindo que criadores e
+comunidades mantenham seus membros
+sempre informados sobre cada novo vídeo
+publicado, tudo de forma automática e
+totalmente personalizável através do Painel
+ODISSEIA ARCANA.
+
+74.Sistema de Assistir Vídeos na
+
+Call — ODISSEIA ARCANA
+O Sistema de Assistir Vídeos na Call permite
+que os membros assistam a vídeos diretamente
+em um canal de voz do Discord, criando uma
+experiência sincronizada para todos os
+participantes da chamada. O bot reproduz o
+
+vídeo para todos ao mesmo tempo, permitindo
+sessões de entretenimento, estudos, eventos e
+apresentações dentro do servidor.
+Para utilizar o sistema, o usuário deverá estar
+conectado a um canal de voz.
+───
+
+Funcionamento
+O usuário entra em um canal de voz e utiliza o
+comando para iniciar a reprodução.
+O bot entrará automaticamente no mesmo canal
+e carregará o vídeo solicitado.
+Todos os membros presentes na call assistirão
+ao vídeo de forma sincronizada.
+Caso outro usuário entre na chamada durante a
+reprodução, ele poderá acompanhar o vídeo a
+partir do ponto em que estiver sendo exibido.
+
+───
+
+Plataformas suportadas
+O sistema permitirá assistir vídeos provenientes
+de:
+
+▶️ YouTube.
+🎥 Links diretos de vídeos compatíveis.
+📺 Outras plataformas suportadas
+futuramente.
+
+O usuário poderá utilizar tanto links quanto
+pesquisas pelo nome do vídeo, quando
+disponível.
+───
+
+Interface
+
+Ao iniciar um vídeo, o bot enviará um Embed
+contendo:
+
+🎬 Título do vídeo.
+👤 Nome do canal ou criador.
+⏱️ Duração.
+🖼️ Thumbnail do vídeo.
+
+👤 Usuário que iniciou a reprodução.
+
+👥 Quantidade de pessoas assistindo na call.
+───
+
+Controles
+O sistema contará com botões interativos para
+controlar a reprodução:
+
+▶️ Reproduzir.
+⏸️ Pausar.
+⏭️ Avançar.
+
+⏮️ Voltar.
+⏩ Pular para um ponto específico.
+🔊 Ajustar volume.
+🔁 Reiniciar o vídeo.
+❌ Encerrar a sessão.
+Os controles poderão ser limitados ao usuário
+que iniciou a sessão ou a administradores,
+conforme a configuração do servidor.
+───
+
+Requisitos
+Para utilizar o sistema, será necessário:
+
+🎤 Estar conectado a um canal de voz.
+🤖 O bot conseguir entrar nesse canal.
+🔊 Permanecer na call durante a reprodução.
+Quando todos os usuários saírem da call, o bot
+
+encerrará automaticamente a sessão e deixará
+o canal de voz.
+───
+
+Recursos do sistema
+
+🎬 Reprodução sincronizada de vídeos.
+▶️ Suporte a vídeos do YouTube.
+🎤 Entrada automática do bot no canal de
+voz.
+🖼️ Embed moderno com informações do
+vídeo.
+🎛️ Controles por botões.
+⏯️ Pausar, continuar, avançar e reiniciar.
+🔊 Controle de volume.
+
+👥 Reprodução compartilhada para todos na
+call.
+💤 Encerramento automático quando a call
+
+ficar vazia.
+Compatível com comandos de Prefixo e
+Slash Commands.
+Registro das sessões no banco de dados.
+O Sistema de Assistir Vídeos na Call transforma
+os canais de voz do ODISSEIA ARCANA em
+verdadeiras salas de cinema e entretenimento.
+Com reprodução sincronizada, controles
+intuitivos e integração com o YouTube, os
+membros podem assistir juntos a vídeos,
+apresentações e outros conteúdos de forma
+prática e organizada, tornando as chamadas
+muito mais interativas.
+
+
