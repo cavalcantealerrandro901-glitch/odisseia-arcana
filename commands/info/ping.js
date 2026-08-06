@@ -1,0 +1,7 @@
+module.exports = {
+  name: 'ping',
+  description: 'Verifica a latência do bot',
+  async execute(message, args, client) {
+    return message.reply(`🏓 **Pong!** Latência: **${client.ws.ping}ms**`);
+  },
+};
