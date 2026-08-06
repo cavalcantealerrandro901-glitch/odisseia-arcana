@@ -2,7 +2,7 @@ const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } = require
 const express = require('express');
 require('dotenv').config();
 
-// Servidor Web para o Web Service do Render
+// --- SERVIDOR WEB (Para manter o Web Service do Render ativo) ---
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -14,7 +14,7 @@ app.listen(PORT, () => {
   console.log(`🌐 Servidor Web rodando na porta ${PORT}`);
 });
 
-// Configuração do Bot Discord
+// --- CONFIGURAÇÃO DO BOT DISCORD ---
 const PREFIX = 'o.';
 
 const client = new Client({
@@ -25,34 +25,35 @@ const client = new Client({
   ],
 });
 
-// Registra os comandos Slash (/)
+// Definindo comandos Slash (/)
 const commands = [
   new SlashCommandBuilder().setName('ping').setDescription('Responde com Pong e a latência!'),
   new SlashCommandBuilder().setName('ajuda').setDescription('Mostra a lista de comandos'),
 ];
 
+// Registrando comandos Slash na API do Discord
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 async function registerSlashCommands() {
   try {
-    console.log('Atualizando comandos Slash (/)...');
+    console.log('🔄 Atualizando comandos Slash (/)...');
     await rest.put(
       Routes.applicationCommands(process.env.CLIENT_ID),
       { body: commands }
     );
-    console.log('Comandos Slash registrados com sucesso!');
+    console.log('✅ Comandos Slash registrados com sucesso!');
   } catch (error) {
-    console.error('Erro ao registrar comandos Slash:', error);
+    console.error('❌ Erro ao registrar comandos Slash:', error);
   }
 }
 
-// Evento: Bot Online
+// Evento: Bot pronto / online
 client.once('ready', () => {
   console.log(`🤖 Bot online como: ${client.user.tag}`);
   registerSlashCommands();
 });
 
-// Evento: Comandos por Prefixo 'o.'
+// Evento: Mensagens com Prefixo (o.)
 client.on('messageCreate', (message) => {
   if (message.author.bot || !message.content.startsWith(PREFIX)) return;
 
@@ -64,11 +65,11 @@ client.on('messageCreate', (message) => {
   }
 
   if (command === 'ajuda') {
-    return message.reply('📜 **Comandos Disponíveis:**\n• `o.ping` ou `/ping` - Checa o ping\n• `o.ajuda` ou `/ajuda` - Menu de ajuda');
+    return message.reply('📜 **Comandos Disponíveis:**\n• `o.ping` ou `/ping` - Checa a latência\n• `o.ajuda` ou `/ajuda` - Menu de ajuda');
   }
 });
 
-// Evento: Comandos Slash (/)
+// Evento: Interação com Comandos Slash (/)
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -77,9 +78,10 @@ client.on('interactionCreate', async (interaction) => {
   if (commandName === 'ping') {
     await interaction.reply(`🏓 Pong! Latência: **${client.ws.ping}ms**`);
   } else if (commandName === 'ajuda') {
-    await interaction.reply('📜 **Comandos Disponíveis:**\n• `o.ping` ou `/ping` - Checa o ping\n• `o.ajuda` ou `/ajuda` - Menu de ajuda');
+    await interaction.reply('📜 **Comandos Disponíveis:**\n• `o.ping` ou `/ping` - Checa a latência\n• `o.ajuda` ou `/ajuda` - Menu de ajuda');
   }
 });
 
+// Login do Bot
 client.login(process.env.DISCORD_TOKEN);
 
