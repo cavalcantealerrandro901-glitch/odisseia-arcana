@@ -1,41 +1,74 @@
-Atue como um desenvolvedor especialista em
+Atue como um desenvolvedor sénior de
 Discord.js v14.
-Refatore o projeto do bot ODISSEIA ARCANA
-para usar uma estrutura modular de comandos
-em arquivos separados.
-REQUISITOS DA ESTRUTURA:
+O objetivo desta tarefa é reestruturar o bot
+ODISSEIA ARCANA para usar uma arquitetura
+modular baseada em comandos por arquivos
+individuais dentro da pasta 'commands/',
+mantendo a compatibilidade total com os
+prefixos 'O.' e 'o.'.
+--- ESTRUTURA DE FICHEIROS E PASTA
 
-1. Servidor Web Express (index.js):
-Mantenha o servidor Express ativo
+'commands/' ---
+
+1. FICHEIRO PRINCIPAL (index.js):
+Deve manter o servidor Express ativo
 rodando na porta process.env.PORT ou
-10000 para não dar o erro "Application
-exited early" no Render.
+10000 para evitar o erro "Application
+exited early" na hospedagem do Render.
+Deve carregar dinamicamente todos os
+ficheiros .js localizados na pasta
+'commands/'.
+Deve processar os comandos recebidos
+pelas mensagens que comecem com os
+prefixos 'O.' ou 'o.'.
+Deve conter uma estrutura simples de
+banco de dados em memória para gerir o
+saldo de 'Almas' dos utilizadores.
 
-2. Handler de Comandos Modular:
-Crie uma pasta 'commands' para
-armazenar os arquivos de comando
-individualmente.
-O index.js deve carregar dinamicamente
-todos os arquivos .js dentro da pasta
-'commands'.
+2. COMANDOS A SEREM CRIADOS NA PASTA
 
-3. Arquivos de Exemplo na pasta 'commands/':
-commands/ping.js (Responde o ping/
-latência do bot para O.ping e /ping).
-commands/help.js (Menu de ajuda com
-os sistemas do bot para O.help e /help).
-commands/daily.js (Comando de resgate
-diário de Almas).
-commands/atm.js (Comando de ver o
-saldo de Almas).
+'commands/':
 
-4. Suporte a Prefixos:
-O bot deve aceitar os prefixos 'O.' e 'o.'.
-Deve ser fácil adicionar novos arquivos de
-comando na pasta 'commands' no futuro.
+a) commands/daily.js:
+- Comando: O.daily
+- Descrição: Recompensa diária de Almas.
+Resgate único por dia (com verificação/reinício).
+Adiciona entre 500 e 1000 Almas ao utilizador e
+envia uma mensagem/embed confirmando o
+valor recebido e o novo saldo.
+b) commands/atm.js:
+- Comandos: O.atm / O.saldo
+- Descrição: Consulta o saldo bancário de Almas
+do utilizador ou do membro mencionado
+(@user).
+c) commands/work.js:
+- Comando: O.work
+- Descrição: Trabalha para ganhar uma
 
-Crie/atualize o index.js e os arquivos da pasta
-'commands' mantendo o código limpo e sem
-erros de sintaxe.
+quantidade aleatória de Almas (ex: 100 a 400
+Almas) com tempo de recarga (cooldown).
+d) commands/ping.js:
+- Comando: O.ping
+- Descrição: Responde com a latência atual do
+bot e da API do Discord.
+e) commands/help.js:
+- Comandos: O.help / O.ajuda
+- Descrição: Exibe um painel/embed moderno
+com a lista de categorias e comandos
+disponíveis no bot.
+f) commands/clear.js:
+- Comando: O.clear <quantidade>
+- Descrição: Comando de moderação para
+apagar de 1 a 100 mensagens no canal atual
+(requer permissão de Gestão de Mensagens).
+
+--- REQUISITOS TÉCNICOS --Todo o código deve ser gerado sem erros de
+sintaxe.
+Deve usar os recursos modernos da v14 do
+Discord.js (EmbedBuilder, ActionRowBuilder,
+etc.).
+Deve garantir a criação da pasta
+'commands/' e o salvamento individual de
+cada ficheiro.
 
 
