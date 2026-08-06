@@ -4,8 +4,8 @@ const db = new Database({ filePath: './database/economia.json' });
 
 module.exports = {
   name: 'balance',
-  aliases: ['bal', 'saldo', 'carteira'],
-  description: 'Consulta o saldo da carteira, banco e o total de um membro',
+  aliases: ['bal', 'saldo', 'carteira', 'atm'],
+  description: 'Consulta o saldo da carteira, banco e total de um membro',
   slashData: new SlashCommandBuilder()
     .setName('balance')
     .setDescription('Consulta o saldo de um membro')
@@ -16,7 +16,13 @@ module.exports = {
     ),
 
   async execute(message, args, client) {
-    const target = message.mentions.users.first() || message.author;
+    // Tenta pegar por menção, por ID ou usa quem enviou a mensagem
+    let target = message.mentions.users.first();
+    if (!target && args[0]) {
+      target = await client.users.fetch(args[0]).catch(() => null);
+    }
+    if (!target) target = message.author;
+
     return exibirSaldo(message, target);
   },
 
@@ -36,9 +42,9 @@ async function exibirSaldo(contexto, target, isSlash = false) {
     .setColor('#f1c40f')
     .setThumbnail(target.displayAvatarURL({ dynamic: true }))
     .addFields(
-      { name: '👛 Carteira', value: `\`${carteira.toLocaleString()}\` 🪙`, inline: true },
-      { name: '🏦 Banco', value: `\`${banco.toLocaleString()}\` 🪙`, inline: true },
-      { name: '💎 Total Geral', value: `\`${total.toLocaleString()}\` 🪙`, inline: false }
+      { name: '👛 Carteira', value: `\`${carteira.toLocaleString('pt-BR')}\` 🪙`, inline: true },
+      { name: '🏦 Banco', value: `\`${banco.toLocaleString('pt-BR')}\` 🪙`, inline: true },
+      { name: '💎 Total Geral', value: `\`${total.toLocaleString('pt-BR')}\` 🪙`, inline: false }
     )
     .setFooter({ text: 'Aeternus Economia' })
     .setTimestamp();
