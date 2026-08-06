@@ -1,4 +1,7 @@
-1. Comando Daily — ODISSEIA ARCANA
+Crie todos esses comandos e edite os arquivos
+se for necessário e pode criar tambem, mas
+lembrando que ele vai ser em prefixo (O.) E em
+slash(/). Comando Daily — ODISSEIA ARCANA
 O comando Daily é a principal recompensa
 diária do ODISSEIA ARCANA. Seu objetivo é
 incentivar os usuários a entrarem no servidor
@@ -15,11 +18,11 @@ disponível novamente.
 Quando o Daily for resgatado, o bot verificará se
 o usuário já recebeu a recompensa naquele dia.
 Se ainda não recebeu, as Almas serão
-adicionadas ao saldo, o banco de dados será
+
+adicionadas ao saldo, o banco de dados será
 atualizado e o usuário receberá uma mensagem
 confirmando o resgate com o valor recebido e o
-
-novo saldo.
+novo saldo.
 Quando o relógio marcar 00:00, o sistema
 liberará automaticamente o Daily para todos os
 usuários que já possuem uma conta registrada
@@ -36,11 +39,11 @@ outros benefícios sem necessidade de
 reescrever o comando.
 O Daily contará com diversas proteções para
 impedir abusos, verificando o registro do
-usuário, evitando múltiplos resgates no mesmo
+
+usuário, evitando múltiplos resgates no mesmo
 dia e garantindo que todas as alterações sejam
 salvas corretamente no banco de dados.
-
-No futuro, o sistema poderá incluir recursos
+No futuro, o sistema poderá incluir recursos
 como:
 
 🔥 Sequência de dias consecutivos (Streak
@@ -58,11 +61,11 @@ integrado à economia do ODISSEIA ARCANA,
 permitindo que novas funcionalidades sejam
 adicionadas facilmente sem alterar a estrutura
 principal do comando.
-2. Work: Comando Work — ODISSEIA ARCANA
+
+2. Work: Comando Work — ODISSEIA ARCANA
 O comando Work representa o sistema de
 trabalho do ODISSEIA ARCANA. Ele permite que
-
-os usuários ganhem Almas realizando
+os usuários ganhem Almas realizando
 diferentes profissões e atividades dentro da
 economia do bot, sendo uma das principais
 formas de obter recursos além do Daily e dos
@@ -79,11 +82,11 @@ O sistema contará com dezenas de profissões
 diferentes, cada uma com suas próprias
 mensagens e recompensas. Algumas serão
 comuns e oferecerão ganhos menores,
-enquanto outras serão mais raras e poderão
+
+enquanto outras serão mais raras e poderão
 conceder recompensas significativamente
 maiores.
-
-Além da recompensa principal, o Work poderá
+Além da recompensa principal, o Work poderá
 gerar eventos especiais de forma aleatória. Em
 algumas ocasiões, o usuário poderá encontrar
 um tesouro, receber uma gorjeta, ganhar um
@@ -100,11 +103,11 @@ O Work será totalmente integrado à economia
 do ODISSEIA ARCANA. Todas as Almas
 recebidas serão adicionadas automaticamente
 ao saldo do usuário e registradas em suas
-estatísticas, permitindo acompanhar ganhos
+
+estatísticas, permitindo acompanhar ganhos
 totais, quantidade de trabalhos realizados e
 outras informações relacionadas.
-
-Entre as funcionalidades planejadas estão:
+Entre as funcionalidades planejadas estão:
 
 💼 Diversas profissões e atividades.
 💰 Recompensas aleatórias.
@@ -122,11 +125,11 @@ O sistema será desenvolvido de forma modular,
 facilitando a adição de novas profissões,
 recompensas e eventos sem alterar a estrutura
 principal do comando. Dessa forma, o Work se
-tornará um dos pilares da economia do
+
+tornará um dos pilares da economia do
 ODISSEIA ARCANA, oferecendo uma forma
 divertida e constante de evolução para todos os
-
-jogadores.
+jogadores.
 
 3.Sistema de Moderação — ODISSEIA ARCANA
 O sistema de moderação do ODISSEIA ARCANA
@@ -142,11 +145,11 @@ moderação.
 Cada comando verificará automaticamente se o
 usuário possui as permissões necessárias antes
 de ser executado, impedindo o uso por
-membros sem autorização. Além disso, todas
+
+membros sem autorização. Além disso, todas
 as ações poderão registrar o responsável, o
 usuário afetado, o motivo da punição e a data
-
-em que a ação foi aplicada.
+em que a ação foi aplicada.
 Comandos de moderação
 Ban (/ban e O.ban)
 Remove permanentemente um membro do
@@ -163,11 +166,11 @@ Expulsa um membro do servidor sem bani-lo. O
 usuário poderá retornar posteriormente caso
 receba um novo convite.
 Silenciar (/mute e O.mute)
-Impede temporariamente que um membro envie
+
+Impede temporariamente que um membro envie
 mensagens ou participe de conversas,
 utilizando cargos ou permissões configuradas
-
-no servidor.
+no servidor.
 Timeout (/timeout e O.timeout)
 Aplica o tempo limite nativo do Discord,
 impedindo o envio de mensagens e a
@@ -184,11 +187,11 @@ Avisar (/warn e O.warn)
 Aplica uma advertência ao usuário, registrando
 o motivo no banco de dados do bot.
 Advertências (/warnings e O.warnings)
-Exibe o histórico completo de advertências de
+
+Exibe o histórico completo de advertências de
 um membro, incluindo datas, motivos e o
 moderador responsável.
-
-Remover Advertência (/unwarn e O.unwarn)
+Remover Advertência (/unwarn e O.unwarn)
 Remove uma advertência específica do histórico
 do usuário.
 Trancar Canal (/lock e O.lock)
@@ -206,12 +209,12 @@ moderação.
 ação.
 📅 Data e horário de todas as punições.
 📌 Motivo obrigatório ou opcional, conforme o
-comando.
+
+comando.
+
 🔔 Notificações privadas para o usuário punido
 (quando possível).
-
-📊 Histórico permanente de advertências.
-
+📊 Histórico permanente de advertências.
 ⚡ Respostas rápidas utilizando Slash
 Commands e comandos por prefixo.
 🔒 Proteção contra ações em administradores,
@@ -230,10 +233,11 @@ a moderação do ODISSEIA ARCANA será
 completa, segura e preparada para servidores de
 qualquer tamanho. Todos teram um botão de
 confirmação, menos os comandos de limpar,
-lock e unlock.
+
+lock e unlock.
 3. Jogo Mines — ODISSEIA
 
-ARCANA
+ARCANA
 O Mines é um dos principais jogos de apostas
 do ODISSEIA ARCANA, inspirado no clássico
 Campo Minado e adaptado para a economia do
@@ -249,11 +253,11 @@ deseja enfrentar. O sistema aceitará valores
 numéricos, abreviações como 1k, 2.5m, 1b, além
 das opções all e half. Também será possível
 jogar no modo diversão, sem apostar Almas.
-O tabuleiro será composto por 25 casas (5×5).
+
+O tabuleiro será composto por 25 casas (5×5).
 As minas serão posicionadas aleatoriamente no
 início de cada partida, garantindo que cada jogo
-
-seja único. O usuário poderá escolher entre 1 e
+seja único. O usuário poderá escolher entre 1 e
 24 minas, alterando completamente a
 dificuldade e o multiplicador da partida.
 Durante o jogo, cada casa aberta com sucesso
@@ -274,11 +278,11 @@ minas serão reveladas e o resultado será exibido
 no tabuleiro.
 A interface utilizará botões interativos do
 Discord, permitindo que o jogador abra as casas
-diretamente na mensagem do jogo. O sistema
+
+diretamente na mensagem do jogo. O sistema
 atualizará automaticamente o tabuleiro, o
 multiplicador, o prêmio atual e o número de
-
-casas restantes após cada jogada.
+casas restantes após cada jogada.
 Além do botão
 botão
 
@@ -300,11 +304,10 @@ verificadas antes de atualizar o saldo da
 economia.
 Recursos do sistema
 
-💣 Tabuleiro de 5×5 (25 casas).
+💣 Tabuleiro de 5×5 (25 casas).
 🎯 Escolha entre 1 e 24 minas.
 💰 Apostas personalizadas.
-
-💎 Aceita 500, 2.5k, 1m, 1b, all e half.
+💎 Aceita 500, 2.5k, 1m, 1b, all e half.
 🎮 Modo diversão (sem apostar Almas).
 📈 Multiplicador atualizado em tempo real.
 💰 Botão Sacar para garantir o prêmio
@@ -323,11 +326,11 @@ novos recursos.
 
 O sistema será desenvolvido de forma
 organizada e independente, permitindo
-adicionar novos modos de jogo, animações,
+
+adicionar novos modos de jogo, animações,
 efeitos visuais, tabelas de multiplicadores,
 eventos especiais e outras funcionalidades sem
-
-alterar sua estrutura principal. O Mines será um
+alterar sua estrutura principal. O Mines será um
 dos jogos mais completos e importantes da
 economia do ODISSEIA ARCANA.
 4. Comando Ajuda / Help — ODISSEIA ARCANA
@@ -343,11 +346,11 @@ mostrar uma lista extensa de comandos, o
 usuário poderá navegar entre diferentes menus
 utilizando botões e menus de seleção, tornando
 a experiência muito mais intuitiva.
-Cada categoria reunirá comandos relacionados,
+
+Cada categoria reunirá comandos relacionados,
 apresentando uma breve descrição, exemplos
 de uso, permissões necessárias (quando
-
-houver) e observações importantes.
+houver) e observações importantes.
 Categorias disponíveis
 
 💰 Economia — ATM, Daily, Work, Pay, Pix e
@@ -369,11 +372,11 @@ versão, uptime, estatísticas e links úteis.
 
 Ao selecionar uma categoria, o painel será
 atualizado automaticamente, mostrando apenas
-os comandos daquele sistema. Cada comando
+
+os comandos daquele sistema. Cada comando
 terá uma descrição clara, explicando sua
 função, seus parâmetros e exemplos de
-
-utilização.
+utilização.
 O sistema também contará com uma busca
 inteligente. O usuário poderá solicitar ajuda
 sobre um comando específico, como:
@@ -391,12 +394,11 @@ desenvolvedor e links oficiais do projeto.
 Recursos do sistema
 
 📚 Painel organizado por categorias.
-🎛️ Navegação por botões e menus interativos.
+
+🎛️ Navegação por botões e menus interativos.
 🔍 Busca por comando específico.
 📝 Descrição detalhada de cada comando.
-
-💡 Exemplos práticos de utilização.
-
+💡 Exemplos práticos de utilização.
 ⚙️ Compatível com comandos de prefixo e
 Slash Commands.
 📱 Interface organizada e fácil de navegar.
@@ -412,11 +414,10 @@ garante que o comando Ajuda/Help permaneça
 sempre atualizado, tornando-se o principal guia
 para todos os usuários do bot.
 
-5. Jogo Blackjack — ODISSEIA
+5. Jogo Blackjack — ODISSEIA
 
 ARCANA
-
-O Blackjack é um dos principais jogos de
+O Blackjack é um dos principais jogos de
 apostas do ODISSEIA ARCANA, baseado nas
 regras clássicas do jogo 21 e totalmente
 integrado à economia do bot. O objetivo é
@@ -432,10 +433,11 @@ opções all e half.
 Quando a partida começar, cada participante
 receberá duas cartas. Durante o jogo, será
 possível utilizar botões interativos para decidir
-cada jogada.
+
+cada jogada.
 Botões disponíveis
 
-🃏 Pedir Carta (Hit) — Compra mais uma
+🃏 Pedir Carta (Hit) — Compra mais uma
 carta.
 ✋ Parar (Stand) — Encerra sua vez e
 mantém a mão atual.
@@ -451,11 +453,11 @@ Blackjack:
 Cartas 2 a 10 mantêm seus valores.
 J, Q e K valem 10.
 O Ás (A) poderá valer 1 ou 11, sendo
-ajustado automaticamente para favorecer o
+
+ajustado automaticamente para favorecer o
 jogador sem ultrapassar 21.
 Quando a partida for contra o bot, ele seguirá
-
-uma estratégia automática, comprando cartas
+uma estratégia automática, comprando cartas
 até atingir uma pontuação considerada segura e
 então encerrando sua jogada. Ao final, o
 sistema comparará as mãos para determinar o
@@ -471,11 +473,12 @@ botões da partida, apenas um jogo poderá
 permanecer ativo por usuário ao mesmo tempo
 e todas as apostas serão verificadas antes do
 início da partida.
-Recursos do sistema
+
+Recursos do sistema
 
 🃏 Baralho completo de 52 cartas.
 
-🤖 Partidas contra o bot.
+🤖 Partidas contra o bot.
 👥 Partidas entre usuários.
 💰 Apostas personalizadas.
 💎 Aceita 500, 2.5k, 1m, 1b, all e half.
@@ -494,11 +497,11 @@ possam interagir com a partida.
 
 O Blackjack será desenvolvido de forma
 modular, permitindo adicionar futuramente
-recursos como Double Down, Split, torneios,
+
+recursos como Double Down, Split, torneios,
 rankings, desafios diários, mesas privadas e
 eventos especiais. Assim, ele se tornará um dos
-
-jogos mais estratégicos e completos da
+jogos mais estratégicos e completos da
 economia do ODISSEIA ARCANA.
 
 6. Jogo Cara ou Coroa — ODISSEIA
@@ -514,11 +517,11 @@ O sistema aceitará apostas utilizando números
 comuns e abreviações como 1k, 2.5m, 1b, além
 das opções all e half. Também será possível
 jogar no modo diversão, sem apostar Almas.
-Após iniciar a partida, o bot exibirá uma
+
+Após iniciar a partida, o bot exibirá uma
 pequena animação simulando o giro da moeda
 antes de revelar o resultado. Isso torna a
-
-experiência mais dinâmica e emocionante.
+experiência mais dinâmica e emocionante.
 O resultado será completamente aleatório,
 utilizando um sistema justo para garantir que
 tanto Cara quanto Coroa tenham exatamente
@@ -534,11 +537,10 @@ partidas no perfil do jogador, permitindo
 acompanhar estatísticas detalhadas.
 Recursos do sistema
 
-🪙 Escolha entre Cara ou Coroa.
+🪙 Escolha entre Cara ou Coroa.
 💰 Apostas personalizadas.
 💎 Aceita 500, 2.5k, 1m, 1b, all e half.
-
-🎮 Modo diversão (sem apostar Almas).
+🎮 Modo diversão (sem apostar Almas).
 🎲 Resultado totalmente aleatório e justo.
 ✨ Animação do lançamento da moeda.
 📊 Estatísticas completas de partidas,
@@ -558,10 +560,11 @@ eventos especiais, sequências de vitórias
 (streaks), desafios diários, rankings e torneios. O
 Cara ou Coroa será um dos jogos mais simples,
 rápidos e acessíveis do ODISSEIA ARCANA,
-perfeito para quem deseja testar a sorte em
+
+perfeito para quem deseja testar a sorte em
 poucos segundos.
 
-7. Jogo Roleta — ODISSEIA
+7. Jogo Roleta — ODISSEIA
 
 ARCANA
 A Roleta é um jogo de apostas baseado em
@@ -576,11 +579,11 @@ menor retorno, ou apostas mais arriscadas com
 recompensas muito maiores.
 Antes de iniciar a partida, o usuário informará o
 valor da aposta. O sistema aceitará números
-comuns e abreviações como 1k, 2.5m, 1b, além
+
+comuns e abreviações como 1k, 2.5m, 1b, além
 das opções all e half. Também será possível
 jogar no modo diversão, sem apostar Almas.
-
-Após escolher o valor, o jogador selecionará o
+Após escolher o valor, o jogador selecionará o
 tipo de aposta por meio de botões ou menus
 interativos.
 Tipos de apostas
@@ -598,11 +601,11 @@ Tipos de apostas
 📦 Dúzias
 
 Depois da escolha, o bot exibirá uma animação
-simulando o giro da roleta antes de revelar o
+
+simulando o giro da roleta antes de revelar o
 número sorteado, sua cor e o resultado da
 aposta.
-
-Cada tipo de aposta terá um multiplicador
+Cada tipo de aposta terá um multiplicador
 diferente. Apostas mais fáceis terão
 pagamentos menores, enquanto apostas mais
 difíceis poderão oferecer prêmios muito maiores.
@@ -619,10 +622,9 @@ automaticamente no perfil do usuário,
 permitindo acompanhar estatísticas detalhadas.
 Recursos do sistema
 
-🎡 Roleta totalmente interativa.
+🎡 Roleta totalmente interativa.
 🎯 Diversos tipos de apostas.
-
-💰 Apostas personalizadas.
+💰 Apostas personalizadas.
 💎 Aceita 500, 2.5k, 1m, 1b, all e half.
 🎮 Modo diversão (sem apostar Almas).
 ✨ Animação do giro da roleta.
@@ -643,10 +645,11 @@ ODISSEIA ARCANA, oferecendo uma
 combinação de sorte, estratégia e emoção. Com
 vários tipos de apostas e multiplicadores, ela
 permitirá que cada jogador escolha entre jogar
-de forma mais segura ou buscar grandes
+
+de forma mais segura ou buscar grandes
 recompensas assumindo riscos maiores.
 
-8. Jogo Rinha — ODISSEIA ARCANA
+8. Jogo Rinha — ODISSEIA ARCANA
 A Rinha é um jogo competitivo do ODISSEIA
 ARCANA onde dois jogadores se enfrentam em
 uma batalha baseada em sorte, estratégia e
@@ -661,10 +664,10 @@ opções all e half.
 Após receber o desafio, o adversário poderá
 aceitar ou recusar utilizando botões interativos.
 Se o desafio for recusado ou não for respondido
-dentro do tempo determinado, ele será
-cancelado automaticamente e nenhuma Alma
 
-será transferida.
+dentro do tempo determinado, ele será
+cancelado automaticamente e nenhuma Alma
+será transferida.
 Quando ambos aceitarem, o combate
 começará. Cada participante terá seus atributos
 gerados automaticamente, como força, defesa,
@@ -681,9 +684,10 @@ aposta, enquanto o perdedor perderá o valor
 apostado. Todas as estatísticas da partida
 serão registradas automaticamente no perfil
 dos dois participantes.
-Recursos do sistema
 
-⚔️ Desafios entre usuários.
+Recursos do sistema
+
+⚔️ Desafios entre usuários.
 💰 Apostas personalizadas.
 💎 Aceita 500, 2.5k, 1m, 1b, all e half.
 🎮 Modo diversão (sem apostar Almas).
@@ -702,10 +706,9 @@ rankings.
 🔒 Apenas os participantes podem interagir
 com a partida.
 
-O sistema será modular e preparado para
+O sistema será modular e preparado para
 futuras expansões, como personagens
-
-exclusivos, equipamentos, habilidades
+exclusivos, equipamentos, habilidades
 especiais, arenas temáticas, torneios,
 temporadas competitivas e modos de batalha
 diferenciados. A Rinha será um dos jogos PvP
@@ -722,10 +725,10 @@ quantidade de Almas e sacar antes que o
 multiplicador "quebre" (crash). Quanto mais
 tempo o jogador esperar, maior será o
 multiplicador e o possível prêmio, mas também
-maior será o risco de perder toda a aposta.
-Antes da partida, o jogador escolhe o valor da
 
-aposta. O sistema aceitará números comuns e
+maior será o risco de perder toda a aposta.
+Antes da partida, o jogador escolhe o valor da
+aposta. O sistema aceitará números comuns e
 abreviações como 1k, 2.5m, 1b, além das
 opções all e half. Também será possível jogar
 no modo diversão, sem apostar Almas.
@@ -747,10 +750,10 @@ tornando cada partida imprevisível e
 emocionante. Em algumas rodadas ele poderá
 acontecer rapidamente, enquanto em outras o
 multiplicador poderá atingir valores muito altos.
-O jogo utilizará uma interface interativa com
-atualização em tempo real, mostrando o
 
-multiplicador atual, o prêmio estimado e o
+O jogo utilizará uma interface interativa com
+atualização em tempo real, mostrando o
+multiplicador atual, o prêmio estimado e o
 estado da partida.
 Recursos do sistema
 
@@ -769,10 +772,10 @@ alcançado, maior prêmio e total apostado.
 rankings.
 🔒 Apenas o dono da partida pode interagir
 com os botões.
-🚀 Estrutura modular para adicionar efeitos
-visuais, animações, multiplicadores
 
-especiais e eventos futuros.
+🚀 Estrutura modular para adicionar efeitos
+visuais, animações, multiplicadores
+especiais e eventos futuros.
 O Crash será um dos jogos mais arriscados e
 recompensadores do ODISSEIA ARCANA. Cada
 decisão importa: sacar cedo garante um lucro
@@ -789,10 +792,10 @@ gira os rolos da máquina na esperança de
 alinhar símbolos iguais para conquistar grandes
 prêmios.
 Antes de iniciar a partida, o usuário escolhe o
-valor da aposta. O sistema aceitará números
-comuns e abreviações como 1k, 2.5m, 1b, além
 
-das opções all e half. Também será possível
+valor da aposta. O sistema aceitará números
+comuns e abreviações como 1k, 2.5m, 1b, além
+das opções all e half. Também será possível
 jogar no modo diversão, sem apostar Almas.
 Após confirmar a aposta, os três rolos
 começarão a girar com uma pequena animação.
@@ -807,13 +810,12 @@ multiplicadores muito maiores.
 Exemplos de símbolos
 
 🍒 Cereja
-
 🍋 Limão
 🍇 Uva
-💎 Diamante
-👑 Coroa
 
-⭐ Estrela
+💎 Diamante
+👑 Coroa
+⭐ Estrela
 🔥 Chama
 
 🌌 Símbolo Arcano (Lendário)
@@ -832,10 +834,10 @@ Ao final da rodada, o bot mostrará:
 
 🎰 Resultado dos três rolos.
 💰 Valor apostado.
-📈 Multiplicador obtido.
-🏆 Valor ganho (caso vença).
 
-💸 Saldo atualizado.
+📈 Multiplicador obtido.
+🏆 Valor ganho (caso vença).
+💸 Saldo atualizado.
 Todas as partidas serão registradas
 automaticamente no perfil do usuário,
 permitindo acompanhar estatísticas completas.
@@ -852,10 +854,11 @@ interativa.
 ODISSEIA ARCANA.
 💎 Jackpot com grandes recompensas.
 📊 Estatísticas de partidas, vitórias,
-derrotas, jackpots conquistados, maior
+
+derrotas, jackpots conquistados, maior
 prêmio e total apostado.
 
-🏆 Integração com conquistas, missões,
+🏆 Integração com conquistas, missões,
 rankings e eventos especiais.
 🚀 Estrutura modular para adicionar novos
 símbolos, jackpots temáticos e modos de
@@ -870,9 +873,8 @@ detalhado.
 Começando pelo ATM.
 ───
 
-Comando ATM — ODISSEIA
-
-ARCANA
+Comando ATM — ODISSEIA
+ARCANA
 O comando ATM é o principal comando da
 economia do ODISSEIA ARCANA. Ele permite
 que o usuário consulte rapidamente todas as
@@ -889,10 +891,10 @@ atualizados.
 Além do saldo principal, o ATM também
 mostrará informações complementares, como o
 patrimônio total, a posição do usuário no
-ranking global e no ranking do servidor, a
-quantidade de Almas recebidas por
 
-recompensas, trabalhos, jogos e transferências,
+ranking global e no ranking do servidor, a
+quantidade de Almas recebidas por
+recompensas, trabalhos, jogos e transferências,
 além do total gasto em apostas, compras e
 pagamentos.
 O comando também poderá exibir o histórico
@@ -909,10 +911,9 @@ saldo, histórico financeiro, estatísticas da
 economia e outras informações relacionadas.
 Informações exibidas
 
-💰 Saldo atual de Almas.
+💰 Saldo atual de Almas.
 🏆 Posição no ranking global.
-
-🌍 Posição no ranking do servidor.
+🌍 Posição no ranking do servidor.
 📈 Total de Almas ganhas.
 📉 Total de Almas gastas.
 🎮 Ganhos obtidos em jogos.
@@ -929,10 +930,10 @@ dados.
 🎨 Interface moderna e organizada.
 📱 Compatível com Slash Commands (/atm)
 e comandos por prefixo (O.atm).
-🔒 Sistema seguro contra alterações
-indevidas.
 
-📊 Preparado para futuras expansões da
+🔒 Sistema seguro contra alterações
+indevidas.
+📊 Preparado para futuras expansões da
 economia.
 
 O comando ATM será o centro financeiro do
@@ -950,10 +951,10 @@ da economia do bot.
 ARCANA
 O comando Ping é responsável por mostrar o
 desempenho e o estado atual do ODISSEIA
-ARCANA. Ele permite que os usuários e
-administradores verifiquem rapidamente se o
 
-bot está funcionando corretamente, além de
+ARCANA. Ele permite que os usuários e
+administradores verifiquem rapidamente se o
+bot está funcionando corretamente, além de
 fornecer informações sobre a conexão com o
 Discord e o desempenho do sistema.
 Ao utilizar o comando, o bot calculará
@@ -970,14 +971,13 @@ Informações exibidas
 
 🟢 Status atual do bot.
 📡 Latência da API do Discord.
-⚡ Tempo de resposta da mensagem.
-⏱️ Tempo em que o bot está online (Uptime).
 
-💾 Uso de memória RAM.
+⚡ Tempo de resposta da mensagem.
+⏱️ Tempo em que o bot está online (Uptime).
+💾 Uso de memória RAM.
 🖥️ Versão do Node.js.
 🤖 Versão do Discord.js.
 📊 Quantidade de servidores conectados.
-
 👥 Quantidade total de usuários atendidos.
 ⚙️ Número de comandos carregados.
 🔄 Status do banco de dados.
@@ -993,10 +993,9 @@ instabilidade.
 
 Recursos do sistema
 
-⚡ Atualização em tempo real.
+⚡ Atualização em tempo real.
 📊 Informações técnicas completas.
-
-🔍 Verificação da conexão com o Discord.
+🔍 Verificação da conexão com o Discord.
 💾 Monitoramento do consumo de memória.
 ⏱️ Exibição do tempo online do bot.
 🎨 Interface moderna com embeds
@@ -1014,9 +1013,10 @@ informações como uso de CPU, tempo médio de
 resposta dos comandos, status do painel web,
 conexão com serviços externos e
 monitoramento detalhado de todos os módulos
-do sistema.
 
-13.Comando BotInfo — ODISSEIA
+do sistema.
+
+13.Comando BotInfo — ODISSEIA
 
 ARCANA
 O comando BotInfo foi desenvolvido para
@@ -1033,9 +1033,9 @@ transparência sobre o funcionamento do
 sistema e mostrar a evolução do projeto.
 Além das informações técnicas, o comando
 também destacará dados da comunidade, da
-economia e do desenvolvimento do bot.
 
-Informações exibidas
+economia e do desenvolvimento do bot.
+Informações exibidas
 
 🤖 Nome e versão atual do bot.
 🌌 Descrição do ODISSEIA ARCANA.
@@ -1055,9 +1055,9 @@ está presente.
 📦 Versão do Discord.js.
 🔄 Status do banco de dados.
 🌐 Status do painel web.
-📅 Data da última atualização do bot.
 
-Botões interativos
+📅 Data da última atualização do bot.
+Botões interativos
 O painel poderá contar com botões para facilitar
 o acesso a recursos importantes, como:
 
@@ -1073,13 +1073,14 @@ Recursos do sistema
 
 📊 Informações atualizadas em tempo real.
 🎨 Interface moderna e organizada.
-
 ⚡ Compatível com Slash Commands (/
+
 botinfo) e comandos por prefixo (O.botinfo).
-🔒 Exibição apenas de informações públicas
+
+🔒 Exibição apenas de informações públicas
 e úteis.
 
-🌐 Integração com o painel web do
+🌐 Integração com o painel web do
 ODISSEIA ARCANA.
 📈 Preparado para exibir novas estatísticas
 conforme o projeto evoluir.
@@ -1096,10 +1097,10 @@ comunidade sempre informada.
 14.Comando ServerInfo —
 
 ODISSEIA ARCANA
-O comando ServerInfo foi desenvolvido para
-exibir informações completas sobre o servidor
 
-onde o ODISSEIA ARCANA está sendo utilizado.
+O comando ServerInfo foi desenvolvido para
+exibir informações completas sobre o servidor
+onde o ODISSEIA ARCANA está sendo utilizado.
 Seu objetivo é oferecer aos membros e
 administradores um painel organizado com os
 principais dados da comunidade, facilitando a
@@ -1116,9 +1117,10 @@ ao ODISSEIA ARCANA, como a economia do
 servidor, quantidade de contas registradas no
 bot, total de Almas movimentadas e estatísticas
 dos jogos.
-Informações exibidas
 
-🏰 Nome do servidor.
+Informações exibidas
+
+🏰 Nome do servidor.
 🆔 ID do servidor.
 👑 Dono do servidor.
 📅 Data de criação.
@@ -1181,7 +1183,8 @@ comando tudo o que administradores e
 membros precisam saber sobre o servidor.
 Conforme novas funcionalidades forem
 
-expandido para incluir estatísticas mais
+adicionadas ao bot, o comando também será
+expandido para incluir estatísticas mais
 detalhadas e recursos exclusivos.
 
 15.Comando UserInfo — ODISSEIA
@@ -1198,9 +1201,9 @@ consultar as próprias informações ou mencionar
 outro membro do servidor para visualizar seus
 dados. O bot exibirá um painel moderno,
 organizado e atualizado em tempo real.
-Além das informações do Discord, o comando
 
-também poderá integrar dados do ODISSEIA
+Além das informações do Discord, o comando
+também poderá integrar dados do ODISSEIA
 ARCANA, permitindo visualizar a evolução do
 jogador dentro do bot.
 Informações exibidas
@@ -1219,9 +1222,9 @@ ou Offline).
 🎙️ Canal de voz em que está conectado
 (caso esteja).
 🎨 Avatar em alta resolução.
-🖼️ Banner do perfil (quando disponível).
 
-✨ Insígnias públicas da conta (Badges do
+🖼️ Banner do perfil (quando disponível).
+✨ Insígnias públicas da conta (Badges do
 Discord).
 🚀 Impulsionador do servidor (caso possua
 Boost).
@@ -1239,9 +1242,10 @@ bot, também serão exibidas informações como:
 📅 Data de criação da conta no bot.
 Botões interativos
 O painel poderá incluir botões para facilitar a
-navegação:
 
-👤 Perfil do ODISSEIA ARCANA.
+navegação:
+
+👤 Perfil do ODISSEIA ARCANA.
 🖼️ Ver Avatar.
 🎨 Ver Banner.
 📊 Estatísticas.
@@ -1384,19 +1388,23 @@ detalhadas do usuário.
 
 do usuário dentro do bot.
 Recursos do sistema
-Visualização do banner em alta
+
+🖼️ Visualização do banner em alta
 resolução.
-Suporte para banners estáticos e
+✨ Suporte para banners estáticos e
 animados.
-Consulta do próprio banner ou do banner
+
+👥 Consulta do próprio banner ou do banner
 de qualquer membro.
-Interface moderna com embeds
+🎨 Interface moderna com embeds
 personalizados.
-Carregamento rápido e atualização em
+
+⚡ Carregamento rápido e atualização em
 tempo real.
-Compatível com /banner e O.banner.
-Exibe apenas informações públicas
+📱 Compatível com /banner e O.banner.
+🔒 Exibe apenas informações públicas
 disponibilizadas pelo Discord.
+
 Caso o usuário não possua um banner
 configurado, o comando informará isso sem
 gerar erros e poderá sugerir a visualização do
@@ -1599,21 +1607,24 @@ conquistas desbloqueadas.
 ❤️ Reputação — Usuários com mais
 
 reputações.
-Transferências — Quem mais enviou e
+
+💸 Transferências — Quem mais enviou e
 recebeu Almas.
-Sequência — Maiores sequências de
+🔥 Sequência — Maiores sequências de
 vitórias em jogos.
+
 Cada ranking exibirá os melhores jogadores da
 categoria selecionada, com destaque especial
 para os três primeiros colocados.
 Informações exibidas
-Posição no ranking.
-Nome do usuário.
-Valor correspondente à categoria.
-Cargo especial (quando houver).
-Nível do usuário.
-Evolução em relação à última atualização.
-Sua posição no ranking.
+
+🏆 Posição no ranking.
+👤 Nome do usuário.
+📊 Valor correspondente à categoria.
+🎖️ Cargo especial (quando houver).
+⭐ Nível do usuário.
+📈 Evolução em relação à última atualização.
+👤 Sua posição no ranking.
 Botões interativos
 
 O painel contará com diversos controles para
@@ -1638,8 +1649,10 @@ personalizados.
 📱 Compatível com /leaderboard e
 
 O.leaderboard.
-Sistema otimizado para milhares de
+
+⚡ Sistema otimizado para milhares de
 usuários.
+
 No futuro, o Leaderboard poderá incluir
 temporadas competitivas, rankings diários,
 semanais e mensais, recompensas automáticas
@@ -1803,8 +1816,9 @@ exibidas.
 23.Agora vamos para os Sistemas Automáticos
 do ODISSEIA ARCANA.
 
-Sistema Automático de Economia
+⚙️ Sistema Automático de Economia
 Descrição: O sistema de economia controla
+
 automaticamente o dinheiro virtual do servidor,
 chamado Almas, gerenciando ganhos, perdas e
 movimentações dos usuários.
@@ -1813,8 +1827,9 @@ Cada usuário possui uma carteira própria.
 O bot salva automaticamente o saldo no
 banco de dados.
 As Almas podem ser ganhas através de:
-Daily
-Work
+
+🎁 Daily
+💼 Work
 
 🎮 Jogos
 💰 Eventos automáticos
@@ -1880,7 +1895,7 @@ Integração com cargos automáticos.
 
 ───
 
-Sistema Automático de Boasvindas
+Sistema Automático de Boas👋vindas
 Descrição: Sistema responsável por receber
 novos membros automaticamente.
 Como funciona:
@@ -2154,19 +2169,21 @@ através de comandos.
 
 ───
 
-Tipos de Ranking:
-Ranking de Almas
+🏆 Tipos de Ranking:
+💰 Ranking de Almas
+
 Mostra os usuários com maior quantidade de
 moeda.
 Exemplo:
 
-Jogador 1 — 500.000 Almas
+🥇 Jogador 1 — 500.000 Almas
 
-Jogador 2 — 300.000 Almas
-Jogador 3 — 150.000 Almas
+🥈 Jogador 2 — 300.000 Almas
+🥉 Jogador 3 — 150.000 Almas
+
 ───
 
-Ranking de XP
+⭐ Ranking de XP
 
 Mostra os membros mais ativos do servidor.
 Baseado em:
@@ -2319,8 +2336,9 @@ Histórico de avisos enviados.
 
 ───
 
-Configuração pelo Painel:
+🖥️ Configuração pelo Painel:
 O administrador poderá:
+
 Escolher quais notificações ficam ativas.
 Definir canais de envio.
 Personalizar mensagens.
@@ -2329,7 +2347,7 @@ Configurar avisos para membros e equipe.
 
 ───
 
-Objetivo:
+🎯 Objetivo:
 
 Manter os usuários informados sobre tudo que
 acontece no ODISSEIA ARCANA, aumentando a
@@ -2665,7 +2683,8 @@ Banco de dados para armazenar
 configurações e histórico.
 
 Sistema Automático de
-Configuração Inteligente
+🧩Configuração
+Inteligente
 32.
 
 Descrição: O Sistema Automático de
@@ -2676,7 +2695,7 @@ configurações definidas pelo administrador no
 painel.
 ───
 
-Como funciona:
+⚙️ Como funciona:
 O bot carrega as configurações salvas no
 banco de dados.
 
@@ -2974,8 +2993,9 @@ Mantém o administrador informado sobre
 
 ───
 
-Tipos de atualizações:
-Atualizações de Sistemas
+📌 Tipos de atualizações:
+🛠️ Atualizações de Sistemas
+
 Melhorias nos módulos do bot:
 Economia.
 Jogos.
@@ -3174,7 +3194,8 @@ encerramento.
 
 ───
 
-Objetivo:
+🎯 Objetivo:
+
 Criar um sistema profissional de atendimento
 dentro do ODISSEIA ARCANA, permitindo que os
 usuários recebam ajuda de forma organizada e
@@ -3592,8 +3613,10 @@ As mensagens podem ser personalizadas
 ───
 
 Tipos de Mensagens
+📌
 Automáticas:
-Mensagem de Boas-vindas Privada
+
+👋 Mensagem de Boas-vindas Privada
 Quando um usuário entra no servidor:
 O bot pode enviar:
 Apresentação do servidor.
@@ -4344,8 +4367,9 @@ O usuário recebe atualizações sobre sua
 
 ───
 
-Tipos de Feedback:
-Sugestões de Sistemas
+📌 Tipos de Feedback:
+
+💡 Sugestões de Sistemas
 Usuários podem sugerir:
 Novos comandos.
 Novos jogos.
@@ -4354,7 +4378,7 @@ Novas funções do painel.
 
 ───
 
-Sugestões do Servidor
+🏰 Sugestões do Servidor
 
 Podem enviar ideias sobre:
 Canais.
@@ -4395,18 +4419,20 @@ Novas atualizações.
 
 ───
 
-Configuração pelo Painel:
+🖥️ Configuração pelo Painel:
 O administrador poderá:
+
 Criar categorias de sugestões.
 Escolher canal de envio.
 Ativar votação da comunidade.
 Definir cargos responsáveis.
 Ver sugestões pendentes.
 Marcar como:
-Aceita
-Em análise
-Recusada
-Em desenvolvimento
+
+✅ Aceita
+🔄 Em análise
+❌ Recusada
+🚧 Em desenvolvimento
 
 ───
 
@@ -4581,8 +4607,8 @@ reconhecimentos.
 
 ───
 
-Formas de ganhar reputação:
-Participação na Comunidade
+📌 Formas de ganhar reputação:
+💬 Participação na Comunidade
 O usuário ganha pontos por:
 Conversar no servidor.
 Ajudar outros membros.
@@ -5646,7 +5672,10 @@ Versão: 1.0.5
 
 ───
 
-🎨 2. Personalização Visual do Bot
+🎨
+
+2. Personalização Visual do Bot
+
 Permite alterar a aparência das mensagens.
 Configurar:
 Nome do bot.
@@ -5704,9 +5733,9 @@ Uma página externa mostrando informações do
 servidor.
 Pode mostrar:
 Ranking.
-Eventos ativos.
 
-Estatísticas.
+Eventos ativos.
+Estatísticas.
 Usuários destaque.
 Notícias.
 Exemplo:
@@ -5723,9 +5752,9 @@ Almas em circulação
 6. Sistema de Notificações do
 🔔
 Painel
-O administrador recebe avisos:
 
-Exemplos:
+O administrador recebe avisos:
+Exemplos:
 
 ⚠️ Economia desequilibrada.
 🚨 Muitas tentativas de spam.
@@ -5741,9 +5770,9 @@ Perguntas frequentes.
 Canais onde a IA funciona.
 Limites de respostas.
 
-───
+───
 
-🔄 8. Sistema de Backup
+🔄 8. Sistema de Backup
 Proteção dos dados:
 Faz backup de:
 Usuários.
@@ -5886,6 +5915,7 @@ Participantes: 250
 ───
 
 16. Monitoramento em Tempo
+👁️
 Real
 Descrição: Uma central para acompanhar o bot
 ao vivo.
@@ -5981,6 +6011,7 @@ Economia geral.
 ───
 
 21. Sistema de Missões e
+🎯
 Desafios
 Descrição: Criar objetivos automáticos para
 usuários.
@@ -6116,7 +6147,7 @@ em profissionalização, segurança e crescimento
 do projeto.
 ───
 
-27. Sistema de Marketplace
+🧩 27. Sistema de Marketplace
 
 Global
 Descrição: Um mercado geral onde usuários
@@ -6160,7 +6191,7 @@ Recebeu recompensa
 ───
 
 29. Sistema de Simulação
-Econômica
+🧮Econômica
 Descrição: Permite testar mudanças antes de
 aplicar.
 Exemplo:
@@ -6177,7 +6208,8 @@ Impacto estimado:
 
 ───
 
-30. Editor Visual de Embeds
+🎨 30. Editor Visual de Embeds
+
 Descrição: Criar mensagens bonitas sem mexer
 no código.
 Permite:
@@ -6415,6 +6447,7 @@ Almas
 VIP
 2️⃣ Cargo
 ⏰ Termina amanhã
+
 ───
 
 🎟️ /participar
@@ -6463,15 +6496,16 @@ Vencedores:
 
 ───
 
-/sorteio-finalizar
+🛑 /sorteio-finalizar
 Encerra manualmente.
 ───
 
-/sorteio-refazer
+🔄 /sorteio-refazer
+
 Refaz o sorteio caso necessário.
 ───
 
-/sorteio-cancelar
+❌ /sorteio-cancelar
 
 Cancela um sorteio ativo.
 ───
@@ -6656,8 +6690,9 @@ Em 3 dias
 👥127Participantes:
 ───
 
-Comandos dos Usuários:
-/rifa
+👤 Comandos dos Usuários:
+🎟️ /rifa
+
 Mostra rifas ativas.
 Exemplo:
 
@@ -6672,7 +6707,8 @@ Cargo VIP Ouro
 
 ───
 
-/rifa-info
+🎫 /rifa-info
+
 Mostra informações da rifa.
 Exemplo:
 
@@ -7019,7 +7055,7 @@ Exemplo:
 
 ───
 
-/abrir-caixa
+🔓 /abrir-caixa
 Abre uma caixa.
 Opções:
 
@@ -7027,7 +7063,7 @@ Opções:
 
 ───
 
-/inventario
+🎒 /inventario
 
 Mostra:
 Caixas.
@@ -7263,8 +7299,8 @@ Raridade:
 🥇
 ───
 
-Tipos de Roleta:
-Roleta Comum
+🎰 Tipos de Roleta:
+🪵 Roleta Comum
 Disponível para todos.
 Possíveis prêmios:
 1.000 Almas.
@@ -7313,7 +7349,7 @@ Seus tickets:
 🎟️
 ───
 
-/roleta-girar
+🎲 /roleta-girar
 Realiza um giro.
 Exemplo:
 
@@ -7329,7 +7365,7 @@ Parabéns!
 
 ───
 
-/tickets-roleta
+🎟️ /tickets-roleta
 Mostra seus tickets.
 Exemplo:
 
@@ -7368,10 +7404,7 @@ Chance: 80%
 
 ───
 
-🛡️
-
-Comandos Administrativos:
-
+🛡️ Comandos Administrativos:
 🎰 /roleta-criar
 
 Cria uma nova roleta.
@@ -7590,7 +7623,8 @@ Participe agora e concorra a prêmios.
 
 ───
 
-/mensagem-embed
+🎨 /mensagem-embed
+
 Cria uma mensagem profissional em formato
 Embed.
 Configura:
@@ -7612,7 +7646,8 @@ Prêmio:
 
 ───
 
-/mensagem-criar
+📝 /mensagem-criar
+
 Cria modelos de mensagens salvos.
 Exemplo:
 Criar modelo:
@@ -8940,23 +8975,27 @@ voz.
 🎵 Reprodução automática de músicas
 
 durante as rodadas.
-A música para em momentos totalmente
+
+⏸️ A música para em momentos totalmente
 aleatórios.
-Botão Sentar liberado apenas quando a
+💺 Botão Sentar liberado apenas quando a
 música parar.
-Registro dos cliques em tempo real.
-Eliminação de quem clicar antes da hora.
-Eliminação de quem não conseguir uma
+
+⚡ Registro dos cliques em tempo real.
+❌ Eliminação de quem clicar antes da hora.
+❌ Eliminação de quem não conseguir uma
 cadeira.
-Eliminação automática ao sair do canal
+❌ Eliminação automática ao sair do canal
 de voz.
-Participação ilimitada.
-Recompensa configurável.
-Apenas um vencedor por partida.
-Entrega automática das Almas.
-Interface moderna com Embeds e botões.
-Registro completo da partida no banco
+
+👥 Participação ilimitada.
+💰 Recompensa configurável.
+👑 Apenas um vencedor por partida.
+💸 Entrega automática das Almas.
+🎨 Interface moderna com Embeds e botões.
+📊 Registro completo da partida no banco
 de dados.
+
 O Dança das Cadeiras foi projetado para ser um
 
 dos eventos mais divertidos e competitivos do
@@ -9007,9 +9046,9 @@ chamada Fim, onde será possível configurar:
 🖼️ Banner ou imagem.
 📌 Título da mensagem.
 📄 Rodapé (Footer).
-👤 Autor do Embed.
 
-🎭 Cargos que podem utilizar o comando.
+👤 Autor do Embed.
+🎭 Cargos que podem utilizar o comando.
 📢 Canais onde o comando poderá ser
 usado.
 🚫 Canais bloqueados.
@@ -9026,9 +9065,9 @@ aplicadas imediatamente ao comando.
 
 Mensagens Personalizadas
 O administrador poderá escrever qualquer
-mensagem que desejar.
 
-Exemplo:
+mensagem que desejar.
+Exemplo:
 
 🎉 O evento foi encerrado! Obrigado a todos
 que participaram. Nos vemos na próxima
@@ -9049,9 +9088,9 @@ Recursos do sistema
 ODISSEIA ARCANA.
 📝 Mensagem totalmente personalizada.
 🎨 Embed moderno e personalizável.
-🖼️ Suporte a imagens e banners.
 
-👤 Autor e rodapé configuráveis.
+🖼️ Suporte a imagens e banners.
+👤 Autor e rodapé configuráveis.
 🎭 Restrição por cargos.
 📢 Restrição por canais.
 🔔 Suporte a menções automáticas.
@@ -9194,6 +9233,7 @@ O.saldo adicionar @usuario 500000
 
 text
 O.saldo remover @usuario 100000
+
 text
 O.saldo definir @usuario 1000000
 
@@ -9207,9 +9247,9 @@ Ações disponíveis
 ➕ Adicionar Almas.
 ➖ Remover Almas.
 ✏️ Definir um saldo específico.
-🗑️ Zerar completamente o saldo.
 
-O comando aceitará números normais e
+🗑️ Zerar completamente o saldo.
+O comando aceitará números normais e
 abreviados, como:
 500000
 500k
@@ -9225,9 +9265,9 @@ Este comando será protegido por um sistema de
 segurança.
 Apenas o ID do proprietário do bot poderá
 executá-lo.
-Mesmo administradores do servidor não terão
 
-acesso.
+Mesmo administradores do servidor não terão
+acesso.
 Caso outra pessoa tente utilizá-lo, o bot
 responderá informando que o comando é
 exclusivo do desenvolvedor.
@@ -9244,9 +9284,9 @@ histórico contendo:
 Recursos do sistema
 
 ➕ Adicionar Almas.
-➖ Remover Almas.
 
-✏️ Definir saldo.
+➖ Remover Almas.
+✏️ Definir saldo.
 🗑️ Zerar saldo.
 🔒 Exclusivo do proprietário do bot.
 📜 Registro completo das alterações.
@@ -9263,9 +9303,9 @@ O comando Painel permite que qualquer usuário
 acesse rapidamente o Painel Web do ODISSEIA
 ARCANA, onde administradores podem
 configurar todos os sistemas do bot de forma
-intuitiva.
 
-O comando enviará um Embed moderno com
+intuitiva.
+O comando enviará um Embed moderno com
 uma imagem ilustrativa do painel, uma breve
 descrição de suas funcionalidades e um botão
 que direciona o usuário para o site oficial.
@@ -9281,9 +9321,9 @@ Embed contendo:
 🌌 Nome do Painel ODISSEIA ARCANA.
 🖼️ Imagem do painel.
 📝 Descrição das funcionalidades.
-🌐 Link oficial para acesso.
 
-───
+🌐 Link oficial para acesso.
+───
 
 Informações exibidas
 O Embed apresentará uma breve descrição,
@@ -9688,9 +9728,10 @@ call.
 💤 Encerramento automático quando a call
 
 ficar vazia.
-Compatível com comandos de Prefixo e
+
+📱 Compatível com comandos de Prefixo e
 Slash Commands.
-Registro das sessões no banco de dados.
+📊 Registro das sessões no banco de dados.
 O Sistema de Assistir Vídeos na Call transforma
 os canais de voz do ODISSEIA ARCANA em
 verdadeiras salas de cinema e entretenimento.
