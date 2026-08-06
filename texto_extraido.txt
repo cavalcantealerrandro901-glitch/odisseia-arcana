@@ -1,83 +1,105 @@
 Atue como um desenvolvedor especialista em
 Discord.js v14.
-O objetivo desta etapa é criar a estrutura
-modular de pastas e a PRIMEIRA PARTE dos
-comandos do bot ODISSEIA ARCANA.
+O objetivo desta etapa é criar a SEGUNDA
+PARTE dos comandos do bot ODISSEIA
+ARCANA, organizando-os em subpastas dentro
+da pasta 'commands/'.
 --- ESTRUTURA E ARQUIVO PRINCIPAL (index.js)
 ---
 
 1. Mantendo o Servidor Web (index.js):
-Mantenha OBRIGATORIAMENTE o
+
+Mantenha OBRIGATORIAMENTE o
 servidor Web Express (app.listen na porta
+process.env.PORT || 10000) no index.js
+para evitar o erro "Application exited early"
+na hospedagem do Render.
 
-process.env.PORT || 10000) no index.js
-para evitar que a hospedagem no Render
-dê erro "Application exited early".
-
-2. Handler de Comandos e Pastas:
-Crie as pastas:
+2. Suporte a Subpastas do Handler:
+Garanta que o index.js carregue
+dinamicamente todas as subpastas da
+pasta 'commands/':
 'commands/economia/'
 'commands/info/'
-O index.js deve carregar dinamicamente
-todos os comandos de todas as
-subpastas dentro de 'commands/'.
-O bot deve aceitar os prefixos 'O.' e 'o.'.
-Crie uma estrutura em memória/banco de
-dados simples para gerenciar as Almas
-dos usuários.
+'commands/jogos/'
+'commands/moderacao/'
+'commands/eventos/'
+O bot deve continuar aceitando os
+prefixos 'O.' e 'o.'.
 
---- PASTA 'commands/economia/' ---
+--- PASTA 'commands/jogos/' ---
 
-1. commands/economia/daily.js (Comando:
-O.daily)
-Recompensa diária em Almas (entre 500
-e 1000 Almas).
-Impede resgate duplo no mesmo dia e
-exibe Embed com valor recebido e novo
-saldo.
+1. commands/jogos/caracoroa.js (Comando:
+O.caracoroa <cara/coroa> <aposta>)
+Jogo clássico de cara ou coroa
+apostando Almas. Duplica o valor em
+caso de vitória e desconta no caso de
+derrota.
 
-2. commands/economia/atm.js (Comando:
-O.atm ou O.saldo)
-Consulta o saldo de Almas do próprio
-usuário ou do membro mencionado.
+2. commands/jogos/roleta.js (Comando:
+O.roleta <cor> <aposta>)
+Permite apostar Almas em cores
+(vermelho, preto ou verde) com
+multiplicadores de saldo.
 
-3. commands/economia/work.js (Comando:
-O.work)
-Permite trabalhar para ganhar Almas
-aleatórias (100 a 400 Almas) com
+3. commands/jogos/slots.js (Comando: O.slots
+<aposta>)
 
-cooldown.
+Caça-níqueis com emojis animados/
+estáticos. Vitória com 3 emojis iguais.
 
-4. commands/economia/pay.js (Comando:
-O.pay <@membro> <quantidade>)
-Permite transferir Almas da conta do
-usuário para outro membro do servidor.
+4. commands/jogos/mines.js (Comando:
+O.mines <aposta>)
+Jogo de campo minado simples adaptado
+para Discord apostando Almas.
 
---- PASTA 'commands/info/' ---
+--- PASTA 'commands/moderacao/' ---
 
-1. commands/info/ping.js (Comando: O.ping)
-Responde com a latência da API do
-Discord e do bot.
+1. commands/moderacao/ban.js (Comando:
+O.ban <@membro> [motivo])
+Bane um membro do servidor (requer
+permissão BanMembers).
 
-2. commands/info/ajuda.js (Comando: O.help
-ou O.ajuda)
-Exibe um Embed bem organizado listando
+2. commands/moderacao/kick.js (Comando:
 
-os comandos disponíveis.
+O.kick <@membro> [motivo])
+Expulsa um membro do servidor (requer
+permissão KickMembers).
 
-3. commands/info/botinfo.js (Comando:
-O.botinfo)
-Exibe informações do bot (Uptime,
-Servidores, Memória).
+3. commands/moderacao/clear.js (Comando:
+O.clear <quantidade>)
+Apaga de 1 a 100 mensagens do canal
+atual.
 
-4. commands/info/perfil.js (Comando: O.perfil)
-Exibe um cartão/Embed do perfil do
-usuário mostrando suas Almas e
-estatísticas.
+4. commands/moderacao/lock.js e unlock.js
+(Comandos: O.lock / O.unlock)
+Tranca e destranca o canal atual
+alterando as permissões do cargo
+@everyone.
 
---- REQUISITOS --Gere todos os arquivos de código completos,
-funcionais e sem erros de sintaxe, garantindo
-que a pasta 'commands/' e suas subpastas
-sejam criadas corretamente.
+5. commands/moderacao/warn.js (Comando:
 
-
+O.warn <@membro> [motivo])
+Aplica e registra uma advertência ao
+membro no banco de dados temporário.
+
+--- PASTA 'commands/eventos/' ---
+
+1. commands/eventos/fim.js (Comando: O.fim)
+Envia uma mensagem em Embed
+anunciando o encerramento de um evento
+no servidor.
+
+2. commands/eventos/mensagem.js
+(Comando: O.mensagem <texto>)
+Envia uma mensagem personalizada em
+formato Embed no canal atual através do
+bot.
+
+--- REQUISITOS --Gere todo o código JavaScript completo, sem
+erros de sintaxe, garantindo que as subpastas
+em 'commands/' sejam criadas e os comandos
+fiquem 100% integrados ao sistema de Almas e
+ao index.js.
+
+
