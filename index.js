@@ -54,7 +54,9 @@ const userSchema = new mongoose.Schema({
   lastWork: { type: Date, default: null },
   workNotified: { type: Boolean, default: true },
   workLevel: { type: Number, default: 1 },
-  workXp: { type: Number, default: 0 }
+  workXp: { type: Number, default: 0 },
+  afkReason: { type: String, default: null },
+  afkTimestamp: { type: Date, default: null }
 });
 
 const GuildModel = mongoose.models.Guild || mongoose.model('Guild', guildSchema);
@@ -357,11 +359,43 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Evento de Mensagens (Prefixo + Texto Direto para Comando Errado)
+// Evento de Mensagens (Prefixo + Lógica AFK + Sugestão)
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
 
   const currentPrefix = await client.getPrefix(message.guild.id);
+
+  // 1. Lógica de Remoção de AFK
+  if (mongoose.connection.readyState === 1) {
+    let authorData = await UserModel.findOne({ userId: message.author.id });
+    if (authorData && authorData.afkTimestamp) {
+      const isAfkCmd = message.content.startsWith(`${currentPrefix}afk`);
+      
+      if (!isAfkCmd) {
+        authorData.afkReason = null;
+        authorData.afkTimestamp = null;
+        await authorData.save();
+        message.reply(`👋 Bem-vindo(a) de volta, **${message.author.username}**! Removi seu status de AFK.`).catch(() => {});
+      }
+    }
+
+    // 2. Lógica de Aviso se Mencionar Usuário AFK
+    if (message.mentions.users.size > 0) {
+      for (const [id, user] of message.mentions.users) {
+        if (user.id === message.author.id || user.bot) continue;
+        
+        const mentionedData = await UserModel.findOne({ userId: user.id });
+        if (mentionedData && mentionedData.afkTimestamp) {
+          const timePassed = Math.floor((Date.now() - new Date(mentionedData.afkTimestamp).getTime()) / 1000 / 60);
+          const timeStr = timePassed < 1 ? 'menos de 1 minuto' : `${timePassed} min`;
+          const reason = mentionedData.afkReason || 'Sem motivo informado';
+
+          message.reply(`💤 **${user.username}** está AFK: **${reason}** *(há ${timeStr})*`).catch(() => {});
+        }
+      }
+    }
+  }
+
   if (!message.content.startsWith(currentPrefix)) return;
 
   const args = message.content.slice(currentPrefix.length).trim().split(/ +/);
