@@ -6,6 +6,7 @@ module.exports = {
     .setDescription('Exibe seu saldo da carteira e do banco.')
     .addUserOption(opt => opt.setName('usuario').setDescription('Usuário para consultar')),
   name: 'carteira',
+  category: 'Geral',
   description: 'Exibe seu saldo da carteira e do banco.',
   async execute(ctx, client, isSlash, args = []) {
     const targetUser = isSlash 

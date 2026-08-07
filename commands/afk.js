@@ -11,6 +11,7 @@ module.exports = {
         .setRequired(false)
     ),
   name: 'afk',
+  category: 'Geral',
   aliases: ['ausente'],
   description: 'Fique ausente (AFK) com um motivo opcional.',
   async execute(ctx, client, isSlash, args = []) {

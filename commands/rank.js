@@ -25,6 +25,7 @@ module.exports = {
         .setName('xp')
         .setDescription('Ranking de Experiência (XP).')),
   name: 'rank',
+  category: 'Economia e Ranks',
   aliases: ['top', 'leaderboard', 'lb'],
   description: 'Exibe os rankings de almas (global/local) e XP em Embed com páginas.',
   async execute(ctx, client, isSlash, args = []) {

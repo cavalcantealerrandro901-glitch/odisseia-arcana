@@ -14,6 +14,7 @@ module.exports = {
         .setDescription('Motivo do banimento')
         .setRequired(false)),
   name: 'ban',
+  category: 'Geral',
   aliases: ['banir'],
   description: 'Bane um usuário do servidor.',
   async execute(ctx, client, isSlash, args = []) {

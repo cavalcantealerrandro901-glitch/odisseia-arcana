@@ -5,6 +5,7 @@ module.exports = {
     .setName('ajuda')
     .setDescription('Mostra a lista de todos os comandos disponíveis no bot.'),
   name: 'ajuda',
+  category: 'Geral',
   aliases: ['help', 'comandos'],
   description: 'Mostra a lista de todos os comandos disponíveis no bot.',
   async execute(ctx, client, isSlash, args = []) {

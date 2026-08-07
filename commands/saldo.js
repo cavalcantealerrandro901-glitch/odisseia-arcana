@@ -11,6 +11,7 @@ module.exports = {
         .setRequired(false)
     ),
   name: 'saldo',
+  category: 'Geral',
   aliases: ['bal', 'atm', 'carteira', 'banco', 'ver-saldo', 'versaldo'],
   description: 'Veja o seu saldo ou o saldo de outro usuário.',
   async execute(ctx, client, isSlash, args = []) {

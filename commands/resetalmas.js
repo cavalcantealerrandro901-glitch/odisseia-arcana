@@ -11,6 +11,7 @@ module.exports = {
         .setDescription('O usuário que terá as almas resetadas')
         .setRequired(true)),
   name: 'resetalmas',
+  category: 'Geral',
   aliases: ['resetaralmas', 'zeraralmas', 'resetsouls'],
   description: 'Reseta as almas de um usuário.',
   async execute(ctx, client, isSlash, args = []) {

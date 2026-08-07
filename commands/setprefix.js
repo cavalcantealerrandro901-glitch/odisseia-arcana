@@ -6,6 +6,7 @@ module.exports = {
     .setDescription('Altera o prefixo de comandos do servidor.')
     .addStringOption(opt => opt.setName('novo_prefixo').setDescription('Novo caractere (ex: !, ., ?)').setRequired(true)),
   name: 'setprefix',
+  category: 'Geral',
   description: 'Altera o prefixo de comandos do servidor.',
   async execute(ctx, client, isSlash, args = []) {
     if (!ctx.member.permissions.has(PermissionFlagsBits.Administrator)) {

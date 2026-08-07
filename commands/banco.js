@@ -14,6 +14,7 @@ module.exports = {
     .setName('banco')
     .setDescription('Acessa o painel bancário para empréstimos e pagamentos.'),
   name: 'banco',
+  category: 'Geral',
   description: 'Acessa o painel bancário para empréstimos e pagamentos.',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;

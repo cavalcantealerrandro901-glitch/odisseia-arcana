@@ -17,6 +17,7 @@ module.exports = {
             .setRequired(false))
     ),
   name: 'perfil',
+  category: 'Perfil',
   aliases: ['profile'],
   description: 'Exibe o seu card de perfil ou de outro usuário.',
   async execute(ctx, client, isSlash, args = []) {

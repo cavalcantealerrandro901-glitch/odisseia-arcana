@@ -16,6 +16,7 @@ module.exports = {
         .setRequired(true)
         .setMinValue(1)),
   name: 'addalmas',
+  category: 'Geral',
   aliases: ['add-almas', 'daralmas', 'addsouls'],
   description: 'Adiciona almas para um usuário.',
   async execute(ctx, client, isSlash, args = []) {

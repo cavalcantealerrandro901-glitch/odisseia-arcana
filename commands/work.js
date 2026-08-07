@@ -17,6 +17,7 @@ module.exports = {
     .setName('work')
     .setDescription('Trabalhe para ganhar salário, XP e subir na carreira profissional.'),
   name: 'work',
+  category: 'Geral',
   aliases: ['trabalhar', 'job'],
   description: 'Trabalhe para ganhar salário, XP e subir na carreira profissional.',
   async execute(ctx, client, isSlash, args = []) {

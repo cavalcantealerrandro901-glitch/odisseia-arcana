@@ -82,7 +82,8 @@ module.exports = {
             .setDescription('Tempo limite para aceitar (Padrão: 15m, Máximo: 7d)')
             .setRequired(false)
             .addChoices(
-              { name: '15 Minutos', value: '15m' },
+              { name: '15 Minutos',
+  category: 'Geral', value: '15m' },
               { name: '1 Hora', value: '1h' },
               { name: '1 Dia', value: '1d' },
               { name: '5 Dias', value: '5d' },

@@ -12,6 +12,7 @@ module.exports = {
     .setName('daily')
     .setDescription('Abre o painel de resgate da sua recompensa diária.'),
   name: 'daily',
+  category: 'Geral',
   description: 'Abre o painel de resgate da sua recompensa diária.',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;

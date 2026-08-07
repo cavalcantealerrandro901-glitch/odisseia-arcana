@@ -6,6 +6,7 @@ module.exports = {
     .setDescription('Deposita dinheiro da carteira no banco.')
     .addStringOption(opt => opt.setName('valor').setDescription('Valor ou "tudo"').setRequired(true)),
   name: 'depositar',
+  category: 'Geral',
   description: 'Deposita dinheiro da carteira no banco.',
   async execute(ctx, client, isSlash, args = []) {
     const rawVal = isSlash ? ctx.options.getString('valor') : args[0];
