@@ -4,8 +4,9 @@ const path = require('path');
 const http = require('http');
 const { Client, GatewayIntentBits, Collection, REST, Routes, MessageFlags } = require('discord.js');
 const mongoose = require('mongoose');
+const Guild = require('./models/Guild');
 
-// 🌐 Servidor HTTP para o UptimeRobot manter o bot 24/7 no Render
+// 🌐 Servidor HTTP para o UptimeRobot
 const PORT = process.env.PORT || 3000;
 http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -24,7 +25,7 @@ const client = new Client({
 client.commands = new Collection();
 client.aliases = new Collection();
 
-// 🍃 Conexão com o Banco de Dados (MongoDB)
+// 🍃 Conexão com o MongoDB
 if (process.env.MONGO_URI) {
   mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('🍃 Conectado ao MongoDB com sucesso!'))
@@ -33,7 +34,7 @@ if (process.env.MONGO_URI) {
   console.warn('⚠️ MONGO_URI não foi configurada nas variáveis de ambiente!');
 }
 
-// 📂 Carregamento dinâmico de comandos (varre pastas e subpastas)
+// 📂 Carregamento dinâmico de comandos
 const commandsPath = path.join(__dirname, 'commands');
 
 function carregarComandos(dir) {
@@ -85,14 +86,17 @@ client.once('ready', async () => {
   }
 });
 
-// 💬 Evento de Mensagens (Comandos por Prefixo)
-const PREFIX = process.env.PREFIX || '!';
-
+// 💬 Evento de Mensagens (Comandos por Prefixo Dinâmico)
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
-  if (!message.content.startsWith(PREFIX)) return;
 
-  const args = message.content.slice(PREFIX.length).trim().split(/ +/);
+  // Busca o prefixo do servidor no banco de dados ou usa o padrão
+  let guildConfig = await Guild.findOne({ guildId: message.guild.id });
+  const prefix = guildConfig?.prefix || process.env.PREFIX || '!';
+
+  if (!message.content.startsWith(prefix)) return;
+
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
   const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
@@ -101,7 +105,7 @@ client.on('messageCreate', async (message) => {
 
   try {
     if (command.execute) {
-      await command.execute(message, args, client);
+      await command.execute(message, args, client, prefix);
     }
   } catch (error) {
     console.error(`❌ Erro no comando ${commandName}:`, error);
