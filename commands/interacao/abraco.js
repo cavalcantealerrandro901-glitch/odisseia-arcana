@@ -1,25 +1,21 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
-const { getGif } = require('../../utils/gifs');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { executarInteracao } = require('../../utils/interacaoHelper');
 
 module.exports = {
   name: 'abraço',
   aliases: ['abraco', 'hug'],
-  description: 'Dê um abraço em um membro',
+  description: 'Dê um abraço em alguém',
   slashData: new SlashCommandBuilder()
     .setName('abraco')
-    .setDescription('Dê um abraço em um membro')
-    .addUserOption(opt =>
-      opt.setName('usuario')
-        .setDescription('Membro em quem você quer dar um abraço')
-        .setRequired(true)
-    ),
+    .setDescription('Dê um abraço em alguém')
+    .addUserOption(opt => opt.setName('usuario').setDescription('Membro a ser abraçado').setRequired(true)),
 
   async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply(`❌ Você precisa mencionar quem quer abraçar! Ex: \`${prefix}abraco @membro\``);
+    if (!target) return message.reply(`❌ Mencione alguém! Ex: \`${prefix}abraco @membro\``);
     if (target.id === message.author.id) return message.reply('❌ Você não pode abraçar a si mesmo!');
 
-    return executarInteracao(message, message.author, target, 'hug', 'um abraço em', '🫂', '#9B59B6', false);
+    return executarInteracao({ contexto: message, autor: message.author, alvo: target, client, endpoint: 'hug', nomeAcao: 'um abraço em', emoji: '🫂', cor: '#9B59B6', isSlash: false });
   },
 
   async executeSlash(interaction, client) {
@@ -28,72 +24,6 @@ module.exports = {
       return interaction.reply({ content: '❌ Você não pode abraçar a si mesmo!', flags: [MessageFlags.Ephemeral] });
     }
 
-    return executarInteracao(interaction, interaction.user, target, 'hug', 'um abraço em', '🫂', '#9B59B6', true);
+    return executarInteracao({ contexto: interaction, autor: interaction.user, alvo: target, client, endpoint: 'hug', nomeAcao: 'um abraço em', emoji: '🫂', cor: '#9B59B6', isSlash: true });
   }
 };
-
-async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
-  let currentAuthor = autor;
-  let currentTarget = alvo;
-
-  // Busca a GIF diretamente do arquivo local em 0ms
-  const gif = getGif(endpoint);
-
-  const button = new ButtonBuilder()
-    .setCustomId('devolver_acao')
-    .setLabel('Devolver 🔄')
-    .setStyle(ButtonStyle.Primary);
-
-  const row = new ActionRowBuilder().addComponents(button);
-
-  const embed = new EmbedBuilder()
-    .setDescription(`${emoji} **${currentAuthor.username}** deu ${nomeAcao} **${currentTarget.username}**!`)
-    .setColor(cor)
-    .setTimestamp();
-
-  if (gif) embed.setImage(gif);
-
-  const payload = {
-    content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
-    embeds: [embed],
-    components: [row]
-  };
-
-  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
-
-  const collector = mensagem.createMessageComponentCollector({
-    componentType: ComponentType.Button,
-    time: 360000
-  });
-
-  collector.on('collect', async (i) => {
-    if (i.user.id !== currentTarget.id) {
-      return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
-    }
-
-    const temp = currentAuthor;
-    currentAuthor = currentTarget;
-    currentTarget = temp;
-
-    const novoGif = getGif(endpoint);
-
-    const novoEmbed = new EmbedBuilder()
-      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o abraço para **${currentTarget.username}**!`)
-      .setColor(cor)
-      .setTimestamp();
-
-    if (novoGif) novoEmbed.setImage(novoGif);
-
-    await i.update({
-      content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
-      embeds: [novoEmbed],
-      components: [row]
-    });
-  });
-
-  collector.on('end', () => {
-    button.setDisabled(true);
-    const disabledRow = new ActionRowBuilder().addComponents(button);
-    mensagem.edit({ components: [disabledRow] }).catch(() => {});
-  });
-}
