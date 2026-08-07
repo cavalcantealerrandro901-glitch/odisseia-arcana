@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, SlashCommandBuilder, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { Database } = require('st.db');
 const db = new Database({ filePath: './database/economia.json' });
 
@@ -14,152 +14,159 @@ const CARGOS_DIVINOS = [
   'Deus Absurdo do Aeternus'
 ];
 
+const COOLDOWN_TEMPO = 30 * 60 * 1000; // 30 Minutos em ms
+
 module.exports = {
   name: 'work',
-  aliases: ['trabalhar', 'w'],
-  description: 'Trabalhe para ganhar almas e evoluir seu Rank Divino no Aeternus',
+  aliases: ['trabalhar', 'job', 'trampo'],
+  description: 'Trabalhe para ganhar almas e evoluir no Rank Divino (Cooldown: 30 min)',
   slashData: new SlashCommandBuilder()
     .setName('work')
-    .setDescription('Trabalhe para ganhar almas e evoluir seu Rank Divino no Aeternus'),
+    .setDescription('Trabalhe para ganhar almas e evoluir no Rank Divino'),
 
   async execute(message, args, client) {
-    return executarWork(message, message.author, client, false);
+    return processarTrabalho(message, message.author, false);
   },
 
   async executeSlash(interaction, client) {
-    return executarWork(interaction, interaction.user, client, true);
+    return processarTrabalho(interaction, interaction.user, true);
   }
 };
 
-async function executarWork(contexto, user, client, isSlash = false) {
-  const userId = user.id;
-  const cooldownKey = `work_cooldown_${userId}`;
-  const rankKey = `work_rank_${userId}`;
-  const countKey = `work_count_${userId}`;
-  const carteiraKey = `carteira_${userId}`;
-  const notifyKey = `work_notify_${userId}`;
-
-  const ultimoWork = (await db.get(cooldownKey)) || 0;
+async function processarTrabalho(contexto, usuario, isSlash = false) {
+  const userId = usuario.id;
   const agora = Date.now();
-  const tempoEspera = 30 * 60 * 1000; // 30 minutos
 
-  if (agora - ultimoWork < tempoEspera) {
-    const restante = tempoEspera - (agora - ultimoWork);
+  const ultimoWork = (await db.get(`work_cooldown_${userId}`)) || 0;
+  const tempoPassado = agora - ultimoWork;
+
+  // Botão de Lembrete
+  const botaoLembrete = new ButtonBuilder()
+    .setCustomId(`lembrete_work_${userId}`)
+    .setLabel('🔔 Me avise no PV quando puder trabalhar')
+    .setStyle(ButtonStyle.Primary);
+
+  const row = new ActionRowBuilder().addComponents(botaoLembrete);
+
+  // Verificação de Cooldown (Ainda não passaram 30 minutos)
+  if (tempoPassado < COOLDOWN_TEMPO) {
+    const restante = COOLDOWN_TEMPO - tempoPassado;
     const minutos = Math.floor(restante / (1000 * 60));
     const segundos = Math.floor((restante % (1000 * 60)) / 1000);
 
-    const msgCooldown = `⏱️ Você precisa descansar! Aguarde **${minutos}m ${segundos}s** para trabalhar novamente no Aeternus.`;
-    return isSlash 
-      ? contexto.reply({ content: msgCooldown, flags: [MessageFlags.Ephemeral] }) 
-      : contexto.reply(msgCooldown);
+    const embedCooldown = new EmbedBuilder()
+      .setTitle('⏳ Você já trabalhou recentemente!')
+      .setDescription(`Você está cansado. Aguarde **${minutos}m ${segundos}s** para poder trabalhar novamente.`)
+      .setColor('#FF0000')
+      .setFooter({ text: 'Dica: Clique no botão abaixo para receber um aviso no PV quando o tempo acabar!' })
+      .setTimestamp();
+
+    const respostaCooldown = isSlash 
+      ? await contexto.reply({ embeds: [embedCooldown], components: [row], fetchReply: true })
+      : await contexto.reply({ embeds: [embedCooldown], components: [row] });
+
+    tratarColetorLembrete(respostaCooldown, usuario, restante);
+    return;
   }
 
-  // Incrementar contador de trabalhos
-  let trabalhosRealizados = ((await db.get(countKey)) || 0) + 1;
-  await db.set(countKey, trabalhosRealizados);
-
-  // Evolução de Rank Divino
-  let rankIndex = (await db.get(rankKey)) || 0;
-  const trabalhosParaProximoRank = (rankIndex + 1) * 10;
-  
-  let subiuDeRank = false;
-  if (trabalhosRealizados >= trabalhosParaProximoRank && rankIndex < CARGOS_DIVINOS.length - 1) {
-    rankIndex += 1;
-    await db.set(rankKey, rankIndex);
-    subiuDeRank = true;
-  }
+  // Processamento do Trabalho
+  let rankIndex = (await db.get(`work_rank_${userId}`)) || 0;
+  let workCount = (await db.get(`work_count_${userId}`)) || 0;
+  let carteira = (await db.get(`carteira_${userId}`)) || 0;
 
   const multiplicador = rankIndex + 1;
-  const ganhoBase = Math.floor(Math.random() * 200) + 100;
-  const totalGanhos = ganhoBase * multiplicador;
+  const baseGanha = Math.floor(Math.random() * 150) + 100; // Gera entre 100 e 250
+  const valorTotal = baseGanha * multiplicador;
 
-  const carteiraAtual = (await db.get(carteiraKey)) || 0;
-  const novoSaldo = carteiraAtual + totalGanhos;
-  await db.set(carteiraKey, novoSaldo);
-  await db.set(cooldownKey, agora);
-  await db.delete(`work_notified_${userId}`); // Reseta status de notificação enviada
+  workCount += 1;
+  
+  // Progressão do Rank Divino
+  let subiuRank = false;
+  const trabalhosNecessarios = (rankIndex + 1) * 5;
+  if (workCount >= trabalhosNecessarios && rankIndex < CARGOS_DIVINOS.length - 1) {
+    rankIndex += 1;
+    workCount = 0;
+    subiuRank = true;
+  }
+
+  // Atualização no banco de dados
+  await db.set(`carteira_${userId}`, carteira + valorTotal);
+  await db.set(`work_cooldown_${userId}`, agora);
+  await db.set(`work_rank_${userId}`, rankIndex);
+  await db.set(`work_count_${userId}`, workCount);
 
   const nomeRank = CARGOS_DIVINOS[rankIndex];
-  const notificacaoAtiva = await db.get(notifyKey);
 
-  // Botão de Notificação / Lembrete
-  const btnNotificacao = new ButtonBuilder()
-    .setCustomId(`toggle_notify_${userId}`)
-    .setLabel(notificacaoAtiva ? '🔔 Lembrete Ativado' : '🔕 Ativar Lembrete (30m)')
-    .setStyle(notificacaoAtiva ? ButtonStyle.Success : ButtonStyle.Secondary);
+  const frasesTrabalho = [
+    'Você purificou almas perdidas no abismo de Aeternus.',
+    'Você forjou artefatos místico-divinos para os deuses.',
+    'Você colheu essências estelares nos campos celestiais.',
+    'Você protegeu os portões celestes contra invasores sombrios.',
+    'Você transmutou poeira cósmica em almas puras.'
+  ];
+  const fraseSorteada = frasesTrabalho[Math.floor(Math.random() * frasesTrabalho.length)];
 
-  const row = new ActionRowBuilder().addComponents(btnNotificacao);
+  const embedSucesso = new EmbedBuilder()
+    .setTitle('🛠️ Trabalho Concluído!')
+    .setAuthor({ name: usuario.globalName || usuario.username, iconURL: usuario.displayAvatarURL() })
+    .setDescription(
+      `*${fraseSorteada}*\n\n` +
+      `💰 **Almas Ganhas:** \`+${valorTotal.toLocaleString('pt-BR')}\` *(Base: ${baseGanha} x Mult: ${multiplicador})*\n` +
+      `👛 **Novo Saldo em Mãos:** \`${(carteira + valorTotal).toLocaleString('pt-BR')}\` almas\n` +
+      `👑 **Rank Divino Atual:** **${nomeRank}**` +
+      (subiuRank ? `\n\n🎉 **PARABÉNS!** Você evoluiu para o Rank **${nomeRank}**! Seu multiplicador agora é **x${rankIndex + 1}**!` : '')
+    )
+    .setColor('#00FFA3')
+    .setFooter({ text: 'Próximo trabalho em 30 minutos. Clique abaixo se quiser ser avisado!' })
+    .setTimestamp();
 
-  let textoMensagem = 
-    `🛠️ **JORNADA DE TRABALHO CÓSMICA — AETERNUS**\n\n` +
-    `Membro: <@${userId}>\n` +
-    `Rank Divino: **${nomeRank}** (Multiplicador x${multiplicador})\n` +
-    `Almas Coletadas: \`+${totalGanhos.toLocaleString('pt-BR')}\` almas\n` +
-    `Saldo na Carteira: \`${novoSaldo.toLocaleString('pt-BR')}\` almas\n` +
-    `Total de Trabalhos Concluídos: \`${trabalhosRealizados}\``;
+  const respostaSucesso = isSlash
+    ? await contexto.reply({ embeds: [embedSucesso], components: [row], fetchReply: true })
+    : await contexto.reply({ embeds: [embedSucesso], components: [row] });
 
-  if (subiuDeRank) {
-    textoMensagem += `\n\n🎉 **ASCENSÃO DIVINA!** Você subiu para o Rank **${nomeRank}**! Seus ganhos futuros aumentaram!`;
-  }
-
-  const msgResposta = isSlash
-    ? await contexto.reply({ content: textoMensagem, components: [row], fetchReply: true })
-    : await contexto.reply({ content: textoMensagem, components: [row] });
-
-  // Collector para o Botão
-  const collector = msgResposta.createMessageComponentCollector({
-    componentType: ComponentType.Button,
-    time: 60000
-  });
-
-  collector.on('collect', async (i) => {
-    if (i.user.id !== userId) {
-      return i.reply({ content: 'Apenas quem trabalhou pode configurar este lembrete.', flags: [MessageFlags.Ephemeral] });
-    }
-
-    const estadoAtual = await db.get(notifyKey);
-    const novoEstado = !estadoAtual;
-    await db.set(notifyKey, novoEstado);
-
-    btnNotificacao
-      .setLabel(novoEstado ? '🔔 Lembrete Ativado' : '🔕 Ativar Lembrete (30m)')
-      .setStyle(novoEstado ? ButtonStyle.Success : ButtonStyle.Secondary);
-
-    const rowAtualizada = new ActionRowBuilder().addComponents(btnNotificacao);
-
-    await i.update({ components: [rowAtualizada] });
-    await i.followUp({
-      content: novoEstado 
-        ? '✅ Lembrete ativado! O bot tentará enviar-lhe uma mensagem privada em 30 minutos.' 
-        : '🔕 Lembrete desativado com sucesso.',
-      flags: [MessageFlags.Ephemeral]
-    });
-  });
+  tratarColetorLembrete(respostaSucesso, usuario, COOLDOWN_TEMPO);
 }
 
-// Verificação periódica de notificações a cada minuto
-setInterval(async () => {
-  try {
-    const todosDados = await db.all();
-    if (!Array.isArray(todosDados)) return;
+function tratarColetorLembrete(mensagemResposta, usuarioOriginal, tempoEspera) {
+  const collector = mensagemResposta.createMessageComponentCollector({
+    componentType: ComponentType.Button,
+    time: 120000 // O botão fica interativo na mensagem por 2 minutos
+  });
 
-    const agora = Date.now();
-    const tempoEspera = 30 * 60 * 1000; // 30 minutos
-
-    for (const item of todosDados) {
-      if (item?.key && typeof item.key === 'string' && item.key.startsWith('work_notify_') && item.value === true) {
-        const userId = item.key.replace('work_notify_', '');
-        const ultimoWork = (await db.get(`work_cooldown_${userId}`)) || 0;
-
-        if (agora - ultimoWork >= tempoEspera) {
-          const jaAvisou = await db.get(`work_notified_${userId}`);
-          if (!jaAvisou) {
-            await db.set(`work_notified_${userId}`, true);
-          }
-        }
-      }
+  collector.on('collect', async interaction => {
+    if (interaction.user.id !== usuarioOriginal.id) {
+      return interaction.reply({ content: '❌ Apenas quem usou o comando pode ativar este lembrete!', ephemeral: true });
     }
-  } catch (err) {
-    console.error('Erro na verificação de notificações:', err);
-  }
-}, 60000);
+
+    const minutosFaltantes = Math.ceil(tempoEspera / (1000 * 60));
+
+    await interaction.reply({ 
+      content: `🔔 **Lembrete ativado com sucesso!** Eu vou te mandar uma mensagem privada no PV assim que seu trabalho estiver liberado (em aprox. **${minutosFaltantes} min**).`, 
+      ephemeral: true 
+    });
+
+    // Desativa e altera o botão após o clique
+    const botaoAgendado = new ButtonBuilder()
+      .setCustomId('lembrete_concluido')
+      .setLabel('✅ Lembrete Agendado no PV')
+      .setStyle(ButtonStyle.Success)
+      .setDisabled(true);
+
+    await interaction.message.edit({ components: [new ActionRowBuilder().addComponents(botaoAgendado)] }).catch(() => {});
+
+    // Agenda o envio da notificação no PV
+    setTimeout(async () => {
+      try {
+        const embedAviso = new EmbedBuilder()
+          .setTitle('⏰ Hora de Trabalhar!')
+          .setDescription('Já se passaram **30 minutos**! Seu cooldown terminou e você já pode usar `O.work` ou `/work` novamente para coletar mais almas.')
+          .setColor('#00FFA3')
+          .setTimestamp();
+
+        await usuarioOriginal.send({ embeds: [embedAviso] });
+      } catch (err) {
+        // Ignora caso as DMs do usuário estejam bloqueadas
+      }
+    }, tempoEspera);
+  });
+}
