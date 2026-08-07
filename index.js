@@ -138,3 +138,14 @@ if (MONGO_URI) {
 }
 
 client.login(TOKEN);
+
+// --- Servidor HTTP para o Render ---
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+  res.end('🤖 O Bot do Discord está online e operando!');
+});
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🌐 [SERVIDOR] Servidor HTTP rodando na porta ${PORT}`);
+});
