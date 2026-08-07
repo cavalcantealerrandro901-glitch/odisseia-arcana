@@ -35,6 +35,9 @@ module.exports = {
       { returnDocument: 'after', upsert: true }
     );
 
+    // Atualiza o cache em memória
+    if (client.prefixes) client.prefixes.set(message.guild.id, novoPrefixo);
+
     const embed = new EmbedBuilder()
       .setColor('#2ECC71')
       .setTitle('⚙️ Prefixo Alterado!')
@@ -48,7 +51,7 @@ module.exports = {
     const novoPrefixo = interaction.options.getString('novo_prefixo');
 
     if (novoPrefixo.length > 5) {
-      return interaction.reply({ content: '❌ O prefixo não pode ter mais de 5 caracteres.', ephemeral: true });
+      return interaction.reply({ content: '❌ O prefixo não pode ter mais de 5 caracteres.', flags: [MessageFlags.Ephemeral] });
     }
 
     await Guild.findOneAndUpdate(
@@ -56,6 +59,9 @@ module.exports = {
       { prefix: novoPrefixo },
       { returnDocument: 'after', upsert: true }
     );
+
+    // Atualiza o cache em memória
+    if (client.prefixes) client.prefixes.set(interaction.guild.id, novoPrefixo);
 
     const embed = new EmbedBuilder()
       .setColor('#2ECC71')

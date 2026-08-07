@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const GuildSchema = new mongoose.Schema({
-  guildId: { type: String, required: true, unique: true },
+  guildId: { type: String, required: true, unique: true, index: true },
   prefix: { type: String, default: '!' }
 }, {
   timestamps: true

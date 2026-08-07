@@ -1,20 +1,11 @@
-require('dotenv').config();
+const { Client, GatewayIntentBits, Collection, MessageFlags } = require('discord.js');
+const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const http = require('http');
-const { Client, GatewayIntentBits, Collection, REST, Routes, MessageFlags } = require('discord.js');
-const mongoose = require('mongoose');
-const Guild = require('./models/Guild');
+require('dotenv').config();
 
-// 🌐 Servidor HTTP
-const PORT = process.env.PORT || 3000;
-http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.write('Bot online e operacional!');
-  res.end();
-}).listen(PORT, () => console.log(`🌐 Servidor Web ativo na porta ${PORT}`));
+const Guild = require('./database/schemas/Guild');
 
-// 🤖 Instância do Client
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -25,29 +16,43 @@ const client = new Client({
 
 client.commands = new Collection();
 client.aliases = new Collection();
+client.prefixes = new Map(); // Cache em memória RAM para prefixos
 
-// 🍃 Conexão com MongoDB
-if (process.env.MONGO_URI) {
-  mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('🍃 Conectado ao MongoDB com sucesso!'))
-    .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
-} else {
-  console.warn('⚠️ MONGO_URI não foi configurada!');
+/**
+ * Busca o prefixo em 0ms consultando a RAM.
+ * Só consulta o MongoDB se o servidor ainda não estiver no cache.
+ */
+async function getPrefix(guildId, defaultPrefix = '!') {
+  if (!guildId) return defaultPrefix;
+
+  if (client.prefixes.has(guildId)) {
+    return client.prefixes.get(guildId);
+  }
+
+  try {
+    const guildData = await Guild.findOne({ guildId }).lean();
+    const prefix = guildData?.prefix || defaultPrefix;
+    client.prefixes.set(guildId, prefix);
+    return prefix;
+  } catch (err) {
+    console.error('Erro ao buscar prefixo:', err.message);
+    return defaultPrefix;
+  }
 }
 
-// 📂 Carregamento de comandos
+// Carregamento dinâmico de comandos das pastas
 const commandsPath = path.join(__dirname, 'commands');
+if (fs.existsSync(commandsPath)) {
+  const commandFolders = fs.readdirSync(commandsPath);
+  for (const folder of commandFolders) {
+    const folderPath = path.join(commandsPath, folder);
+    if (!fs.lstatSync(folderPath).isDirectory()) continue;
 
-function carregarComandos(dir) {
-  if (!fs.existsSync(dir)) return;
-  const files = fs.readdirSync(dir, { withFileTypes: true });
+    const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
+    for (const file of commandFiles) {
+      const filePath = path.join(folderPath, file);
+      const command = require(filePath);
 
-  for (const file of files) {
-    const fullPath = path.join(dir, file.name);
-    if (file.isDirectory()) {
-      carregarComandos(fullPath);
-    } else if (file.name.endsWith('.js')) {
-      const command = require(fullPath);
       if (command.name) {
         client.commands.set(command.name, command);
         if (command.aliases && Array.isArray(command.aliases)) {
@@ -58,83 +63,67 @@ function carregarComandos(dir) {
   }
 }
 
-carregarComandos(commandsPath);
-console.log(`📦 ${client.commands.size} comando(s) carregado(s)!`);
-
-// 🚀 Evento Ready
-client.once('clientReady', async () => {
-  console.log(`🤖 Bot online como ${client.user.tag}!`);
-
-  const slashCommandsArray = [];
-  client.commands.forEach(cmd => {
-    if (cmd.slashData) slashCommandsArray.push(cmd.slashData.toJSON());
-  });
-
-  if (slashCommandsArray.length > 0) {
-    const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || process.env.DISCORD_TOKEN);
-    try {
-      await rest.put(Routes.applicationCommands(client.user.id), { body: slashCommandsArray });
-      console.log('✅ Slash Commands registrados!');
-    } catch (error) {
-      console.error('❌ Erro Slash Commands:', error);
-    }
-  }
+client.once('ready', () => {
+  console.log(`⚡ Bot online e otimizado como: ${client.user.tag}`);
 });
 
-// 💬 Evento de Mensagens (Comandos por Prefixo)
+// Evento de Mensagens (Comandos por Prefixo)
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
-  // Prefixo padrão alterado para BOT_PREFIX (evita o conflito com o Termux)
-  let prefix = process.env.BOT_PREFIX || '!';
-
-  try {
-    const guildConfig = await Guild.findOne({ guildId: message.guild.id });
-    if (guildConfig && guildConfig.prefix) {
-      prefix = guildConfig.prefix;
-    }
-  } catch (err) {
-    console.error('⚠️ Erro ao buscar prefixo no MongoDB:', err.message);
-  }
+  const prefix = await getPrefix(message.guild.id);
 
   if (!message.content.startsWith(prefix)) return;
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
+  const cmdNameResolved = client.commands.has(commandName) 
+    ? commandName 
+    : client.aliases.get(commandName);
+
+  const command = client.commands.get(cmdNameResolved);
 
   if (!command) return;
 
   try {
-    if (command.execute) {
-      await command.execute(message, args, client, prefix);
-    }
+    await command.execute(message, args, client, prefix);
   } catch (error) {
     console.error(`❌ Erro no comando ${commandName}:`, error);
     message.reply('❌ Ocorreu um erro ao executar este comando.').catch(() => {});
   }
 });
 
-// ⚡ Interações Slash
+// Evento de Interações (Slash Commands)
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   const command = client.commands.get(interaction.commandName);
-  if (!command) return;
+  if (!command || !command.executeSlash) return;
 
   try {
-    if (command.executeSlash) {
-      await command.executeSlash(interaction, client);
-    }
+    await command.executeSlash(interaction, client);
   } catch (error) {
-    console.error(`❌ Erro no Slash Command ${interaction.commandName}:`, error);
+    console.error(`❌ Erro no slash command ${interaction.commandName}:`, error);
+    const errMessage = { content: '❌ Ocorreu um erro ao executar este comando.', flags: [MessageFlags.Ephemeral] };
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp(errMessage).catch(() => {});
+    } else {
+      await interaction.reply(errMessage).catch(() => {});
+    }
   }
 });
 
-const token = process.env.TOKEN || process.env.DISCORD_TOKEN;
-if (!token) {
-  console.error('❌ TOKEN não configurado!');
+// Conexão com o Banco de Dados e Login
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
+const TOKEN = process.env.TOKEN || process.env.DISCORD_TOKEN;
+
+if (MONGO_URI) {
+  mongoose.connect(MONGO_URI)
+    .then(() => console.log('🍃 Conectado ao MongoDB!'))
+    .catch(err => console.error('❌ Erro de conexão com MongoDB:', err));
 } else {
-  client.login(token);
+  console.warn('⚠️ Aviso: Nenhuma URL do MongoDB foi informada no .env');
 }
+
+client.login(TOKEN);
