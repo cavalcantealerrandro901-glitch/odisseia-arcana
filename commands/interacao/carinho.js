@@ -3,7 +3,24 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const GIFS_CARINHO = [
   'https://media.giphy.com/media/5tmRHw632SmCIRvD2L/giphy.gif',
   'https://media.giphy.com/media/109ltfnjz50pK8/giphy.gif',
-  'https://media.giphy.com/media/L2z7dnOduqE6Y/giphy.gif'
+  'https://media.giphy.com/media/L2z7dnOduqE6Y/giphy.gif',
+  'https://media.giphy.com/media/ARSp9T7wwxNcs/giphy.gif',
+  'https://media.giphy.com/media/ye4mOfawcfOda/giphy.gif',
+  'https://media.giphy.com/media/os5Bz1IRmXaik/giphy.gif',
+  'https://media.giphy.com/media/N0CIxcy454Bgc/giphy.gif',
+  'https://media.giphy.com/media/S8P32p6A4qO6s/giphy.gif',
+  'https://media.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif',
+  'https://media.giphy.com/media/M3a51DMeWvYUo/giphy.gif',
+  'https://media.giphy.com/media/4f5R23Sj5E120/giphy.gif',
+  'https://media.giphy.com/media/129NVCr3LflX1u/giphy.gif',
+  'https://media.giphy.com/media/SvC0mB7T3eO4g/giphy.gif',
+  'https://media.giphy.com/media/3o85xH5S1Pj2T4P7fa/giphy.gif',
+  'https://media.giphy.com/media/12xmI3w2Cj2mU8/giphy.gif',
+  'https://media.giphy.com/media/25445JvL7X8cM/giphy.gif',
+  'https://media.giphy.com/media/kHOts8AniA2ve/giphy.gif',
+  'https://media.giphy.com/media/1043fC1f3r9c5O/giphy.gif',
+  'https://media.giphy.com/media/SnoT50sIqT5a0/giphy.gif',
+  'https://media.giphy.com/media/l41YoV54ZT3T0kM4M/giphy.gif'
 ];
 
 module.exports = {
