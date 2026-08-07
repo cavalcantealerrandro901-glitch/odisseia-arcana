@@ -7,6 +7,44 @@ const {
 } = require('discord.js');
 const mongoose = require('mongoose');
 
+// Função para converter strings como 2.5K, 2.5M, 1B, 5.360.25M em números inteiros
+function parseAmount(input) {
+  if (!input) return NaN;
+  let str = input.toString().trim().toLowerCase();
+
+  const multipliers = {
+    'k': 1e3,
+    'm': 1e6,
+    'b': 1e9,
+    't': 1e12
+  };
+
+  const lastChar = str.slice(-1);
+  let multiplier = 1;
+
+  if (multipliers[lastChar]) {
+    multiplier = multipliers[lastChar];
+    str = str.slice(0, -1).trim();
+  }
+
+  // Tratamento de vírgulas e pontos
+  if (str.includes(',') && str.includes('.')) {
+    str = str.replace(/\./g, '').replace(',', '.');
+  } else if (str.includes(',')) {
+    str = str.replace(',', '.');
+  } else {
+    const dotCount = (str.match(/\./g) || []).length;
+    if (dotCount > 1) {
+      str = str.replace(/\./g, '');
+    }
+  }
+
+  const num = parseFloat(str);
+  if (isNaN(num) || num <= 0) return NaN;
+
+  return Math.floor(num * multiplier);
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('pagar')
@@ -15,11 +53,10 @@ module.exports = {
       sub
         .setName('almas')
         .setDescription('Transfere almas para um ou mais usuários.')
-        .addIntegerOption(opt => 
+        .addStringOption(opt => 
           opt.setName('quantia')
-            .setDescription('Quantidade de almas a ser transferida para cada pessoa')
-            .setRequired(true)
-            .setMinValue(1))
+            .setDescription('Quantidade de almas (ex: 200k, 2.5M, 1B, 50000)')
+            .setRequired(true))
         .addUserOption(opt => 
           opt.setName('usuario1')
             .setDescription('Primeiro usuário a receber as almas')
@@ -42,7 +79,7 @@ module.exports = {
             .setRequired(false))
         .addStringOption(opt =>
           opt.setName('tempo')
-            .setDescription('Tempo limite para aceitar a transferência (Padrão: 15m, Máximo: 7d)')
+            .setDescription('Tempo limite para aceitar (Padrão: 15m, Máximo: 7d)')
             .setRequired(false)
             .addChoices(
               { name: '15 Minutos', value: '15m' },
@@ -71,7 +108,9 @@ module.exports = {
       const subcommand = ctx.options.getSubcommand();
       if (subcommand !== 'almas') return;
 
-      amount = ctx.options.getInteger('quantia');
+      const rawAmount = ctx.options.getString('quantia');
+      amount = parseAmount(rawAmount);
+
       for (let i = 1; i <= 5; i++) {
         const u = ctx.options.getUser(`usuario${i}`);
         if (u) targets.push(u);
@@ -80,9 +119,7 @@ module.exports = {
       timeChoice = ctx.options.getString('tempo') || '15m';
       autoAccept = ctx.options.getBoolean('confirmacao_automatica') || false;
     } else {
-      // Exemplo prefixo: !pix 200000 @user1 @user2 1h auto
-      amount = parseInt(args.find(a => !isNaN(a) && !a.includes('<@')), 10);
-
+      // Prefixo: !pix 2.5M @user1 @user2 1h auto
       if (ctx.mentions && ctx.mentions.users.size > 0) {
         targets = Array.from(ctx.mentions.users.values());
       }
@@ -94,9 +131,21 @@ module.exports = {
         autoAccept = true;
       }
 
-      if (!amount || isNaN(amount) || amount <= 0 || targets.length === 0) {
-        return ctx.reply('❌ **Uso correto:** `!pix <quantia> @usuario1 [@usuario2...] [15m|1h|1d|5d|7d] [auto]`');
+      // Buscar o argumento da quantia
+      for (const arg of args) {
+        if (arg.startsWith('<@') || ['15m', '1h', '1d', '5d', '7d', 'auto', 'automatico', 'sim', 'true'].includes(arg.toLowerCase())) {
+          continue;
+        }
+        const parsed = parseAmount(arg);
+        if (!isNaN(parsed) && parsed > 0) {
+          amount = parsed;
+          break;
+        }
       }
+    }
+
+    if (!amount || isNaN(amount) || amount <= 0) {
+      return ctx.reply('❌ **Quantia inválida!** Use formatos como `200k`, `2.5M`, `1B`, `5000` etc.');
     }
 
     // Filtrar bots e duplicatas
@@ -120,7 +169,6 @@ module.exports = {
       return ctx.reply(`❌ **Almas Insuficientes!** Você precisa de 🔮 **${totalCost.toLocaleString()} almas** para enviar **${amount.toLocaleString()} almas** para ${targets.length} pessoa(s), mas possui apenas 🔮 **${(senderData.souls || 0).toLocaleString()} almas**.`);
     }
 
-    // Mapeamento de tempos limite
     const timeMap = {
       '15m': { ms: 15 * 60 * 1000, label: '15 minutos' },
       '1h': { ms: 60 * 60 * 1000, label: '1 hora' },
@@ -131,7 +179,6 @@ module.exports = {
 
     const timeInfo = timeMap[timeChoice] || timeMap['15m'];
 
-    // Se houver múltiplos usuários, envia um aviso geral inicial
     if (targets.length > 1) {
       await ctx.reply(`🔮 **PROCESSO DE TRANSFERÊNCIA MÚLTIPLA INICIADO!**\n\n` +
         `• Remetente: <@${author.id}>\n` +
@@ -142,7 +189,7 @@ module.exports = {
         `📩 *Gerando mensagens de confirmação dedicadas para cada usuário abaixo...*`);
     }
 
-    // Criar uma mensagem dedicada para CADA destinatário
+    // Criar mensagem dedicada para CADA destinatário
     for (let i = 0; i < targets.length; i++) {
       const target = targets[i];
       const confirmedUsers = new Set();
@@ -190,7 +237,6 @@ module.exports = {
         });
       }
 
-      // Collector individual para esta mensagem dedicada
       const collector = targetMsg.createMessageComponentCollector({
         componentType: ComponentType.Button,
         time: timeInfo.ms
@@ -251,7 +297,7 @@ module.exports = {
           tData.souls = (tData.souls || 0) + amount;
           await tData.save();
 
-          // Calcular Ranks do Servidor
+          // Ranks do Servidor
           const allUsers = await UserModel.find().sort({ souls: -1 });
           const getRank = (uId) => {
             const idx = allUsers.findIndex(u => u.userId === uId);
