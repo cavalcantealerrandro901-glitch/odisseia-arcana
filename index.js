@@ -1,202 +1,422 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+const { 
+  Client, 
+  GatewayIntentBits, 
+  Collection, 
+  REST, 
+  Routes, 
+  EmbedBuilder 
+} = require('discord.js');
 const mongoose = require('mongoose');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// 1. Servidor HTTP simples para manter o Render ativo
+// 1. Servidor HTTP (Uptime)
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-  res.end('🤖 Bot do Discord Online e a Funcionar!');
+  res.end('🤖 Bot Online e Operacional!');
 });
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`🌐 [SERVIDOR] Servidor HTTP a rodar na porta ${PORT}`);
-});
+server.listen(PORT, () => console.log(`🌐 [HTTP] Servidor rodando na porta ${PORT}`));
 
-// 2. Inicialização do Cliente com Intenções Necessárias
+// 2. Cliente Discord
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildExpressions
+    GatewayIntentBits.GuildMembers
   ]
 });
 
-// Separação estrita das coleções de comandos
-client.commands = new Collection();       // Guarda comandos Slash (/)
-client.prefixCommands = new Collection(); // Guarda comandos de Prefixo (!)
-const PREFIX = '!';                      // Alterar aqui se o prefixo for outro
+client.commands = new Collection();
+client.prefixCommands = new Collection();
+const DEFAULT_PREFIX = process.env.PREFIX || '!';
 
-// 3. Conexão ao MongoDB Atlas
+// 3. Database & Schemas
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+const guildSchema = new mongoose.Schema({
+  guildId: { type: String, required: true, unique: true },
+  prefix: { type: String, default: DEFAULT_PREFIX }
+});
+
+const userSchema = new mongoose.Schema({
+  userId: { type: String, required: true, unique: true },
+  wallet: { type: Number, default: 0 },
+  bank: { type: Number, default: 0 },
+  debt: { type: Number, default: 0 },
+  debtDueDate: { type: Date, default: null },
+  debtNotified: { type: Boolean, default: false },
+  lastDaily: { type: Date, default: null },
+  dailyStreak: { type: Number, default: 0 },
+  lastWork: { type: Date, default: null },
+  workNotified: { type: Boolean, default: true },
+  workLevel: { type: Number, default: 1 },
+  workXp: { type: Number, default: 0 }
+});
+
+const GuildModel = mongoose.models.Guild || mongoose.model('Guild', guildSchema);
+const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
+
 if (mongoUri) {
   mongoose.connect(mongoUri)
-    .then(() => console.log('🌿 [DATABASE] Conectado com sucesso ao MongoDB!'))
-    .catch(err => console.error('❌ [DATABASE] Erro ao conectar ao MongoDB:', err));
-} else {
-  console.warn('⚠️ [DATABASE] Nenhuma URI do MongoDB configurada nas variáveis de ambiente.');
+    .then(() => console.log('🌿 [DATABASE] Conectado ao MongoDB!'))
+    .catch(err => console.error('❌ [DATABASE] Erro MongoDB:', err.message));
 }
 
-// Função auxiliar para procurar ficheiros de forma recursiva
-const getAllFiles = (dirPath, arrayOfFiles = []) => {
-  if (!fs.existsSync(dirPath)) return arrayOfFiles;
-  const files = fs.readdirSync(dirPath);
+// Prefixo Helper
+const prefixCache = new Map();
+client.getPrefix = async (guildId) => {
+  if (!guildId) return DEFAULT_PREFIX;
+  if (prefixCache.has(guildId)) return prefixCache.get(guildId);
 
-  files.forEach((file) => {
-    const fullPath = path.join(dirPath, file);
-    if (fs.statSync(fullPath).isDirectory()) {
-      arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
-    } else if (file.endsWith('.js')) {
-      arrayOfFiles.push(fullPath);
+  try {
+    if (mongoose.connection.readyState === 1) {
+      const data = await GuildModel.findOne({ guildId });
+      const prefix = data?.prefix || DEFAULT_PREFIX;
+      prefixCache.set(guildId, prefix);
+      return prefix;
     }
-  });
-
-  return arrayOfFiles;
+  } catch (err) {}
+  return DEFAULT_PREFIX;
 };
 
-// 4. Carregador de Comandos (Separado e Seguro)
+client.setPrefix = async (guildId, newPrefix) => {
+  if (!guildId) return;
+  prefixCache.set(guildId, newPrefix);
+  if (mongoose.connection.readyState === 1) {
+    await GuildModel.findOneAndUpdate({ guildId }, { prefix: newPrefix }, { upsert: true });
+  }
+};
+
+// Algoritmo de Similaridade (Distância de Levenshtein)
+function getLevenshteinDistance(a, b) {
+  const matrix = Array.from({ length: a.length + 1 }, () => 
+    Array(b.length + 1).fill(0)
+  );
+  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return matrix[a.length][b.length];
+}
+
+// Cálculo de Prazos por Valor de Empréstimo
+function getLoanDays(amount) {
+  if (amount < 10000) return 1;
+  if (amount < 50000) return 2;
+  if (amount < 100000) return 3;
+  if (amount < 200000) return 4;
+  if (amount < 500000) return 5;
+  if (amount < 1000000) return 7;
+  return 10;
+}
+
+// Cron de Dívidas: Aviso PV + Multa 9,99%
+const checkDebts = async () => {
+  if (mongoose.connection.readyState !== 1) return;
+
+  try {
+    const usersWithDebt = await UserModel.find({ debt: { $gt: 0 } });
+    const now = new Date();
+
+    for (const user of usersWithDebt) {
+      if (!user.debtDueDate) continue;
+
+      const timeDiff = user.debtDueDate.getTime() - now.getTime();
+      const hoursLeft = timeDiff / (1000 * 60 * 60);
+
+      if (hoursLeft <= 6 && hoursLeft > 0 && !user.debtNotified) {
+        try {
+          const discordUser = await client.users.fetch(user.userId);
+          const warnEmbed = new EmbedBuilder()
+            .setTitle('⚠️ Alerta de Vencimento de Dívida!')
+            .setColor('#FEE75C')
+            .setDescription(`Sua dívida bancária de **$${user.debt.toLocaleString()}** vence em breve!\n\nPague pelo comando \`/banco\` ou \`!banco\` para evitar a multa de **9,99%**.`)
+            .setTimestamp();
+
+          await discordUser.send({ embeds: [warnEmbed] });
+          user.debtNotified = true;
+          await user.save();
+        } catch (e) {}
+      }
+
+      if (now > user.debtDueDate) {
+        const penalty = Math.floor(user.debt * 0.0999);
+        user.debt += penalty;
+
+        const newDueDate = new Date();
+        newDueDate.setHours(newDueDate.getHours() + 24);
+        user.debtDueDate = newDueDate;
+        user.debtNotified = false;
+
+        await user.save();
+
+        try {
+          const discordUser = await client.users.fetch(user.userId);
+          const penaltyEmbed = new EmbedBuilder()
+            .setTitle('❌ Dívida Vencida - Multa Aplicada!')
+            .setColor('#ED4245')
+            .setDescription(`O prazo expirou! Sua dívida recebeu uma multa de **9,99%** (+$${penalty.toLocaleString()}).\n\n**Novo total:** $${user.debt.toLocaleString()}`)
+            .setTimestamp();
+
+          await discordUser.send({ embeds: [penaltyEmbed] });
+        } catch (e) {}
+      }
+    }
+  } catch (err) {}
+};
+
+setInterval(checkDebts, 5 * 60 * 1000);
+
+// Cron de Avisos de Trabalho (Work) no PV
+const checkWorkCooldowns = async () => {
+  if (mongoose.connection.readyState !== 1) return;
+
+  try {
+    const cooldown = 20 * 60 * 1000;
+    const now = new Date();
+
+    const usersToNotify = await UserModel.find({ 
+      workNotified: false, 
+      lastWork: { $ne: null } 
+    });
+
+    for (const user of usersToNotify) {
+      if (now - new Date(user.lastWork) >= cooldown) {
+        try {
+          const discordUser = await client.users.fetch(user.userId);
+          const dmEmbed = new EmbedBuilder()
+            .setTitle('🔔 Trabalho Disponível!')
+            .setColor('#57F287')
+            .setDescription(`Olá **${discordUser.username}**, seu tempo de descanso de 20 minutos terminou!\nVocê já pode trabalhar novamente usando \`/work\` ou \`!work\` / \`!trabalhar\`.`)
+            .setTimestamp();
+
+          await discordUser.send({ embeds: [dmEmbed] });
+        } catch (e) {}
+
+        user.workNotified = true;
+        await user.save();
+      }
+    }
+  } catch (err) {}
+};
+
+setInterval(checkWorkCooldowns, 60 * 1000);
+
+// Carregador de Comandos
 const slashCommandsArray = [];
-const loadedSlashNames = new Set();
 
 const loadCommands = () => {
-  console.log('📦 [SISTEMA] A iniciar o carregamento de comandos...');
-  let totalSlash = 0;
-  let totalPrefix = 0;
+  const commandsPath = path.join(__dirname, 'commands');
+  if (!fs.existsSync(commandsPath)) return;
 
-  const pathsToSearch = [
-    path.join(__dirname, 'src', 'commands'),
-    path.join(__dirname, 'commands')
-  ];
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-  const commandFiles = [];
-  pathsToSearch.forEach(p => getAllFiles(p, commandFiles));
-  const uniqueFiles = [...new Set(commandFiles)];
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    delete require.cache[require.resolve(filePath)];
+    const command = require(filePath);
 
-  for (const filePath of uniqueFiles) {
-    try {
-      delete require.cache[require.resolve(filePath)];
-      const command = require(filePath);
-      const fileName = path.basename(filePath);
+    if (command.data && command.name) {
+      client.commands.set(command.name, command);
+      client.prefixCommands.set(command.name, command);
 
-      if (!command) continue;
-
-      // A) REGISTO DE COMANDO SLASH (deve possuir a propriedade 'data')
-      if (command.data) {
-        const cmdData = typeof command.data.toJSON === 'function' ? command.data.toJSON() : command.data;
-        const cmdName = cmdData.name ? cmdData.name.toLowerCase() : null;
-
-        if (cmdName) {
-          if (loadedSlashNames.has(cmdName)) {
-            console.warn(`   ⚠️ [DUPLICADO IGNORADO] Slash /${cmdName} em ${fileName}`);
-          } else {
-            client.commands.set(cmdName, command);
-            slashCommandsArray.push(cmdData);
-            loadedSlashNames.add(cmdName);
-            console.log(`   └─ 📁 [SLASH] /${cmdName} (${fileName})`);
-            totalSlash++;
-          }
+      if (command.aliases && Array.isArray(command.aliases)) {
+        for (const alias of command.aliases) {
+          client.prefixCommands.set(alias, command);
         }
       }
 
-      // B) REGISTO DE COMANDO DE PREFIXO (deve possuir 'name' e NÃO possuir 'data')
-      if (command.name && !command.data) {
-        const cmdName = command.name.toLowerCase();
-        client.prefixCommands.set(cmdName, command);
-        console.log(`   └─ 📁 [PREFIXO] ${PREFIX}${cmdName} (${fileName})`);
-        totalPrefix++;
-      }
-
-    } catch (err) {
-      console.error(`❌ [ERRO AO CARREGAR] Ficheiro ${filePath}:`, err.message);
+      slashCommandsArray.push(command.data.toJSON());
+      console.log(`├─ 🚀 [CARREGADO] ${command.name}`);
     }
   }
-
-  console.log(`✅ [SISTEMA] Carregamento finalizado: ${totalSlash} Slash Commands e ${totalPrefix} Comandos de Prefixo.`);
 };
 
 loadCommands();
 
-// 5. Evento de Inicialização e Registo de Slash Commands no Discord
 client.once('clientReady', async () => {
-  console.log(`⚡ [ONLINE] Bot ligado com sucesso como: ${client.user.tag}`);
+  console.log(`⚡ [ONLINE] Bot logado como: ${client.user.tag}`);
 
   if (slashCommandsArray.length > 0) {
     try {
-      console.log(`🔄 [API DISCORD] A registar ${slashCommandsArray.length} comandos Slash na API do Discord...`);
+      console.log('🔄 Sincronizando Slash Commands no Discord...');
       const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-      
-      await rest.put(
-        Routes.applicationCommands(client.user.id),
-        { body: slashCommandsArray }
-      );
-      console.log('✅ [API DISCORD] Todos os comandos Slash foram sincronizados com sucesso!');
-    } catch (error) {
-      console.error('❌ [API DISCORD] Erro ao sincronizar comandos Slash:', error);
+      await rest.put(Routes.applicationCommands(client.user.id), { body: slashCommandsArray });
+      console.log('✅ Slash Commands sincronizados com sucesso!');
+    } catch (e) {
+      console.error('❌ Erro ao registrar Slash Commands:', e.message);
     }
-  } else {
-    console.warn('⚠️ [API DISCORD] Nenhum comando Slash válido foi encontrado para registar.');
   }
 });
 
-// 6. Gestor de Comandos Slash (Interações)
+// Evento de Interações (Slash + Modais)
 client.on('interactionCreate', async interaction => {
-  if (!interaction.isChatInputCommand()) return;
+  if (interaction.isModalSubmit()) {
+    let userData = await UserModel.findOne({ userId: interaction.user.id });
+    if (!userData) userData = new UserModel({ userId: interaction.user.id });
 
-  const command = client.commands.get(interaction.commandName);
-  if (!command) return;
+    if (interaction.customId === `modal_loan_${interaction.user.id}`) {
+      const amount = parseInt(interaction.fields.getTextInputValue('loan_amount'), 10);
+      if (isNaN(amount) || amount <= 0) return interaction.reply({ content: '❌ Digite um valor numérico válido!', ephemeral: true });
 
-  try {
-    if (typeof command.execute === 'function') {
-      await command.execute(interaction, client);
-    } else if (typeof command.run === 'function') {
-      await command.run(client, interaction);
+      const debtWithInterest = Math.floor(amount * 1.07);
+      const days = getLoanDays(amount);
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + days);
+
+      userData.bank += amount;
+      userData.debt = debtWithInterest;
+      userData.debtDueDate = dueDate;
+      userData.debtNotified = false;
+      await userData.save();
+
+      return interaction.reply({
+        content: `✅ **Empréstimo Aprovado!**\n• **Valor Recebido:** $${amount.toLocaleString()}\n• **Dívida Total (7% juros):** $${debtWithInterest.toLocaleString()}\n• **Prazo:** ${days} dias (Vencimento: ${dueDate.toLocaleDateString('pt-BR')})`,
+        ephemeral: true
+      });
     }
-  } catch (error) {
-    console.error(`❌ [ERRO SLASH] Falha ao executar /${interaction.commandName}:`, error);
-    const errorMsg = { content: '❌ Ocorreu um erro ao executar este comando!', ephemeral: true };
 
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(errorMsg).catch(() => {});
-    } else {
-      await interaction.reply(errorMsg).catch(() => {});
+    if (interaction.customId === `modal_pay_${interaction.user.id}`) {
+      const input = interaction.fields.getTextInputValue('pay_amount').toLowerCase();
+      let payAmount = input === 'tudo' ? userData.debt : parseInt(input, 10);
+
+      if (isNaN(payAmount) || payAmount <= 0) return interaction.reply({ content: '❌ Valor inválido!', ephemeral: true });
+      if (payAmount > userData.debt) payAmount = userData.debt;
+
+      const totalBalance = userData.wallet + userData.bank;
+      if (totalBalance < payAmount) return interaction.reply({ content: '❌ Saldo insuficiente (Carteira + Banco)!', ephemeral: true });
+
+      if (userData.wallet >= payAmount) {
+        userData.wallet -= payAmount;
+      } else {
+        const remaining = payAmount - userData.wallet;
+        userData.wallet = 0;
+        userData.bank -= remaining;
+      }
+
+      userData.debt -= payAmount;
+      if (userData.debt <= 0) {
+        userData.debt = 0;
+        userData.debtDueDate = null;
+        userData.debtNotified = false;
+      }
+
+      await userData.save();
+
+      return interaction.reply({
+        content: `✅ **Pagamento Realizado!**\n• **Pago:** $${payAmount.toLocaleString()}\n• **Dívida Restante:** $${userData.debt.toLocaleString()}`,
+        ephemeral: true
+      });
+    }
+  }
+
+  if (interaction.isChatInputCommand()) {
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
+
+    let userData = null;
+    if (mongoose.connection.readyState === 1) {
+      userData = await UserModel.findOne({ userId: interaction.user.id });
+      if (!userData) userData = await UserModel.create({ userId: interaction.user.id });
+    }
+
+    interaction.prefix = await client.getPrefix(interaction.guildId);
+    interaction.author = interaction.user;
+
+    if (interaction.member && userData) {
+      interaction.member.wallet = userData.wallet || 0;
+      interaction.member.bank = userData.bank || 0;
+      interaction.member.debt = userData.debt || 0;
+      interaction.member.debtDueDate = userData.debtDueDate || null;
+      interaction.member.lastDaily = userData.lastDaily || null;
+      interaction.member.dailyStreak = userData.dailyStreak || 0;
+      interaction.member.lastWork = userData.lastWork || null;
+      interaction.member.workNotified = userData.workNotified ?? true;
+      interaction.member.workLevel = userData.workLevel || 1;
+      interaction.member.workXp = userData.workXp || 0;
+    }
+
+    try {
+      await command.execute(interaction, client, true);
+    } catch (err) {
+      console.error(`❌ Erro no comando /${interaction.commandName}:`, err);
     }
   }
 });
 
-// 7. Gestor de Comandos de Prefixo (Mensagens do Chat)
+// Evento de Mensagens (Prefixo + Texto Direto para Comando Errado)
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
-  if (!message.content.startsWith(PREFIX)) return;
 
-  const args = message.content.slice(PREFIX.length).trim().split(/ +/);
+  const currentPrefix = await client.getPrefix(message.guild.id);
+  if (!message.content.startsWith(currentPrefix)) return;
+
+  const args = message.content.slice(currentPrefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  const command = client.prefixCommands.get(commandName) || 
-                  client.prefixCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+  const command = client.prefixCommands.get(commandName);
 
-  if (!command) return;
+  // Mensagem sem Embed caso o comando não exista
+  if (!command) {
+    const availableCommands = Array.from(client.prefixCommands.keys());
+    let bestMatch = null;
+    let lowestDistance = Infinity;
+
+    for (const cmd of availableCommands) {
+      const dist = getLevenshteinDistance(commandName, cmd);
+      if (dist < lowestDistance) {
+        lowestDistance = dist;
+        bestMatch = cmd;
+      }
+    }
+
+    let suggestionText = '';
+    if (bestMatch && lowestDistance <= 3) {
+      suggestionText = ` Talvez você quis dizer \`${currentPrefix}${bestMatch}\`?`;
+    }
+
+    return message.reply(`❌ O comando \`${currentPrefix}${commandName}\` não existe.${suggestionText}\nSe não for, use o \`/ajuda\` ou \`${currentPrefix}ajuda\` e veja os nossos comandos disponíveis.`);
+  }
+
+  let userData = null;
+  if (mongoose.connection.readyState === 1) {
+    userData = await UserModel.findOne({ userId: message.author.id });
+    if (!userData) userData = await UserModel.create({ userId: message.author.id });
+  }
+
+  message.prefix = currentPrefix;
+  if (message.member && userData) {
+    message.member.wallet = userData.wallet || 0;
+    message.member.bank = userData.bank || 0;
+    message.member.debt = userData.debt || 0;
+    message.member.debtDueDate = userData.debtDueDate || null;
+    message.member.lastDaily = userData.lastDaily || null;
+    message.member.dailyStreak = userData.dailyStreak || 0;
+    message.member.lastWork = userData.lastWork || null;
+    message.member.workNotified = userData.workNotified ?? true;
+    message.member.workLevel = userData.workLevel || 1;
+    message.member.workXp = userData.workXp || 0;
+  }
 
   try {
-    if (typeof command.execute === 'function') {
-      await command.execute(message, args, client);
-    } else if (typeof command.run === 'function') {
-      await command.run(client, message, args);
-    }
-  } catch (error) {
-    console.error(`❌ [ERRO PREFIXO] Falha ao executar ${PREFIX}${commandName}:`, error);
-    message.reply('❌ Ocorreu um erro ao executar este comando!').catch(() => {});
+    await command.execute(message, client, false, args);
+  } catch (err) {
+    console.error(`❌ Erro no comando !${commandName}:`, err);
   }
 });
 
-// 8. Inicialização do Bot
 const token = process.env.TOKEN;
-if (!token) {
-  console.error('❌ [ERRO CRÍTICO] A variável TOKEN não está definida no ficheiro .env ou no painel!');
-  process.exit(1);
-}
-
-client.login(token);
+if (token) client.login(token);

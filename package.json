@@ -1,28 +1,14 @@
 {
-  "name": "odisseia-arcana-bot",
+  "name": "discord-bot-econ",
   "version": "1.0.0",
-  "description": "Bot com prefixo o. e slash commands",
+  "description": "Bot de Economia para Discord",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js": "^14.27.0",
-    "dotenv": "^16.6.1",
-    "express": "^5.2.1",
-    "mongoose": "^9.9.1",
-    "st.db": "^7.2.10"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cavalcantealerrandro901-glitch/odisseia-arcana.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/cavalcantealerrandro901-glitch/odisseia-arcana/issues"
-  },
-  "homepage": "https://github.com/cavalcantealerrandro901-glitch/odisseia-arcana#readme"
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "mongoose": "^8.2.0"
+  }
 }
