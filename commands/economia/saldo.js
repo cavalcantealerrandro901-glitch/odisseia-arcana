@@ -3,12 +3,12 @@ const { Database } = require('st.db');
 const db = new Database({ filePath: './database/economia.json' });
 
 module.exports = {
-  name: 'banco',
-  aliases: ['bank'],
-  description: 'Exibe apenas o saldo de almas guardado no banco do usuário',
+  name: 'saldo',
+  aliases: ['bal', 'total', 'coins', 'almas'],
+  description: 'Exibe o saldo total acumulado de almas (Carteira + Banco)',
   slashData: new SlashCommandBuilder()
-    .setName('banco')
-    .setDescription('Exibe o saldo de almas no banco')
+    .setName('saldo')
+    .setDescription('Exibe o saldo total de almas de um usuário')
     .addUserOption(opt =>
       opt.setName('usuario')
         .setDescription('Selecione o usuário para consultar')
@@ -17,26 +17,29 @@ module.exports = {
 
   async execute(message, args, client) {
     let targetUser = message.mentions.users.first() || message.author;
-    return exibirBanco(message, targetUser, false);
+    return exibirSaldoTotal(message, targetUser, false);
   },
 
   async executeSlash(interaction, client) {
     const targetUser = interaction.options.getUser('usuario') || interaction.user;
-    return exibirBanco(interaction, targetUser, true);
+    return exibirSaldoTotal(interaction, targetUser, true);
   }
 };
 
-async function exibirBanco(contexto, targetUser, isSlash = false) {
-  const banco = (await db.get(`banco_${targetUser.id}`)) || 0;
+async function exibirSaldoTotal(contexto, targetUser, isSlash = false) {
+  const userId = targetUser.id;
+  const carteira = (await db.get(`carteira_${userId}`)) || 0;
+  const banco = (await db.get(`banco_${userId}`)) || 0;
+  const total = carteira + banco;
   const autor = isSlash ? contexto.user : contexto.author;
 
   const embed = new EmbedBuilder()
     .setAuthor({ 
-      name: `Banco — ${targetUser.globalName || targetUser.username}`, 
+      name: `Saldo Total — ${targetUser.globalName || targetUser.username}`, 
       iconURL: targetUser.displayAvatarURL() 
     })
-    .setColor('#5865F2')
-    .setDescription(`🏦 **Saldo Guardado:** \`${banco.toLocaleString('pt-BR')}\` almas`)
+    .setColor('#FFD700')
+    .setDescription(`🔮 **Patrimônio Total:** \`${total.toLocaleString('pt-BR')}\` almas`)
     .setFooter({ 
       text: `Solicitado por ${autor.username}`, 
       iconURL: autor.displayAvatarURL() 

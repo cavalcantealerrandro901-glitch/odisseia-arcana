@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
 const { Database } = require('st.db');
 const fs = require('fs');
 const path = require('path');
@@ -18,7 +18,7 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Carregar Comandos
+// 1. Função para carregar os arquivos de comandos localmente
 function carregarComandos(dir) {
   const arquivos = fs.readdirSync(dir);
   for (const arquivo of arquivos) {
@@ -40,18 +40,59 @@ if (fs.existsSync('./commands')) {
   carregarComandos('./commands');
 }
 
-// Carregar Eventos de Logs
+// 2. Função para registrar os comandos Slash na API do Discord
+async function autoDeploySlash() {
+  const slashArray = [];
+
+  // Varrer comandos para pegar a estrutura do Slash
+  client.commands.forEach(cmd => {
+    if (cmd.slashData) {
+      slashArray.push(cmd.slashData.toJSON());
+    }
+  });
+
+  if (slashArray.length === 0) return;
+
+  const token = process.env.TOKEN;
+  const clientId = process.env.CLIENT_ID;
+
+  if (!token || !clientId) {
+    console.warn('⚠️ CLIENT_ID ou TOKEN ausentes no .env. Pulos no registro automatico de Slash.');
+    return;
+  }
+
+  const rest = new REST({ version: '10' }).setToken(token);
+
+  try {
+    console.log(`🔄 [AUTO-DEPLOY] Atualizando ${slashArray.length} comandos Slash (/) no Discord...`);
+    await rest.put(
+      Routes.applicationCommands(clientId),
+      { body: slashArray }
+    );
+    console.log('✅ [AUTO-DEPLOY] Todos os comandos Slash foram sincronizados com sucesso!');
+  } catch (error) {
+    console.error('❌ [AUTO-DEPLOY] Erro ao sincronizar comandos Slash:', error);
+  }
+}
+
+// 3. Eventos e Inicialização
 if (fs.existsSync('./events/logsEvents.js')) {
   require('./events/logsEvents')(client);
 }
 
-// Quando o Bot estiver Pronto
-client.once('ready', () => {
-  console.log(`🤖 Bot online como ${client.user.tag}!`);
-  iniciarServidor(); // Inicia o Servidor Web
+client.once('ready', async () => {
+  console.log(`🤖 Bot online com sucesso como ${client.user.tag}!`);
+  
+  // Registra os Slash Commands automaticamente ao ligar
+  await autoDeploySlash();
+  
+  // Inicia o servidor web (Express)
+  if (typeof iniciarServidor === 'function') {
+    iniciarServidor();
+  }
 });
 
-// Manipulador de Mensagens (Comandos por Prefixo Dinâmico)
+// 4. Manipulador de Mensagens por Prefixo
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
@@ -76,7 +117,7 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-// Manipulador de Comandos Slash (/)
+// 5. Manipulador de Comandos Slash (/)
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
