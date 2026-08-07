@@ -5,17 +5,17 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// 1. Servidor HTTP simples para o Render
+// 1. Servidor HTTP simples para manter o Render ativo
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-  res.end('🤖 O Bot do Discord está online e operando!');
+  res.end('🤖 Bot do Discord Online e a Funcionar!');
 });
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`🌐 [SERVIDOR] Servidor HTTP rodando na porta ${PORT}`);
+  console.log(`🌐 [SERVIDOR] Servidor HTTP a rodar na porta ${PORT}`);
 });
 
-// 2. Cliente Discord com Intenções Necessárias
+// 2. Inicialização do Cliente com Intenções Necessárias
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -26,21 +26,22 @@ const client = new Client({
   ]
 });
 
-client.commands = new Collection();
-client.prefixCommands = new Collection();
-const PREFIX = '!'; // Prefixo dos comandos de texto
+// Separação estrita das coleções de comandos
+client.commands = new Collection();       // Guarda comandos Slash (/)
+client.prefixCommands = new Collection(); // Guarda comandos de Prefixo (!)
+const PREFIX = '!';                      // Alterar aqui se o prefixo for outro
 
-// 3. Conexão com MongoDB
+// 3. Conexão ao MongoDB Atlas
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 if (mongoUri) {
   mongoose.connect(mongoUri)
     .then(() => console.log('🌿 [DATABASE] Conectado com sucesso ao MongoDB!'))
-    .catch(err => console.error('❌ [DATABASE] Erro ao conectar no MongoDB:', err));
+    .catch(err => console.error('❌ [DATABASE] Erro ao conectar ao MongoDB:', err));
 } else {
-  console.warn('⚠️ [DATABASE] Nenhuma URI do MongoDB encontrada!');
+  console.warn('⚠️ [DATABASE] Nenhuma URI do MongoDB configurada nas variáveis de ambiente.');
 }
 
-// Função auxiliar para procurar ficheiros .js de forma RECURSIVA em qualquer pasta
+// Função auxiliar para procurar ficheiros de forma recursiva
 const getAllFiles = (dirPath, arrayOfFiles = []) => {
   if (!fs.existsSync(dirPath)) return arrayOfFiles;
   const files = fs.readdirSync(dirPath);
@@ -57,78 +58,91 @@ const getAllFiles = (dirPath, arrayOfFiles = []) => {
   return arrayOfFiles;
 };
 
-// 4. Carregador de Comandos Flexível e Recursivo
+// 4. Carregador de Comandos (Separado e Seguro)
 const slashCommandsArray = [];
+const loadedSlashNames = new Set();
 
 const loadCommands = () => {
-  console.log('📦 [SISTEMA] Inicializando carregamento de comandos...');
-  let totalCommands = 0;
+  console.log('📦 [SISTEMA] A iniciar o carregamento de comandos...');
+  let totalSlash = 0;
+  let totalPrefix = 0;
 
-  // Procura comandos em 'src/commands' E em 'commands' (para cobrir qualquer estrutura)
   const pathsToSearch = [
     path.join(__dirname, 'src', 'commands'),
     path.join(__dirname, 'commands')
   ];
 
   const commandFiles = [];
-  pathsToSearch.forEach(p => {
-    getAllFiles(p, commandFiles);
-  });
+  pathsToSearch.forEach(p => getAllFiles(p, commandFiles));
+  const uniqueFiles = [...new Set(commandFiles)];
 
-  // Remove caminhos duplicados caso existam
-  const uniqueCommandFiles = [...new Set(commandFiles)];
-
-  for (const filePath of uniqueCommandFiles) {
+  for (const filePath of uniqueFiles) {
     try {
       delete require.cache[require.resolve(filePath)];
       const command = require(filePath);
+      const fileName = path.basename(filePath);
 
-      // Registra comandos Slash (possuem propriedade 'data')
-      if (command.data && command.execute) {
-        client.commands.set(command.data.name, command);
-        slashCommandsArray.push(command.data.toJSON());
-        console.log(`   └─ 📁 [SLASH] /${command.data.name} (${path.basename(filePath)})`);
-        totalCommands++;
-      } 
-      // Registra comandos de Prefixo (possuem 'name' e 'execute'/'run', mas sem 'data')
-      else if (command.name && (command.execute || command.run)) {
-        client.prefixCommands.set(command.name, command);
-        console.log(`   └─ 📁 [PREFIXO] ${PREFIX}${command.name} (${path.basename(filePath)})`);
-        totalCommands++;
+      if (!command) continue;
+
+      // A) REGISTO DE COMANDO SLASH (deve possuir a propriedade 'data')
+      if (command.data) {
+        const cmdData = typeof command.data.toJSON === 'function' ? command.data.toJSON() : command.data;
+        const cmdName = cmdData.name ? cmdData.name.toLowerCase() : null;
+
+        if (cmdName) {
+          if (loadedSlashNames.has(cmdName)) {
+            console.warn(`   ⚠️ [DUPLICADO IGNORADO] Slash /${cmdName} em ${fileName}`);
+          } else {
+            client.commands.set(cmdName, command);
+            slashCommandsArray.push(cmdData);
+            loadedSlashNames.add(cmdName);
+            console.log(`   └─ 📁 [SLASH] /${cmdName} (${fileName})`);
+            totalSlash++;
+          }
+        }
       }
+
+      // B) REGISTO DE COMANDO DE PREFIXO (deve possuir 'name' e NÃO possuir 'data')
+      if (command.name && !command.data) {
+        const cmdName = command.name.toLowerCase();
+        client.prefixCommands.set(cmdName, command);
+        console.log(`   └─ 📁 [PREFIXO] ${PREFIX}${cmdName} (${fileName})`);
+        totalPrefix++;
+      }
+
     } catch (err) {
-      console.error(`❌ Erro ao carregar o arquivo ${filePath}:`, err);
+      console.error(`❌ [ERRO AO CARREGAR] Ficheiro ${filePath}:`, err.message);
     }
   }
 
-  console.log(`✅ [SISTEMA] Total de ${totalCommands} comandos carregados na memória.`);
+  console.log(`✅ [SISTEMA] Carregamento finalizado: ${totalSlash} Slash Commands e ${totalPrefix} Comandos de Prefixo.`);
 };
 
 loadCommands();
 
-// 5. Quando o Bot Ficar Pronto + Registro dos Slash Commands na API
-client.once('ready', async () => {
-  console.log(`⚡ [ONLINE] Bot operando como: ${client.user.tag}`);
+// 5. Evento de Inicialização e Registo de Slash Commands no Discord
+client.once('clientReady', async () => {
+  console.log(`⚡ [ONLINE] Bot ligado com sucesso como: ${client.user.tag}`);
 
-  // Registra / atualiza os comandos Slash globalmente no Discord
   if (slashCommandsArray.length > 0) {
     try {
-      console.log(`🔄 [API DISCORD] Registrando ${slashCommandsArray.length} comandos de barra (Slash)...`);
+      console.log(`🔄 [API DISCORD] A registar ${slashCommandsArray.length} comandos Slash na API do Discord...`);
       const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+      
       await rest.put(
         Routes.applicationCommands(client.user.id),
         { body: slashCommandsArray }
       );
-      console.log('✅ [API DISCORD] Comandos Slash sincronizados com sucesso!');
+      console.log('✅ [API DISCORD] Todos os comandos Slash foram sincronizados com sucesso!');
     } catch (error) {
-      console.error('❌ [API DISCORD] Falha ao registrar comandos Slash:', error);
+      console.error('❌ [API DISCORD] Erro ao sincronizar comandos Slash:', error);
     }
   } else {
-    console.warn('⚠️ [API DISCORD] Nenhum comando Slash encontrado para registrar!');
+    console.warn('⚠️ [API DISCORD] Nenhum comando Slash válido foi encontrado para registar.');
   }
 });
 
-// 6. Manipulador de Comandos Slash (/)
+// 6. Gestor de Comandos Slash (Interações)
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -136,11 +150,15 @@ client.on('interactionCreate', async interaction => {
   if (!command) return;
 
   try {
-    await command.execute(interaction);
+    if (typeof command.execute === 'function') {
+      await command.execute(interaction, client);
+    } else if (typeof command.run === 'function') {
+      await command.run(client, interaction);
+    }
   } catch (error) {
-    console.error(`[ERRO SLASH] Falha no /${interaction.commandName}:`, error);
+    console.error(`❌ [ERRO SLASH] Falha ao executar /${interaction.commandName}:`, error);
     const errorMsg = { content: '❌ Ocorreu um erro ao executar este comando!', ephemeral: true };
-    
+
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp(errorMsg).catch(() => {});
     } else {
@@ -149,32 +167,35 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// 7. Manipulador de Comandos por Prefixo (!)
+// 7. Gestor de Comandos de Prefixo (Mensagens do Chat)
 client.on('messageCreate', async message => {
-  if (message.author.bot || !message.content.startsWith(PREFIX)) return;
+  if (message.author.bot || !message.guild) return;
+  if (!message.content.startsWith(PREFIX)) return;
 
   const args = message.content.slice(PREFIX.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  const command = client.prefixCommands.get(commandName) || client.commands.get(commandName);
+  const command = client.prefixCommands.get(commandName) || 
+                  client.prefixCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
   if (!command) return;
 
   try {
-    if ('run' in command) {
+    if (typeof command.execute === 'function') {
+      await command.execute(message, args, client);
+    } else if (typeof command.run === 'function') {
       await command.run(client, message, args);
-    } else if ('execute' in command && !('data' in command)) {
-      await command.execute(message, args);
     }
   } catch (error) {
-    console.error(`[ERRO PREFIXO] Falha no ${PREFIX}${commandName}:`, error);
+    console.error(`❌ [ERRO PREFIXO] Falha ao executar ${PREFIX}${commandName}:`, error);
     message.reply('❌ Ocorreu um erro ao executar este comando!').catch(() => {});
   }
 });
 
-// 8. Inicialização
+// 8. Inicialização do Bot
 const token = process.env.TOKEN;
 if (!token) {
-  console.error('❌ [ERRO] A variável TOKEN não está definida!');
+  console.error('❌ [ERRO CRÍTICO] A variável TOKEN não está definida no ficheiro .env ou no painel!');
   process.exit(1);
 }
 
