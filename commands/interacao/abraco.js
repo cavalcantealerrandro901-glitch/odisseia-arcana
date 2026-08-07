@@ -1,106 +1,106 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
-const GIFS_ABRACO = [
-  'https://i.giphy.com/media/phP4alS1211E2d2J3o/giphy.gif',
-  'https://i.giphy.com/media/l2QDM9Jnim1YV55YA/giphy.gif',
-  'https://i.giphy.com/media/OD5ELByOjry6I/giphy.gif',
-  'https://i.giphy.com/media/u9Bx335zwZL32/giphy.gif',
-  'https://i.giphy.com/media/3b3CdO3aY1XyNqXy98/giphy.gif',
-  'https://i.giphy.com/media/1081fLgl3P3y1O/giphy.gif',
-  'https://i.giphy.com/media/a3IWyhkEC0p32/giphy.gif',
-  'https://i.giphy.com/media/wn45A0S1j6j16/giphy.gif',
-  'https://i.giphy.com/media/lrr9dHuoJO23w0ptLq/giphy.gif',
-  'https://i.giphy.com/media/sUIZWMnfd4Mb6/giphy.gif',
-  'https://i.giphy.com/media/yziFo5qYAOgY8/giphy.gif',
-  'https://i.giphy.com/media/KG5oq4vesE3O8/giphy.gif',
-  'https://i.giphy.com/media/49mdjsMrH7oze/giphy.gif',
-  'https://i.giphy.com/media/IR3m3X8024m3e/giphy.gif',
-  'https://i.giphy.com/media/RP8A63x5ZK6GY/giphy.gif',
-  'https://i.giphy.com/media/qqIbs02L68q4/giphy.gif',
-  'https://i.giphy.com/media/du1m0p8fCIsA8/giphy.gif',
-  'https://i.giphy.com/media/P0U2oM3u9zT5y/giphy.gif',
-  'https://i.giphy.com/media/wM4B83Tch4yD6/giphy.gif',
-  'https://i.giphy.com/media/lOqZ61eRInqfS/giphy.gif',
-  'https://i.giphy.com/media/Evp8oUSefInyU/giphy.gif',
-  'https://i.giphy.com/media/3Zn2q8L80w1T1BqX00/giphy.gif',
-  'https://i.giphy.com/media/10p8d3T670T3K0/giphy.gif',
-  'https://i.giphy.com/media/l0HlF8U5Wp1iR5M88/giphy.gif',
-  'https://i.giphy.com/media/xT39C7O9Xj1Jq15Poc/giphy.gif',
-  'https://i.giphy.com/media/3o7TKMvAipS1vInU2s/giphy.gif',
-  'https://i.giphy.com/media/l0G17u4x4A7T31pU4/giphy.gif',
-  'https://i.giphy.com/media/3oKIPa2LwP6PIn4t7q/giphy.gif',
-  'https://i.giphy.com/media/26AHG1JpA5P0T2v4I/giphy.gif',
-  'https://i.giphy.com/media/3o7TKo8eU5sInuU7i8/giphy.gif'
-];
-
 module.exports = {
   name: 'abraco',
   aliases: ['hug', 'abracar'],
-  description: 'Dê um abraço quentinho em alguém',
+  description: 'Dê um abraço apertado em um membro',
   slashData: new SlashCommandBuilder()
     .setName('abraco')
-    .setDescription('Dê um abraço em alguém')
+    .setDescription('Dê um abraço apertado em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Quem você deseja abraçar?')
+        .setDescription('Membro que você deseja abraçar')
         .setRequired(true)
     ),
 
-  async execute(message, args, client) {
+  async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply('⚠️ Mencione alguém para abraçar!');
-    return enviarInteracao(message, message.author, target, false);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem deseja abraçar! Ex: \`${prefix}abraco @membro\``);
+    if (target.id === message.author.id) return message.reply('❌ Você não pode abraçar a si mesmo!');
+
+    return executarInteracao(message, message.author, target, 'hug', 'abraço', '🫂', '#7289DA', false);
   },
 
   async executeSlash(interaction, client) {
     const target = interaction.options.getUser('usuario');
-    return enviarInteracao(interaction, interaction.user, target, true);
+    if (target.id === interaction.user.id) {
+      return interaction.reply({ content: '❌ Você não pode abraçar a si mesmo!', flags: [MessageFlags.Ephemeral] });
+    }
+
+    return executarInteracao(interaction, interaction.user, target, 'hug', 'abraço', '🫂', '#7289DA', true);
   }
 };
 
-async function enviarInteracao(contexto, autor, alvo, isSlash = false) {
-  if (alvo.id === autor.id) {
-    const msg = '🫂 Você se deu um auto-abraço bem aconchegante!';
-    return isSlash ? contexto.reply({ content: msg, flags: [MessageFlags.Ephemeral] }) : contexto.reply(msg);
+async function getGif(endpoint) {
+  try {
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const data = await res.json();
+    return data.results[0]?.url || '';
+  } catch {
+    return '';
   }
+}
 
-  const gif = GIFS_ABRACO[Math.floor(Math.random() * GIFS_ABRACO.length)];
+async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  let currentAuthor = autor;
+  let currentTarget = alvo;
+
+  let gif = await getGif(endpoint);
+
+  const button = new ButtonBuilder()
+    .setCustomId('devolver_acao')
+    .setLabel('Devolver 🔄')
+    .setStyle(ButtonStyle.Primary);
+
+  const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`🫂 **${autor}** deu um abraço bem apertado em **${alvo}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
+    .setColor(cor)
     .setImage(gif)
-    .setColor('#00BFFF')
     .setTimestamp();
 
-  const btnRetribuir = new ButtonBuilder()
-    .setCustomId(`retribuir_abraco_${autor.id}_${alvo.id}`)
-    .setLabel('🫂 Retribuir Abraço')
-    .setStyle(ButtonStyle.Success);
+  const payload = {
+    content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+    embeds: [embed],
+    components: [row],
+    fetchReply: true
+  };
 
-  const row = new ActionRowBuilder().addComponents(btnRetribuir);
+  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
 
-  const resposta = isSlash
-    ? await contexto.reply({ embeds: [embed], components: [row], fetchReply: true })
-    : await contexto.reply({ embeds: [embed], components: [row] });
-
-  const collector = resposta.createMessageComponentCollector({
+  const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
-    time: 120000
+    time: 360000
   });
 
-  collector.on('collect', async interaction => {
-    if (interaction.user.id !== alvo.id) {
-      return interaction.reply({ content: '❌ Apenas quem recebeu o abraço pode retribuir!', flags: [MessageFlags.Ephemeral] });
+  collector.on('collect', async (i) => {
+    if (i.user.id !== currentTarget.id) {
+      return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
     }
 
-    const gifRetribuicao = GIFS_ABRACO[Math.floor(Math.random() * GIFS_ABRACO.length)];
-    const embedRetribuido = new EmbedBuilder()
-      .setDescription(`🫂 **${alvo}** retribuiu o abraço de **${autor}**!`)
-      .setImage(gifRetribuicao)
-      .setColor('#1E90FF')
+    const temp = currentAuthor;
+    currentAuthor = currentTarget;
+    currentTarget = temp;
+
+    const novoGif = await getGif(endpoint);
+
+    const novoEmbed = new EmbedBuilder()
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
+      .setColor(cor)
+      .setImage(novoGif)
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embedRetribuido] });
-    collector.stop();
+    await i.update({
+      content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+      embeds: [novoEmbed],
+      components: [row]
+    });
+  });
+
+  collector.on('end', () => {
+    button.setDisabled(true);
+    const disabledRow = new ActionRowBuilder().addComponents(button);
+    mensagem.edit({ components: [disabledRow] }).catch(() => {});
   });
 }

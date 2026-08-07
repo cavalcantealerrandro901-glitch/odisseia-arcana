@@ -1,106 +1,106 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
-const GIFS_TAPA = [
-  'https://i.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif',
-  'https://i.giphy.com/media/j3iGKfXRKlLqw/giphy.gif',
-  'https://i.giphy.com/media/Zau0yRL15t84w/giphy.gif',
-  'https://i.giphy.com/media/mEtSQlx3yv62A/giphy.gif',
-  'https://i.giphy.com/media/K1tgb1IUeBOXS/giphy.gif',
-  'https://i.giphy.com/media/xUO4t2gkWBxYSqBKSV/giphy.gif',
-  'https://i.giphy.com/media/uG3lKMYA5ScA8/giphy.gif',
-  'https://i.giphy.com/media/1081fLgl3P3y1O/giphy.gif',
-  'https://i.giphy.com/media/L3v3bY2uM2cGA/giphy.gif',
-  'https://i.giphy.com/media/3XlEk2dbJgJuU/giphy.gif',
-  'https://i.giphy.com/media/13m24iFmhomZi0/giphy.gif',
-  'https://i.giphy.com/media/v4P9A2T1vPq24/giphy.gif',
-  'https://i.giphy.com/media/Q8OPrLV04OZ3y/giphy.gif',
-  'https://i.giphy.com/media/Y6c59hTH3T8aY/giphy.gif',
-  'https://i.giphy.com/media/WL8aC25089vBS/giphy.gif',
-  'https://i.giphy.com/media/qS8P2q8e3Lq7K/giphy.gif',
-  'https://i.giphy.com/media/l3q2K5jinAlChoCLS/giphy.gif',
-  'https://i.giphy.com/media/xXDu7guZKjWM8/giphy.gif',
-  'https://i.giphy.com/media/12t3Awo4s3cve0/giphy.gif',
-  'https://i.giphy.com/media/ToMjGpz81S7usvTIM8w/giphy.gif',
-  'https://i.giphy.com/media/s5CJw8UPITK6I/giphy.gif',
-  'https://i.giphy.com/media/E8S79m6D9qG3A/giphy.gif',
-  'https://i.giphy.com/media/3o7TKoWZ53vMML34T6/giphy.gif',
-  'https://i.giphy.com/media/l0G18R8B30G1vRkO4/giphy.gif',
-  'https://i.giphy.com/media/xT39D7O9Xj1Jq15Poc/giphy.gif',
-  'https://i.giphy.com/media/l2R013mIf1ZXdvoyI/giphy.gif',
-  'https://i.giphy.com/media/3o6ozrozM2A3MkWmYw/giphy.gif',
-  'https://i.giphy.com/media/l0HlCqV35hdEg2GU8/giphy.gif',
-  'https://i.giphy.com/media/3o7TKMInJ1R209X64U/giphy.gif',
-  'https://i.giphy.com/media/26AHInP0E8Y21vR0s/giphy.gif'
-];
-
 module.exports = {
   name: 'tapa',
-  aliases: ['slap', 'bater'],
-  description: 'Dê um tapa em alguém do servidor',
+  aliases: ['slap'],
+  description: 'Dê um tapa em um membro',
   slashData: new SlashCommandBuilder()
     .setName('tapa')
-    .setDescription('Dê um tapa em alguém')
+    .setDescription('Dê um tapa em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Quem você deseja dar um tapa?')
+        .setDescription('Membro que vai levar o tapa')
         .setRequired(true)
     ),
 
-  async execute(message, args, client) {
+  async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply('⚠️ Mencione alguém para dar um tapa!');
-    return enviarInteracao(message, message.author, target, false);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem vai levar o tapa! Ex: \`${prefix}tapa @membro\``);
+    if (target.id === message.author.id) return message.reply('❌ Você não pode dar um tapa em si mesmo!');
+
+    return executarInteracao(message, message.author, target, 'slap', 'tapa', '🖐️', '#E74C3C', false);
   },
 
   async executeSlash(interaction, client) {
     const target = interaction.options.getUser('usuario');
-    return enviarInteracao(interaction, interaction.user, target, true);
+    if (target.id === interaction.user.id) {
+      return interaction.reply({ content: '❌ Você não pode dar um tapa em si mesmo!', flags: [MessageFlags.Ephemeral] });
+    }
+
+    return executarInteracao(interaction, interaction.user, target, 'slap', 'tapa', '🖐️', '#E74C3C', true);
   }
 };
 
-async function enviarInteracao(contexto, autor, alvo, isSlash = false) {
-  if (alvo.id === autor.id) {
-    const msg = '🤦‍♂️ Você deu um tapa na própria cara... Por quê?!';
-    return isSlash ? contexto.reply({ content: msg, flags: [MessageFlags.Ephemeral] }) : contexto.reply(msg);
+async function getGif(endpoint) {
+  try {
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const data = await res.json();
+    return data.results[0]?.url || '';
+  } catch {
+    return '';
   }
+}
 
-  const gif = GIFS_TAPA[Math.floor(Math.random() * GIFS_TAPA.length)];
+async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  let currentAuthor = autor;
+  let currentTarget = alvo;
+
+  let gif = await getGif(endpoint);
+
+  const button = new ButtonBuilder()
+    .setCustomId('devolver_acao')
+    .setLabel('Devolver 🔄')
+    .setStyle(ButtonStyle.Primary);
+
+  const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`🖐️ **${autor}** deu um tapa em **${alvo}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
+    .setColor(cor)
     .setImage(gif)
-    .setColor('#FF4500')
     .setTimestamp();
 
-  const btnRetribuir = new ButtonBuilder()
-    .setCustomId(`retribuir_tapa_${autor.id}_${alvo.id}`)
-    .setLabel('💥 Devolver Tapa')
-    .setStyle(ButtonStyle.Danger);
+  const payload = {
+    content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+    embeds: [embed],
+    components: [row],
+    fetchReply: true
+  };
 
-  const row = new ActionRowBuilder().addComponents(btnRetribuir);
+  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
 
-  const resposta = isSlash
-    ? await contexto.reply({ embeds: [embed], components: [row], fetchReply: true })
-    : await contexto.reply({ embeds: [embed], components: [row] });
-
-  const collector = resposta.createMessageComponentCollector({
+  const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
-    time: 120000
+    time: 360000
   });
 
-  collector.on('collect', async interaction => {
-    if (interaction.user.id !== alvo.id) {
-      return interaction.reply({ content: '❌ Apenas quem levou o tapa pode devolver!', flags: [MessageFlags.Ephemeral] });
+  collector.on('collect', async (i) => {
+    if (i.user.id !== currentTarget.id) {
+      return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
     }
 
-    const gifRetribuicao = GIFS_TAPA[Math.floor(Math.random() * GIFS_TAPA.length)];
-    const embedRetribuido = new EmbedBuilder()
-      .setDescription(`💥 **${alvo}** devolveu o tapa em **${autor}** com o dobro de força!`)
-      .setImage(gifRetribuicao)
-      .setColor('#DC143C')
+    const temp = currentAuthor;
+    currentAuthor = currentTarget;
+    currentTarget = temp;
+
+    const novoGif = await getGif(endpoint);
+
+    const novoEmbed = new EmbedBuilder()
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
+      .setColor(cor)
+      .setImage(novoGif)
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embedRetribuido] });
-    collector.stop();
+    await i.update({
+      content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+      embeds: [novoEmbed],
+      components: [row]
+    });
+  });
+
+  collector.on('end', () => {
+    button.setDisabled(true);
+    const disabledRow = new ActionRowBuilder().addComponents(button);
+    mensagem.edit({ components: [disabledRow] }).catch(() => {});
   });
 }

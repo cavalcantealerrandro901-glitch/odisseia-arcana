@@ -1,106 +1,106 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
-const GIFS_CARINHO = [
-  'https://i.giphy.com/media/5tmRHw632SmCIRvD2L/giphy.gif',
-  'https://i.giphy.com/media/109ltfnjz50pK8/giphy.gif',
-  'https://i.giphy.com/media/L2z7dnOduqE6Y/giphy.gif',
-  'https://i.giphy.com/media/ARSp9T7wwxNcs/giphy.gif',
-  'https://i.giphy.com/media/ye4mOfawcfOda/giphy.gif',
-  'https://i.giphy.com/media/os5Bz1IRmXaik/giphy.gif',
-  'https://i.giphy.com/media/N0CIxcy454Bgc/giphy.gif',
-  'https://i.giphy.com/media/S8P32p6A4qO6s/giphy.gif',
-  'https://i.giphy.com/media/ZfK4cXKJTTay1Ava29/giphy.gif',
-  'https://i.giphy.com/media/M3a51DMeWvYUo/giphy.gif',
-  'https://i.giphy.com/media/4f5R23Sj5E120/giphy.gif',
-  'https://i.giphy.com/media/129NVCr3LflX1u/giphy.gif',
-  'https://i.giphy.com/media/SvC0mB7T3eO4g/giphy.gif',
-  'https://i.giphy.com/media/3o85xH5S1Pj2T4P7fa/giphy.gif',
-  'https://i.giphy.com/media/12xmI3w2Cj2mU8/giphy.gif',
-  'https://i.giphy.com/media/25445JvL7X8cM/giphy.gif',
-  'https://i.giphy.com/media/kHOts8AniA2ve/giphy.gif',
-  'https://i.giphy.com/media/1043fC1f3r9c5O/giphy.gif',
-  'https://i.giphy.com/media/SnoT50sIqT5a0/giphy.gif',
-  'https://i.giphy.com/media/l41YoV54ZT3T0kM4M/giphy.gif',
-  'https://i.giphy.com/media/l0G183A8pT5008S4U/giphy.gif',
-  'https://i.giphy.com/media/3o6ozrA565aIn4rO3U/giphy.gif',
-  'https://i.giphy.com/media/xT39D30uS2PIn0vA4M/giphy.gif',
-  'https://i.giphy.com/media/3o7TKL33InS800S02Y/giphy.gif',
-  'https://i.giphy.com/media/l0HlE22P884U9V90S/giphy.gif',
-  'https://i.giphy.com/media/26AHF28S13v8084S0/giphy.gif',
-  'https://i.giphy.com/media/3o6ozv08yX32InX3U4/giphy.gif',
-  'https://i.giphy.com/media/xT39D4S02InA0u180M/giphy.gif',
-  'https://i.giphy.com/media/3o7TKMInJ1R209X64U/giphy.gif',
-  'https://i.giphy.com/media/26AHInP0E8Y21vR0s/giphy.gif'
-];
-
 module.exports = {
   name: 'carinho',
   aliases: ['pat', 'cafune'],
-  description: 'Faça carinho na cabeça de alguém',
+  description: 'Faça carinho na cabeça de um membro',
   slashData: new SlashCommandBuilder()
     .setName('carinho')
-    .setDescription('Faça carinho em alguém')
+    .setDescription('Faça carinho na cabeça de um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Em quem você deseja fazer carinho?')
+        .setDescription('Membro em quem você quer fazer carinho')
         .setRequired(true)
     ),
 
-  async execute(message, args, client) {
+  async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply('⚠️ Mencione alguém para fazer carinho!');
-    return enviarInteracao(message, message.author, target, false);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem vai receber carinho! Ex: \`${prefix}carinho @membro\``);
+    if (target.id === message.author.id) return message.reply('❌ Você não pode fazer carinho em si mesmo!');
+
+    return executarInteracao(message, message.author, target, 'pat', 'carinho na cabeça de', '🫳', '#F1C40F', false);
   },
 
   async executeSlash(interaction, client) {
     const target = interaction.options.getUser('usuario');
-    return enviarInteracao(interaction, interaction.user, target, true);
+    if (target.id === interaction.user.id) {
+      return interaction.reply({ content: '❌ Você não pode fazer carinho em si mesmo!', flags: [MessageFlags.Ephemeral] });
+    }
+
+    return executarInteracao(interaction, interaction.user, target, 'pat', 'carinho na cabeça de', '🫳', '#F1C40F', true);
   }
 };
 
-async function enviarInteracao(contexto, autor, alvo, isSlash = false) {
-  if (alvo.id === autor.id) {
-    const msg = '🐾 Você fez um afago na sua própria cabeça!';
-    return isSlash ? contexto.reply({ content: msg, flags: [MessageFlags.Ephemeral] }) : contexto.reply(msg);
+async function getGif(endpoint) {
+  try {
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const data = await res.json();
+    return data.results[0]?.url || '';
+  } catch {
+    return '';
   }
+}
 
-  const gif = GIFS_CARINHO[Math.floor(Math.random() * GIFS_CARINHO.length)];
+async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  let currentAuthor = autor;
+  let currentTarget = alvo;
+
+  let gif = await getGif(endpoint);
+
+  const button = new ButtonBuilder()
+    .setCustomId('devolver_acao')
+    .setLabel('Devolver 🔄')
+    .setStyle(ButtonStyle.Primary);
+
+  const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`🐾 **${autor}** fez um carinho fofo na cabeça de **${alvo}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** fez ${nomeAcao} **${currentTarget.username}**!`)
+    .setColor(cor)
     .setImage(gif)
-    .setColor('#FFD700')
     .setTimestamp();
 
-  const btnRetribuir = new ButtonBuilder()
-    .setCustomId(`retribuir_carinho_${autor.id}_${alvo.id}`)
-    .setLabel('🐾 Retribuir Carinho')
-    .setStyle(ButtonStyle.Secondary);
+  const payload = {
+    content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+    embeds: [embed],
+    components: [row],
+    fetchReply: true
+  };
 
-  const row = new ActionRowBuilder().addComponents(btnRetribuir);
+  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
 
-  const resposta = isSlash
-    ? await contexto.reply({ embeds: [embed], components: [row], fetchReply: true })
-    : await contexto.reply({ embeds: [embed], components: [row] });
-
-  const collector = resposta.createMessageComponentCollector({
+  const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
-    time: 120000
+    time: 360000
   });
 
-  collector.on('collect', async interaction => {
-    if (interaction.user.id !== alvo.id) {
-      return interaction.reply({ content: '❌ Apenas quem recebeu o carinho pode retribuir!', flags: [MessageFlags.Ephemeral] });
+  collector.on('collect', async (i) => {
+    if (i.user.id !== currentTarget.id) {
+      return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
     }
 
-    const gifRetribuicao = GIFS_CARINHO[Math.floor(Math.random() * GIFS_CARINHO.length)];
-    const embedRetribuido = new EmbedBuilder()
-      .setDescription(`🐾 **${alvo}** retribuiu o carinho em **${autor}**!`)
-      .setImage(gifRetribuicao)
-      .setColor('#FFA500')
+    const temp = currentAuthor;
+    currentAuthor = currentTarget;
+    currentTarget = temp;
+
+    const novoGif = await getGif(endpoint);
+
+    const novoEmbed = new EmbedBuilder()
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o carinho para **${currentTarget.username}**!`)
+      .setColor(cor)
+      .setImage(novoGif)
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embedRetribuido] });
-    collector.stop();
+    await i.update({
+      content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+      embeds: [novoEmbed],
+      components: [row]
+    });
+  });
+
+  collector.on('end', () => {
+    button.setDisabled(true);
+    const disabledRow = new ActionRowBuilder().addComponents(button);
+    mensagem.edit({ components: [disabledRow] }).catch(() => {});
   });
 }

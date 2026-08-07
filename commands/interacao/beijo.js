@@ -1,106 +1,107 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
-const GIFS_BEIJO = [
-  'https://i.giphy.com/media/G3va39rn8E4A8/giphy.gif',
-  'https://i.giphy.com/media/vUrwEOLtBwvsI/giphy.gif',
-  'https://i.giphy.com/media/FqVM4892FHJ4Y/giphy.gif',
-  'https://i.giphy.com/media/jR22gdcPiOLaE/giphy.gif',
-  'https://i.giphy.com/media/W3a0zO282RVvsM1Dji/giphy.gif',
-  'https://i.giphy.com/media/flL3vLgA1851m/giphy.gif',
-  'https://i.giphy.com/media/l4FsLq2233f2s8wxy/giphy.gif',
-  'https://i.giphy.com/media/11tdsyM4aWo8eI/giphy.gif',
-  'https://i.giphy.com/media/bm2O3nXTcKJeU/giphy.gif',
-  'https://i.giphy.com/media/zkppEMFvRX5FC/giphy.gif',
-  'https://i.giphy.com/media/Kro48m8WZXlIs/giphy.gif',
-  'https://i.giphy.com/media/S0o894i341w88/giphy.gif',
-  'https://i.giphy.com/media/Amu15N72eK1t6/giphy.gif',
-  'https://i.giphy.com/media/nyGFcsP0kAobm/giphy.gif',
-  'https://i.giphy.com/media/s21v3B3neM920/giphy.gif',
-  'https://i.giphy.com/media/o91R8E3j4k9tS/giphy.gif',
-  'https://i.giphy.com/media/e25Y1pP7604E0/giphy.gif',
-  'https://i.giphy.com/media/k5aB5a3iPq7f2/giphy.gif',
-  'https://i.giphy.com/media/bGm9883JmgZtm/giphy.gif',
-  'https://i.giphy.com/media/12VXIxKaGX35hm/giphy.gif',
-  'https://i.giphy.com/media/lGpr3q3Wnt2g/giphy.gif',
-  'https://i.giphy.com/media/vdbrUjzrUEy2I/giphy.gif',
-  'https://i.giphy.com/media/nnP9B38R2gJ60/giphy.gif',
-  'https://i.giphy.com/media/u011jM8fJmH04/giphy.gif',
-  'https://i.giphy.com/media/QGc80334L80na/giphy.gif',
-  'https://i.giphy.com/media/hnNyVPIXgVS3M/giphy.gif',
-  'https://i.giphy.com/media/26AHPxxnSw1L9T1rW/giphy.gif',
-  'https://i.giphy.com/media/3o7TKL33S1a9fUvIn6/giphy.gif',
-  'https://i.giphy.com/media/D0G8J2R4g26S0/giphy.gif',
-  'https://i.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif'
-];
-
 module.exports = {
   name: 'beijo',
   aliases: ['kiss', 'beijar'],
-  description: 'Dê um beijo em alguém do servidor',
+  description: 'Dê um beijo carinhoso em um membro',
   slashData: new SlashCommandBuilder()
     .setName('beijo')
-    .setDescription('Dê um beijo em alguém')
+    .setDescription('Dê um beijo carinhoso em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Quem você deseja beijar?')
+        .setDescription('Membro que você deseja beijar')
         .setRequired(true)
     ),
 
-  async execute(message, args, client) {
+  async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply('⚠️ Mencione alguém para beijar!');
-    return enviarInteracao(message, message.author, target, false);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem deseja beijar! Ex: \`${prefix}beijo @membro\``);
+    if (target.id === message.author.id) return message.reply('❌ Você não pode beijar a si mesmo!');
+
+    return executarInteracao(message, message.author, target, 'kiss', 'beijo', '💋', '#FFB6C1', false);
   },
 
   async executeSlash(interaction, client) {
     const target = interaction.options.getUser('usuario');
-    return enviarInteracao(interaction, interaction.user, target, true);
+    if (target.id === interaction.user.id) {
+      return interaction.reply({ content: '❌ Você não pode beijar a si mesmo!', flags: [MessageFlags.Ephemeral] });
+    }
+
+    return executarInteracao(interaction, interaction.user, target, 'kiss', 'beijo', '💋', '#FFB6C1', true);
   }
 };
 
-async function enviarInteracao(contexto, autor, alvo, isSlash = false) {
-  if (alvo.id === autor.id) {
-    const msg = '💖 Você se ama tanto que tentou beijar o próprio espelho!';
-    return isSlash ? contexto.reply({ content: msg, flags: [MessageFlags.Ephemeral] }) : contexto.reply(msg);
+async function getGif(endpoint) {
+  try {
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const data = await res.json();
+    return data.results[0]?.url || '';
+  } catch {
+    return '';
   }
+}
 
-  const gif = GIFS_BEIJO[Math.floor(Math.random() * GIFS_BEIJO.length)];
+async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  let currentAuthor = autor;
+  let currentTarget = alvo;
 
-  const embed = new EmbedBuilder()
-    .setDescription(`💋 **${autor}** deu um beijo carinhoso em **${alvo}**!`)
-    .setImage(gif)
-    .setColor('#FF69B4')
-    .setTimestamp();
+  let gif = await getGif(endpoint);
 
-  const btnRetribuir = new ButtonBuilder()
-    .setCustomId(`retribuir_beijo_${autor.id}_${alvo.id}`)
-    .setLabel('💋 Retribuir Beijo')
+  const button = new ButtonBuilder()
+    .setCustomId('devolver_acao')
+    .setLabel('Devolver 🔄')
     .setStyle(ButtonStyle.Primary);
 
-  const row = new ActionRowBuilder().addComponents(btnRetribuir);
+  const row = new ActionRowBuilder().addComponents(button);
 
-  const resposta = isSlash
-    ? await contexto.reply({ embeds: [embed], components: [row], fetchReply: true })
-    : await contexto.reply({ embeds: [embed], components: [row] });
+  const embed = new EmbedBuilder()
+    .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
+    .setColor(cor)
+    .setImage(gif)
+    .setTimestamp();
 
-  const collector = resposta.createMessageComponentCollector({
+  const payload = {
+    content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+    embeds: [embed],
+    components: [row],
+    fetchReply: true
+  };
+
+  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
+
+  const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
-    time: 120000
+    time: 360000 // 6 minutos
   });
 
-  collector.on('collect', async interaction => {
-    if (interaction.user.id !== alvo.id) {
-      return interaction.reply({ content: '❌ Apenas quem recebeu o beijo pode retribuir!', flags: [MessageFlags.Ephemeral] });
+  collector.on('collect', async (i) => {
+    if (i.user.id !== currentTarget.id) {
+      return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
     }
 
-    const gifRetribuicao = GIFS_BEIJO[Math.floor(Math.random() * GIFS_BEIJO.length)];
-    const embedRetribuido = new EmbedBuilder()
-      .setDescription(`💋 **${alvo}** retribuiu o beijo de **${autor}**!`)
-      .setImage(gifRetribuicao)
-      .setColor('#FF1493')
+    // Inverte o remetente e o destinatário
+    const temp = currentAuthor;
+    currentAuthor = currentTarget;
+    currentTarget = temp;
+
+    const novoGif = await getGif(endpoint);
+
+    const novoEmbed = new EmbedBuilder()
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
+      .setColor(cor)
+      .setImage(novoGif)
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embedRetribuido] });
-    collector.stop();
+    await i.update({
+      content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+      embeds: [novoEmbed],
+      components: [row]
+    });
+  });
+
+  collector.on('end', () => {
+    button.setDisabled(true);
+    const disabledRow = new ActionRowBuilder().addComponents(button);
+    mensagem.edit({ components: [disabledRow] }).catch(() => {});
   });
 }
