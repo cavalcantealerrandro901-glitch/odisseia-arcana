@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 
 // ----------------------------------------------------
-// 1. SERVIDOR HTTP DE ALTA DISPONIBILIDADE (RENDER)
+// 1. SERVIDOR HTTP PARA O RENDER
 // ----------------------------------------------------
 const PORT = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
@@ -25,7 +25,6 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`🌐 [HTTP] Servidor Web escutando na porta ${PORT}`);
 });
 
-// Prevenir queda do processo em caso de falhas de rede
 process.on('unhandledRejection', (reason) => {
   console.error('⚠️ [PROMISE ERRO]:', reason);
 });
@@ -47,7 +46,12 @@ const client = new Client({
 
 client.commands = new Collection();
 client.prefixCommands = new Collection();
-const DEFAULT_PREFIX = process.env.PREFIX || '!';
+
+// Aceita tanto PREFIX quanto PREFIX_BOT
+const DEFAULT_PREFIX = process.env.PREFIX || process.env.PREFIX_BOT || '!';
+
+// Aceita tanto TOKEN quanto DISCORD_TOKEN
+const BOT_TOKEN = process.env.TOKEN || process.env.DISCORD_TOKEN;
 
 // ----------------------------------------------------
 // 3. MONGODB DATABASE SCHEMAS
@@ -84,7 +88,7 @@ if (mongoUri) {
     .then(() => console.log('🌿 [DATABASE] Conectado ao MongoDB!'))
     .catch(err => console.error('❌ [DATABASE] Erro MongoDB:', err.message));
 } else {
-  console.warn('⚠️ [DATABASE] MONGO_URI não definida nas variáveis de ambiente!');
+  console.warn('⚠️ [DATABASE] MONGO_URI não definida!');
 }
 
 // Helper Prefixo
@@ -104,7 +108,7 @@ client.getPrefix = async (guildId) => {
   return DEFAULT_PREFIX;
 };
 
-// Algoritmo Levenshtein (Sugestão de comando)
+// Algoritmo Levenshtein
 function getLevenshteinDistance(a, b) {
   const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
   for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
@@ -161,10 +165,10 @@ loadCommands();
 client.once('ready', async () => {
   console.log(`⚡ [ONLINE] Bot logado como: ${client.user.tag}`);
 
-  if (slashCommandsArray.length > 0) {
+  if (slashCommandsArray.length > 0 && BOT_TOKEN) {
     try {
       console.log('🔄 Registrando Slash Commands no Discord...');
-      const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+      const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
       await rest.put(Routes.applicationCommands(client.user.id), { body: slashCommandsArray });
       console.log('✅ Slash Commands sincronizados!');
     } catch (e) {
@@ -173,7 +177,7 @@ client.once('ready', async () => {
   }
 });
 
-// Interações (Slash + Modais)
+// Interações
 client.on('interactionCreate', async interaction => {
   if (interaction.isModalSubmit()) {
     let userData = await UserModel.findOne({ userId: interaction.user.id });
@@ -248,7 +252,7 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Evento Mensagens (Prefixo + AFK)
+// Evento Mensagens
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
 
@@ -311,11 +315,10 @@ client.on('messageCreate', async message => {
 });
 
 // Login do Bot
-const token = process.env.TOKEN;
-if (token) {
-  client.login(token).catch(err => {
-    console.error('❌ [DISCORD LOGIN ERRO]: Verifique se o TOKEN está correto no Render!', err.message);
+if (BOT_TOKEN) {
+  client.login(BOT_TOKEN).catch(err => {
+    console.error('❌ [DISCORD LOGIN ERRO]: Verifique se o DISCORD_TOKEN está correto no Render!', err.message);
   });
 } else {
-  console.error('❌ [TOKEN FALTANDO]: Cadastre a variável TOKEN nas Environment Variables do Render!');
+  console.error('❌ [TOKEN FALTANDO]: Variável DISCORD_TOKEN / TOKEN não encontrada!');
 }
