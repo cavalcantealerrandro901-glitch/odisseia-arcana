@@ -1,24 +1,24 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
 module.exports = {
-  name: 'abraco',
-  aliases: ['hug', 'abracar'],
-  description: 'Dê um abraço apertado em um membro',
+  name: 'abraço',
+  aliases: ['abraco', 'hug'],
+  description: 'Dê um abraço em um membro',
   slashData: new SlashCommandBuilder()
     .setName('abraco')
-    .setDescription('Dê um abraço apertado em um membro')
+    .setDescription('Dê um abraço em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Membro que você deseja abraçar')
+        .setDescription('Membro em quem você quer dar um abraço')
         .setRequired(true)
     ),
 
   async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply(`❌ Você precisa mencionar quem deseja abraçar! Ex: \`${prefix}abraco @membro\``);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem quer abraçar! Ex: \`${prefix}abraco @membro\``);
     if (target.id === message.author.id) return message.reply('❌ Você não pode abraçar a si mesmo!');
 
-    return executarInteracao(message, message.author, target, 'hug', 'abraço', '🫂', '#7289DA', false);
+    return executarInteracao(message, message.author, target, 'hug', 'um abraço em', '🫂', '#9B59B6', false);
   },
 
   async executeSlash(interaction, client) {
@@ -27,21 +27,28 @@ module.exports = {
       return interaction.reply({ content: '❌ Você não pode abraçar a si mesmo!', flags: [MessageFlags.Ephemeral] });
     }
 
-    return executarInteracao(interaction, interaction.user, target, 'hug', 'abraço', '🫂', '#7289DA', true);
+    return executarInteracao(interaction, interaction.user, target, 'hug', 'um abraço em', '🫂', '#9B59B6', true);
   }
 };
 
 async function getGif(endpoint) {
   try {
-    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`, {
+      headers: { 'User-Agent': 'DiscordBot/1.0' }
+    });
+    if (!res.ok) return null;
     const data = await res.json();
-    return data.results[0]?.url || '';
-  } catch {
-    return '';
+    const url = data.results?.[0]?.url;
+    return (url && url.startsWith('http')) ? url : null;
+  } catch (err) {
+    console.error('Erro na API de GIF:', err.message);
+    return null;
   }
 }
 
 async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  if (isSlash) await contexto.deferReply();
+
   let currentAuthor = autor;
   let currentTarget = alvo;
 
@@ -55,19 +62,19 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
   const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** deu ${nomeAcao} **${currentTarget.username}**!`)
     .setColor(cor)
-    .setImage(gif)
     .setTimestamp();
+
+  if (gif) embed.setImage(gif);
 
   const payload = {
     content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
     embeds: [embed],
-    components: [row],
-    fetchReply: true
+    components: [row]
   };
 
-  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
+  const mensagem = isSlash ? await contexto.editReply(payload) : await contexto.reply(payload);
 
   const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
@@ -86,10 +93,11 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     const novoGif = await getGif(endpoint);
 
     const novoEmbed = new EmbedBuilder()
-      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o abraço para **${currentTarget.username}**!`)
       .setColor(cor)
-      .setImage(novoGif)
       .setTimestamp();
+
+    if (novoGif) novoEmbed.setImage(novoGif);
 
     await i.update({
       content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,

@@ -2,23 +2,23 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 
 module.exports = {
   name: 'beijo',
-  aliases: ['kiss', 'beijar'],
-  description: 'Dê um beijo carinhoso em um membro',
+  aliases: ['beijar', 'kiss'],
+  description: 'Dê um beijo em um membro',
   slashData: new SlashCommandBuilder()
     .setName('beijo')
-    .setDescription('Dê um beijo carinhoso em um membro')
+    .setDescription('Dê um beijo em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Membro que você deseja beijar')
+        .setDescription('Membro em quem você quer dar um beijo')
         .setRequired(true)
     ),
 
   async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply(`❌ Você precisa mencionar quem deseja beijar! Ex: \`${prefix}beijo @membro\``);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem quer beijar! Ex: \`${prefix}beijo @membro\``);
     if (target.id === message.author.id) return message.reply('❌ Você não pode beijar a si mesmo!');
 
-    return executarInteracao(message, message.author, target, 'kiss', 'beijo', '💋', '#FFB6C1', false);
+    return executarInteracao(message, message.author, target, 'kiss', 'um beijo em', '💋', '#E91E63', false);
   },
 
   async executeSlash(interaction, client) {
@@ -27,21 +27,28 @@ module.exports = {
       return interaction.reply({ content: '❌ Você não pode beijar a si mesmo!', flags: [MessageFlags.Ephemeral] });
     }
 
-    return executarInteracao(interaction, interaction.user, target, 'kiss', 'beijo', '💋', '#FFB6C1', true);
+    return executarInteracao(interaction, interaction.user, target, 'kiss', 'um beijo em', '💋', '#E91E63', true);
   }
 };
 
 async function getGif(endpoint) {
   try {
-    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`, {
+      headers: { 'User-Agent': 'DiscordBot/1.0' }
+    });
+    if (!res.ok) return null;
     const data = await res.json();
-    return data.results[0]?.url || '';
-  } catch {
-    return '';
+    const url = data.results?.[0]?.url;
+    return (url && url.startsWith('http')) ? url : null;
+  } catch (err) {
+    console.error('Erro na API de GIF:', err.message);
+    return null;
   }
 }
 
 async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  if (isSlash) await contexto.deferReply();
+
   let currentAuthor = autor;
   let currentTarget = alvo;
 
@@ -55,23 +62,23 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
   const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** deu ${nomeAcao} **${currentTarget.username}**!`)
     .setColor(cor)
-    .setImage(gif)
     .setTimestamp();
+
+  if (gif) embed.setImage(gif);
 
   const payload = {
     content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
     embeds: [embed],
-    components: [row],
-    fetchReply: true
+    components: [row]
   };
 
-  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
+  const mensagem = isSlash ? await contexto.editReply(payload) : await contexto.reply(payload);
 
   const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
-    time: 360000 // 6 minutos
+    time: 360000
   });
 
   collector.on('collect', async (i) => {
@@ -79,7 +86,6 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
       return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
     }
 
-    // Inverte o remetente e o destinatário
     const temp = currentAuthor;
     currentAuthor = currentTarget;
     currentTarget = temp;
@@ -87,10 +93,11 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     const novoGif = await getGif(endpoint);
 
     const novoEmbed = new EmbedBuilder()
-      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o beijo para **${currentTarget.username}**!`)
       .setColor(cor)
-      .setImage(novoGif)
       .setTimestamp();
+
+    if (novoGif) novoEmbed.setImage(novoGif);
 
     await i.update({
       content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
