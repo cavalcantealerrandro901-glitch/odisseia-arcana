@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
+const { getGif } = require('../../utils/gifs');
 
 module.exports = {
   name: 'abraço',
@@ -31,28 +32,12 @@ module.exports = {
   }
 };
 
-async function getGif(endpoint) {
-  try {
-    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`, {
-      headers: { 'User-Agent': 'DiscordBot/1.0' }
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const url = data.results?.[0]?.url;
-    return (url && url.startsWith('http')) ? url : null;
-  } catch (err) {
-    console.error('Erro na API de GIF:', err.message);
-    return null;
-  }
-}
-
 async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
-  if (isSlash) await contexto.deferReply();
-
   let currentAuthor = autor;
   let currentTarget = alvo;
 
-  let gif = await getGif(endpoint);
+  // Busca a GIF diretamente do arquivo local em 0ms
+  const gif = getGif(endpoint);
 
   const button = new ButtonBuilder()
     .setCustomId('devolver_acao')
@@ -74,7 +59,7 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     components: [row]
   };
 
-  const mensagem = isSlash ? await contexto.editReply(payload) : await contexto.reply(payload);
+  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
 
   const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
@@ -90,7 +75,7 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     currentAuthor = currentTarget;
     currentTarget = temp;
 
-    const novoGif = await getGif(endpoint);
+    const novoGif = getGif(endpoint);
 
     const novoEmbed = new EmbedBuilder()
       .setDescription(`${emoji} **${currentAuthor.username}** devolveu o abraço para **${currentTarget.username}**!`)
