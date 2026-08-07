@@ -9,34 +9,42 @@ const mongoose = require('mongoose');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('pagaralmas')
-    .setDescription('Transfere almas para um ou mais usuários.')
-    .addIntegerOption(opt => 
-      opt.setName('quantia')
-        .setDescription('Quantidade de almas a ser transferida para cada pessoa')
-        .setRequired(true)
-        .setMinValue(1))
-    .addUserOption(opt => 
-      opt.setName('usuario1')
-        .setDescription('Primeiro usuário a receber as almas')
-        .setRequired(true))
-    .addUserOption(opt => 
-      opt.setName('usuario2')
-        .setDescription('Segundo usuário (opcional)')
-        .setRequired(false))
-    .addUserOption(opt => 
-      opt.setName('usuario3')
-        .setDescription('Terceiro usuário (opcional)')
-        .setRequired(false)),
-  name: 'pagaralmas',
-  aliases: ['pagar-almas', 'payalmas', 'doaralmas', 'transferiralmas'],
-  description: 'Transfere almas para um ou mais usuários.',
+    .setName('pagar')
+    .setDescription('Comandos de pagamento e transferência.')
+    .addSubcommand(sub =>
+      sub
+        .setName('almas')
+        .setDescription('Transfere almas para um ou mais usuários.')
+        .addIntegerOption(opt => 
+          opt.setName('quantia')
+            .setDescription('Quantidade de almas a ser transferida para cada pessoa')
+            .setRequired(true)
+            .setMinValue(1))
+        .addUserOption(opt => 
+          opt.setName('usuario1')
+            .setDescription('Primeiro usuário a receber as almas')
+            .setRequired(true))
+        .addUserOption(opt => 
+          opt.setName('usuario2')
+            .setDescription('Segundo usuário (opcional)')
+            .setRequired(false))
+        .addUserOption(opt => 
+          opt.setName('usuario3')
+            .setDescription('Terceiro usuário (opcional)')
+            .setRequired(false))
+    ),
+  name: 'pagar',
+  aliases: ['pix', 'pay', 'pai'],
+  description: 'Transfere almas via /pagar almas, !pix ou !pay',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;
     let targets = [];
     let amount = 0;
 
     if (isSlash) {
+      const subcommand = ctx.options.getSubcommand();
+      if (subcommand !== 'almas') return;
+
       amount = ctx.options.getInteger('quantia');
       const u1 = ctx.options.getUser('usuario1');
       const u2 = ctx.options.getUser('usuario2');
@@ -46,6 +54,7 @@ module.exports = {
       if (u2) targets.push(u2);
       if (u3) targets.push(u3);
     } else {
+      // Prefixo: !pix, !pay ou !pai
       amount = parseInt(args.find(a => !isNaN(a) && !a.includes('<@')), 10);
       
       if (ctx.mentions && ctx.mentions.users.size > 0) {
@@ -53,7 +62,7 @@ module.exports = {
       }
 
       if (!amount || isNaN(amount) || amount <= 0 || targets.length === 0) {
-        return ctx.reply('❌ **Uso correto:** `!pagaralmas <quantia> @usuario1 [@usuario2...]`');
+        return ctx.reply('❌ **Uso correto:** `!pix <quantia> @usuario1 [@usuario2...]` ou `!pay <quantia> @usuario`');
       }
     }
 
