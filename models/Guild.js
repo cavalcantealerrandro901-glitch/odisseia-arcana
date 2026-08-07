@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
-const guildSchema = new mongoose.Schema({
-  guildId: { type: String, required: true, unique: true },
-  prefix: { type: String, default: process.env.BOT_PREFIX || '!' }
+const GuildSchema = new mongoose.Schema({
+  guildId: { type: String, required: true, unique: true, index: true },
+  prefix: { type: String, default: '!' }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('Guild', guildSchema);
+module.exports = mongoose.models.Guild || mongoose.model('Guild', GuildSchema);
