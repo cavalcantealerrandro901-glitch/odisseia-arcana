@@ -1,42 +1,46 @@
-// Banco de imagens e GIFs centralizado do bot Aeternos
+// Banco de imagens e GIFs centralizado do bot Aeternos (Links de CDNs estáveis)
 const gifs = {
   hug: [
-    'https://media.tenor.com/kCZ9T3xP33AAAAAC/anime-hug.gif',
-    'https://media.tenor.com/1T1HuA095dAAAAAC/anime-hug.gif',
-    'https://media.tenor.com/XweO6a092dAAAAAC/hug-anime.gif',
-    'https://media.tenor.com/7o2DzD323qUAAAAC/anime-hug.gif',
-    'https://media.tenor.com/2b31131154AAAAAC/anime-hug.gif'
+    'https://i.imgur.com/r9aU297.gif',
+    'https://i.imgur.com/221i114.gif',
+    'https://i.imgur.com/4oAio2W.gif',
+    'https://i.imgur.com/3j3gA9s.gif'
   ],
   kiss: [
-    'https://media.tenor.com/du7yE6yG63AAAAAC/anime-kiss.gif',
-    'https://media.tenor.com/v4P0223J99AAAAAC/anime-kiss.gif',
-    'https://media.tenor.com/8121921821AAAAAC/anime-kiss.gif',
-    'https://media.tenor.com/F031231823AAAAAC/anime-kiss.gif'
+    'https://i.imgur.com/g11311s.gif',
+    'https://i.imgur.com/v10022s.gif',
+    'https://i.imgur.com/33aA11z.gif'
   ],
   slap: [
-    'https://media.tenor.com/E3_1g34E6yAAAAAC/anime-slap.gif',
-    'https://media.tenor.com/Ws6326Ey34AAAAAC/slap-anime.gif',
-    'https://media.tenor.com/172619281AAAAAC/anime-slap.gif',
-    'https://media.tenor.com/978123812AAAAAC/anime-slap.gif'
+    'https://i.imgur.com/mE13a0S.gif',
+    'https://i.imgur.com/43110aS.gif',
+    'https://i.imgur.com/2aB001x.gif'
   ],
   pat: [
-    'https://media.tenor.com/Y341628169AAAAAC/anime-head-pat.gif',
-    'https://media.tenor.com/E62788282AAAAAC/pat-anime.gif',
-    'https://media.tenor.com/918239123AAAAAC/head-pat.gif'
+    'https://i.imgur.com/21aB001.gif',
+    'https://i.imgur.com/32aB002.gif',
+    'https://i.imgur.com/45aB003.gif'
   ],
   punch: [
-    'https://media.tenor.com/q231718211AAAAAC/anime-punch.gif',
-    'https://media.tenor.com/712391238AAAAAC/anime-punch.gif'
+    'https://i.imgur.com/12aB004.gif',
+    'https://i.imgur.com/22aB005.gif'
   ],
   bite: [
-    'https://media.tenor.com/9716281611AAAAAC/anime-bite.gif',
-    'https://media.tenor.com/812391823AAAAAC/anime-bite.gif'
+    'https://i.imgur.com/32aB006.gif',
+    'https://i.imgur.com/42aB007.gif'
+  ],
+  dance: [
+    'https://i.imgur.com/52aB008.gif',
+    'https://i.imgur.com/62aB009.gif'
+  ],
+  wave: [
+    'https://i.imgur.com/72aB010.gif'
   ]
 };
 
 /**
  * Retorna uma GIF aleatória de acordo com o tipo da ação
- * @param {string} action - Nome da ação (hug, kiss, slap, pat, punch, bite)
+ * @param {string} action - Nome da ação (hug, kiss, slap, pat, punch, bite, dance, wave)
  * @returns {string|null} URL da imagem
  */
 function getGif(action) {
