@@ -124,3 +124,6 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.login(process.env.DISCORD_TOKEN);
+
+// Carregar Sistema de Logs
+require('./events/logsEvents')(client);
