@@ -2,23 +2,23 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 
 module.exports = {
   name: 'tapa',
-  aliases: ['slap'],
+  aliases: ['slap', 'bofetada'],
   description: 'Dê um tapa em um membro',
   slashData: new SlashCommandBuilder()
     .setName('tapa')
     .setDescription('Dê um tapa em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Membro que vai levar o tapa')
+        .setDescription('Membro em quem você quer dar um tapa')
         .setRequired(true)
     ),
 
   async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply(`❌ Você precisa mencionar quem vai levar o tapa! Ex: \`${prefix}tapa @membro\``);
+    if (!target) return message.reply(`❌ Você precisa mencionar quem quer dar um tapa! Ex: \`${prefix}tapa @membro\``);
     if (target.id === message.author.id) return message.reply('❌ Você não pode dar um tapa em si mesmo!');
 
-    return executarInteracao(message, message.author, target, 'slap', 'tapa', '🖐️', '#E74C3C', false);
+    return executarInteracao(message, message.author, target, 'slap', 'um tapa em', '🤚', '#E74C3C', false);
   },
 
   async executeSlash(interaction, client) {
@@ -27,7 +27,7 @@ module.exports = {
       return interaction.reply({ content: '❌ Você não pode dar um tapa em si mesmo!', flags: [MessageFlags.Ephemeral] });
     }
 
-    return executarInteracao(interaction, interaction.user, target, 'slap', 'tapa', '🖐️', '#E74C3C', true);
+    return executarInteracao(interaction, interaction.user, target, 'slap', 'um tapa em', '🤚', '#E74C3C', true);
   }
 };
 
@@ -47,6 +47,8 @@ async function getGif(endpoint) {
 }
 
 async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoji, cor, isSlash) {
+  if (isSlash) await contexto.deferReply();
+
   let currentAuthor = autor;
   let currentTarget = alvo;
 
@@ -60,7 +62,7 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
   const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** deu ${nomeAcao} **${currentTarget.username}**!`)
     .setColor(cor)
     .setTimestamp();
 
@@ -69,11 +71,10 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
   const payload = {
     content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
     embeds: [embed],
-    components: [row],
-    fetchReply: true
+    components: [row]
   };
 
-  const mensagem = isSlash ? await contexto.reply(payload) : await contexto.reply(payload);
+  const mensagem = isSlash ? await contexto.editReply(payload) : await contexto.reply(payload);
 
   const collector = mensagem.createMessageComponentCollector({
     componentType: ComponentType.Button,
@@ -92,7 +93,7 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     const novoGif = await getGif(endpoint);
 
     const novoEmbed = new EmbedBuilder()
-      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o tapa para **${currentTarget.username}**!`)
       .setColor(cor)
       .setTimestamp();
 

@@ -1,33 +1,33 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, MessageFlags } = require('discord.js');
 
 module.exports = {
-  name: 'carinho',
-  aliases: ['pat', 'cafune'],
-  description: 'Faça carinho em um membro',
+  name: 'soco',
+  aliases: ['punch', 'socor'],
+  description: 'Dê um soco em um membro',
   slashData: new SlashCommandBuilder()
-    .setName('carinho')
-    .setDescription('Faça carinho em um membro')
+    .setName('soco')
+    .setDescription('Dê um soco em um membro')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Membro em quem você quer fazer carinho')
+        .setDescription('Membro em quem você quer dar um soco')
         .setRequired(true)
     ),
 
   async execute(message, args, client, prefix) {
     const target = message.mentions.users.first();
-    if (!target) return message.reply(`❌ Você precisa mencionar em quem quer fazer carinho! Ex: \`${prefix}carinho @membro\``);
-    if (target.id === message.author.id) return message.reply('❌ Você não pode fazer carinho em si mesmo!');
+    if (!target) return message.reply(`❌ Você precisa mencionar quem quer dar um soco! Ex: \`${prefix}soco @membro\``);
+    if (target.id === message.author.id) return message.reply('❌ Você não pode dar um soco em si mesmo!');
 
-    return executarInteracao(message, message.author, target, 'pat', 'carinho em', '🫳', '#1ABC9C', false);
+    return executarInteracao(message, message.author, target, 'punch', 'um soco em', '👊', '#C0392B', false);
   },
 
   async executeSlash(interaction, client) {
     const target = interaction.options.getUser('usuario');
     if (target.id === interaction.user.id) {
-      return interaction.reply({ content: '❌ Você não pode fazer carinho em si mesmo!', flags: [MessageFlags.Ephemeral] });
+      return interaction.reply({ content: '❌ Você não pode dar um soco em si mesmo!', flags: [MessageFlags.Ephemeral] });
     }
 
-    return executarInteracao(interaction, interaction.user, target, 'pat', 'carinho em', '🫳', '#1ABC9C', true);
+    return executarInteracao(interaction, interaction.user, target, 'punch', 'um soco em', '👊', '#C0392B', true);
   }
 };
 
@@ -62,7 +62,7 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
   const row = new ActionRowBuilder().addComponents(button);
 
   const embed = new EmbedBuilder()
-    .setDescription(`${emoji} **${currentAuthor.username}** fez ${nomeAcao} **${currentTarget.username}**!`)
+    .setDescription(`${emoji} **${currentAuthor.username}** deu ${nomeAcao} **${currentTarget.username}**!`)
     .setColor(cor)
     .setTimestamp();
 
@@ -93,7 +93,7 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     const novoGif = await getGif(endpoint);
 
     const novoEmbed = new EmbedBuilder()
-      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o carinho para **${currentTarget.username}**!`)
+      .setDescription(`${emoji} **${currentAuthor.username}** devolveu o soco para **${currentTarget.username}**!`)
       .setColor(cor)
       .setTimestamp();
 
