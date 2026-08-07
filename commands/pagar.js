@@ -32,37 +32,70 @@ module.exports = {
           opt.setName('usuario3')
             .setDescription('Terceiro usuário (opcional)')
             .setRequired(false))
+        .addUserOption(opt => 
+          opt.setName('usuario4')
+            .setDescription('Quarto usuário (opcional)')
+            .setRequired(false))
+        .addUserOption(opt => 
+          opt.setName('usuario5')
+            .setDescription('Quinto usuário (opcional)')
+            .setRequired(false))
+        .addStringOption(opt =>
+          opt.setName('tempo')
+            .setDescription('Tempo limite para aceitar a transferência (Padrão: 15m, Máximo: 7d)')
+            .setRequired(false)
+            .addChoices(
+              { name: '15 Minutos', value: '15m' },
+              { name: '1 Hora', value: '1h' },
+              { name: '1 Dia', value: '1d' },
+              { name: '5 Dias', value: '5d' },
+              { name: '7 Dias (Máximo)', value: '7d' }
+            ))
+        .addBooleanOption(opt =>
+          opt.setName('confirmacao_automatica')
+            .setDescription('Aceitar automaticamente da sua parte como remetente (true/false)')
+            .setRequired(false))
     ),
   name: 'pagar',
   aliases: ['pix', 'pay', 'pai'],
-  description: 'Transfere almas via /pagar almas, !pix ou !pay',
+  description: 'Transfere almas via /pagar almas, !pix, !pay ou !pai',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;
+    const channel = ctx.channel;
     let targets = [];
     let amount = 0;
+    let timeChoice = '15m';
+    let autoAccept = false;
 
     if (isSlash) {
       const subcommand = ctx.options.getSubcommand();
       if (subcommand !== 'almas') return;
 
       amount = ctx.options.getInteger('quantia');
-      const u1 = ctx.options.getUser('usuario1');
-      const u2 = ctx.options.getUser('usuario2');
-      const u3 = ctx.options.getUser('usuario3');
+      for (let i = 1; i <= 5; i++) {
+        const u = ctx.options.getUser(`usuario${i}`);
+        if (u) targets.push(u);
+      }
 
-      if (u1) targets.push(u1);
-      if (u2) targets.push(u2);
-      if (u3) targets.push(u3);
+      timeChoice = ctx.options.getString('tempo') || '15m';
+      autoAccept = ctx.options.getBoolean('confirmacao_automatica') || false;
     } else {
-      // Prefixo: !pix, !pay ou !pai
+      // Exemplo prefixo: !pix 200000 @user1 @user2 1h auto
       amount = parseInt(args.find(a => !isNaN(a) && !a.includes('<@')), 10);
-      
+
       if (ctx.mentions && ctx.mentions.users.size > 0) {
         targets = Array.from(ctx.mentions.users.values());
       }
 
+      const timeArg = args.find(a => ['15m', '1h', '1d', '5d', '7d'].includes(a.toLowerCase()));
+      if (timeArg) timeChoice = timeArg.toLowerCase();
+
+      if (args.some(a => ['auto', 'automatico', 'sim', 'true'].includes(a.toLowerCase()))) {
+        autoAccept = true;
+      }
+
       if (!amount || isNaN(amount) || amount <= 0 || targets.length === 0) {
-        return ctx.reply('❌ **Uso correto:** `!pix <quantia> @usuario1 [@usuario2...]` ou `!pay <quantia> @usuario`');
+        return ctx.reply('❌ **Uso correto:** `!pix <quantia> @usuario1 [@usuario2...] [15m|1h|1d|5d|7d] [auto]`');
       }
     }
 
@@ -87,140 +120,165 @@ module.exports = {
       return ctx.reply(`❌ **Almas Insuficientes!** Você precisa de 🔮 **${totalCost.toLocaleString()} almas** para enviar **${amount.toLocaleString()} almas** para ${targets.length} pessoa(s), mas possui apenas 🔮 **${(senderData.souls || 0).toLocaleString()} almas**.`);
     }
 
-    // Pessoas necessárias para confirmar (Remetente + Destinatários)
-    const requiredConfirmations = new Set([author.id, ...targets.map(t => t.id)]);
-    const confirmedUsers = new Set();
+    // Mapeamento de tempos limite
+    const timeMap = {
+      '15m': { ms: 15 * 60 * 1000, label: '15 minutos' },
+      '1h': { ms: 60 * 60 * 1000, label: '1 hora' },
+      '1d': { ms: 24 * 60 * 60 * 1000, label: '1 dia' },
+      '5d': { ms: 5 * 24 * 60 * 60 * 1000, label: '5 dias' },
+      '7d': { ms: 7 * 24 * 60 * 60 * 1000, label: '7 dias' }
+    };
 
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId('accept_soul_transfer')
-        .setLabel('✅ Aceitar Transferência')
-        .setStyle(ButtonStyle.Success),
-      new ButtonBuilder()
-        .setCustomId('cancel_soul_transfer')
-        .setLabel('❌ Cancelar')
-        .setStyle(ButtonStyle.Danger)
-    );
+    const timeInfo = timeMap[timeChoice] || timeMap['15m'];
 
-    const targetMentions = targets.map(t => `<@${t.id}>`).join(', ');
+    // Se houver múltiplos usuários, envia um aviso geral inicial
+    if (targets.length > 1) {
+      await ctx.reply(`🔮 **PROCESSO DE TRANSFERÊNCIA MÚLTIPLA INICIADO!**\n\n` +
+        `• Remetente: <@${author.id}>\n` +
+        `• Valor por pessoa: 🔮 **${amount.toLocaleString()} almas**\n` +
+        `• Total reservado: 🔮 **${totalCost.toLocaleString()} almas** (${targets.length} destinatários)\n` +
+        `• Confirmação automática do remetente: **${autoAccept ? 'Ativada ✅' : 'Desativada ❌'}**\n` +
+        `• Tempo limite: **${timeInfo.label}**\n\n` +
+        `📩 *Gerando mensagens de confirmação dedicadas para cada usuário abaixo...*`);
+    }
 
-    const initialText = `🔮 **TRANSFERÊNCIA DE ALMAS INICIADA!**\n\n` +
-      `O usuário <@${author.id}> está prestes a transferir 🔮 **${amount.toLocaleString()} almas** para cada um dos seguintes usuários: ${targetMentions}.\n` +
-      `*(Custo total para o remetente: 🔮 **${totalCost.toLocaleString()} almas**)*\n\n` +
-      `📜 **REGRAS E CONSEQUÊNCIAS:**\n` +
-      `• Esta ação é **permanente e irreversível** após a confirmação de todos.\n` +
-      `• Transferências fraudulentas ou suspeitas podem resultar em sanções no servidor.\n` +
-      `• **Todos os envolvidos** (<@${author.id}> e os destinatários) precisam clicar no botão **Aceitar** para concluir.\n\n` +
-      `⏳ *Aguardando confirmações (0/${requiredConfirmations.size})...*`;
+    // Criar uma mensagem dedicada para CADA destinatário
+    for (let i = 0; i < targets.length; i++) {
+      const target = targets[i];
+      const confirmedUsers = new Set();
+      if (autoAccept) confirmedUsers.add(author.id);
 
-    const initialMsg = await ctx.reply({
-      content: initialText,
-      components: [row],
-      fetchReply: true
-    });
+      const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`accept_soul_${author.id}_${target.id}`)
+          .setLabel('✅ Aceitar Transferência')
+          .setStyle(ButtonStyle.Success),
+        new ButtonBuilder()
+          .setCustomId(`cancel_soul_${author.id}_${target.id}`)
+          .setLabel('❌ Cancelar')
+          .setStyle(ButtonStyle.Danger)
+      );
 
-    const collector = initialMsg.createMessageComponentCollector({
-      componentType: ComponentType.Button,
-      time: 60000 
-    });
+      const renderDedicatedText = () => {
+        const senderStatus = confirmedUsers.has(author.id) ? '✅ **Aceitou**' : '⏳ **Pendente**';
+        const targetStatus = confirmedUsers.has(target.id) ? '✅ **Aceitou**' : '⏳ **Pendente**';
 
-    collector.on('collect', async (interaction) => {
-      if (!requiredConfirmations.has(interaction.user.id)) {
-        return interaction.reply({
-          content: '❌ Você não faz parte desta transferência de almas!',
-          ephemeral: true
+        return `🔮 **TRANSFERÊNCIA DEDICADA DE ALMAS**\n\n` +
+          `O usuário <@${author.id}> está prestes a transferir 🔮 **${amount.toLocaleString()} almas** para <@${target.id}>.\n\n` +
+          `📜 **REGRAS E CONSEQUÊNCIAS:**\n` +
+          `• Esta ação é **permanente e irreversível** após a confirmação de ambos.\n` +
+          `• Transferências fraudulentas ou suspeitas podem resultar em sanções no servidor.\n` +
+          `• **Ambas as partes** (<@${author.id}> e <@${target.id}>) precisam aceitar para concluir.\n\n` +
+          `📋 **STATUS DE CONFIRMAÇÃO:**\n` +
+          `• Remetente (<@${author.id}>): ${senderStatus}${autoAccept ? ' *(Automático)*' : ''}\n` +
+          `• Destinatário (<@${target.id}>): ${targetStatus}\n\n` +
+          `⏰ **Tempo limite:** ${timeInfo.label}\n` +
+          `⏳ *Aguardando confirmação (${confirmedUsers.size}/2)...*`;
+      };
+
+      let targetMsg;
+      if (targets.length === 1) {
+        targetMsg = await ctx.reply({
+          content: renderDedicatedText(),
+          components: [row],
+          fetchReply: true
+        });
+      } else {
+        targetMsg = await channel.send({
+          content: renderDedicatedText(),
+          components: [row]
         });
       }
 
-      if (interaction.customId === 'cancel_soul_transfer') {
-        collector.stop('cancelled');
-        return interaction.reply({
-          content: `❌ A transferência de almas foi cancelada por <@${interaction.user.id}>.`,
-          ephemeral: false
-        });
-      }
+      // Collector individual para esta mensagem dedicada
+      const collector = targetMsg.createMessageComponentCollector({
+        componentType: ComponentType.Button,
+        time: timeInfo.ms
+      });
 
-      if (interaction.customId === 'accept_soul_transfer') {
-        if (confirmedUsers.has(interaction.user.id)) {
+      collector.on('collect', async (interaction) => {
+        if (interaction.user.id !== author.id && interaction.user.id !== target.id) {
           return interaction.reply({
-            content: '⚠️ Você já aceitou esta transferência! Aguardando os demais.',
+            content: '❌ Você não faz parte desta transferência específica!',
             ephemeral: true
           });
         }
 
-        confirmedUsers.add(interaction.user.id);
-        await interaction.deferUpdate();
-
-        if (confirmedUsers.size < requiredConfirmations.size) {
-          const pendingMentions = Array.from(requiredConfirmations)
-            .filter(id => !confirmedUsers.has(id))
-            .map(id => `<@${id}>`)
-            .join(', ');
-
-          await initialMsg.edit({
-            content: initialText + `\n\n📌 **Falta a confirmação de:** ${pendingMentions}`
-          });
-        } else {
-          collector.stop('completed');
-        }
-      }
-    });
-
-    collector.on('end', async (_, reason) => {
-      if (reason === 'completed') {
-        let freshSender = await UserModel.findOne({ userId: author.id });
-        if (!freshSender || (freshSender.souls || 0) < totalCost) {
-          return initialMsg.edit({
-            content: '❌ **Erro:** O remetente não possui mais almas suficientes para concluir a transferência!',
-            components: []
+        if (interaction.customId.startsWith('cancel_soul_')) {
+          collector.stop('cancelled');
+          return interaction.reply({
+            content: `❌ A transferência de almas para <@${target.id}> foi cancelada por <@${interaction.user.id}>.`,
+            ephemeral: false
           });
         }
 
-        // Descontar do remetente
-        freshSender.souls -= totalCost;
-        await freshSender.save();
+        if (interaction.customId.startsWith('accept_soul_')) {
+          if (confirmedUsers.has(interaction.user.id)) {
+            return interaction.reply({
+              content: '⚠️ Você já aceitou esta transferência! Aguardando a outra parte.',
+              ephemeral: true
+            });
+          }
 
-        // Adicionar aos destinatários
-        for (const target of targets) {
+          confirmedUsers.add(interaction.user.id);
+          await interaction.deferUpdate();
+
+          if (confirmedUsers.size < 2) {
+            await targetMsg.edit({ content: renderDedicatedText() });
+          } else {
+            collector.stop('completed');
+          }
+        }
+      });
+
+      collector.on('end', async (_, reason) => {
+        if (reason === 'completed') {
+          let freshSender = await UserModel.findOne({ userId: author.id });
+          if (!freshSender || (freshSender.souls || 0) < amount) {
+            return targetMsg.edit({
+              content: `❌ **Erro:** O remetente <@${author.id}> não possui mais 🔮 **${amount.toLocaleString()} almas** suficientes para concluir esta transferência.`,
+              components: []
+            });
+          }
+
+          // Descontar do remetente
+          freshSender.souls -= amount;
+          await freshSender.save();
+
+          // Adicionar ao destinatário
           let tData = await UserModel.findOne({ userId: target.id });
           if (!tData) tData = new UserModel({ userId: target.id });
           tData.souls = (tData.souls || 0) + amount;
           await tData.save();
+
+          // Calcular Ranks do Servidor
+          const allUsers = await UserModel.find().sort({ souls: -1 });
+          const getRank = (uId) => {
+            const idx = allUsers.findIndex(u => u.userId === uId);
+            return idx !== -1 ? `#${idx + 1}` : '#?';
+          };
+
+          const senderRank = getRank(author.id);
+          const targetRank = getRank(target.id);
+
+          const resultText = `✅ **TRANSFERÊNCIA DE ALMAS CONCLUÍDA COM SUCESSO!**\n\n` +
+            `O usuário <@${author.id}> transferiu 🔮 **${amount.toLocaleString()} almas** para <@${target.id}>.\n\n` +
+            `📊 **STATUS ATUALIZADO DOS ENVOLVIDOS:**\n` +
+            `• Remetente (<@${author.id}>): agora possui 🔮 **${freshSender.souls.toLocaleString()} almas** e está no **Rank ${senderRank} de Almas** do servidor.\n` +
+            `• Destinatário (<@${target.id}>): recebeu 🔮 **${amount.toLocaleString()} almas**, agora possui 🔮 **${tData.souls.toLocaleString()} almas** e está no **Rank ${targetRank} de Almas** do servidor.`;
+
+          await targetMsg.edit({
+            content: resultText,
+            components: []
+          });
+
+        } else if (reason !== 'cancelled') {
+          await targetMsg.edit({
+            content: `⏰ **Tempo Esgotado!** A transferência de almas para <@${target.id}> expirou pois nem todas as partes aceitaram dentro de ${timeInfo.label}.`,
+            components: []
+          });
         }
-
-        // Ranks baseados no total de almas
-        const allUsers = await UserModel.find().sort({ souls: -1 });
-        const getRank = (uId) => {
-          const idx = allUsers.findIndex(u => u.userId === uId);
-          return idx !== -1 ? `#${idx + 1}` : '#?';
-        };
-
-        const senderRank = getRank(author.id);
-        const senderSouls = freshSender.souls;
-
-        let resultText = `✅ **TRANSFERÊNCIA DE ALMAS CONCLUÍDA COM SUCESSO!**\n\n` +
-          `O usuário <@${author.id}> transferiu 🔮 **${amount.toLocaleString()} almas** para cada destinatário (Total: 🔮 **${totalCost.toLocaleString()} almas**).\n` +
-          `📊 <@${author.id}> agora possui 🔮 **${senderSouls.toLocaleString()} almas** e está no **Rank ${senderRank} de Almas** do servidor.\n\n` +
-          `--- **Destinatários:** ---\n`;
-
-        for (const target of targets) {
-          const tData = await UserModel.findOne({ userId: target.id });
-          const tSouls = tData ? tData.souls : 0;
-          const tRank = getRank(target.id);
-          resultText += `• O usuário <@${target.id}> recebeu 🔮 **${amount.toLocaleString()} almas**, agora possui 🔮 **${tSouls.toLocaleString()} almas** e está no **Rank ${tRank} de Almas** do servidor.\n`;
-        }
-
-        await initialMsg.edit({
-          content: resultText,
-          components: []
-        });
-
-      } else if (reason !== 'cancelled') {
-        await initialMsg.edit({
-          content: '⏰ **Tempo Esgotado!** A transferência de almas foi cancelada pois nem todos confirmaram a tempo.',
-          components: []
-        });
-      }
-    });
+      });
+    }
   }
 };
