@@ -12,9 +12,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// ----------------------------------------------------
 // 1. SERVIDOR HTTP PARA O RENDER
-// ----------------------------------------------------
 const PORT = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -32,9 +30,7 @@ process.on('uncaughtException', (err) => {
   console.error('💥 [EXCEÇÃO ERRO]:', err);
 });
 
-// ----------------------------------------------------
 // 2. CONFIGURAÇÃO DO CLIENTE DISCORD
-// ----------------------------------------------------
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -47,15 +43,10 @@ const client = new Client({
 client.commands = new Collection();
 client.prefixCommands = new Collection();
 
-// Aceita tanto PREFIX quanto PREFIX_BOT
 const DEFAULT_PREFIX = process.env.PREFIX || process.env.PREFIX_BOT || '!';
-
-// Aceita tanto TOKEN quanto DISCORD_TOKEN
 const BOT_TOKEN = process.env.TOKEN || process.env.DISCORD_TOKEN;
 
-// ----------------------------------------------------
-// 3. MONGODB DATABASE SCHEMAS
-// ----------------------------------------------------
+// 3. MONGODB DATABASE SCHEMAS (ATUALIZADO COM ALMAS E INVENTÁRIO)
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 const guildSchema = new mongoose.Schema({
@@ -67,6 +58,8 @@ const userSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   wallet: { type: Number, default: 0 },
   bank: { type: Number, default: 0 },
+  souls: { type: Number, default: 0 },
+  inventory: { type: [String], default: [] },
   debt: { type: Number, default: 0 },
   debtDueDate: { type: Date, default: null },
   debtNotified: { type: Boolean, default: false },
@@ -127,9 +120,7 @@ function getLevenshteinDistance(a, b) {
   return matrix[a.length][b.length];
 }
 
-// ----------------------------------------------------
 // 4. CARREGADOR DE COMANDOS
-// ----------------------------------------------------
 const slashCommandsArray = [];
 
 const loadCommands = () => {
