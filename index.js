@@ -12,7 +12,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// 1. Servidor HTTP para o Render (Health Check)
+// 1. Servidor HTTP para Keep-Alive no Render
 const PORT = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -96,7 +96,7 @@ client.setPrefix = async (guildId, newPrefix) => {
   }
 };
 
-// Algoritmo de Similaridade (Distância de Levenshtein)
+// Algoritmo de Similaridade
 function getLevenshteinDistance(a, b) {
   const matrix = Array.from({ length: a.length + 1 }, () => 
     Array(b.length + 1).fill(0)
@@ -137,7 +137,7 @@ const checkDebts = async () => {
           const warnEmbed = new EmbedBuilder()
             .setTitle('⚠️ Alerta de Vencimento de Dívida!')
             .setColor('#FEE75C')
-            .setDescription(`Sua dívida bancária de **$${user.debt.toLocaleString()}** vence em breve!\n\nPague pelo comando \`/banco\` ou \`!banco\` para evitar a multa de **9,99%**.`)
+            .setDescription(`Sua dívida bancária de **$${user.debt.toLocaleString()}** vence em breve!\n\nPague pelo comando \`/banco\` para evitar a multa de **9,99%**.`)
             .setTimestamp();
 
           await discordUser.send({ embeds: [warnEmbed] });
@@ -194,7 +194,7 @@ const checkWorkCooldowns = async () => {
           const dmEmbed = new EmbedBuilder()
             .setTitle('🔔 Trabalho Disponível!')
             .setColor('#57F287')
-            .setDescription(`Olá **${discordUser.username}**, seu tempo de descanso de 20 minutos terminou!\nVocê já pode trabalhar novamente usando \`/work\` ou \`!work\` / \`!trabalhar\`.`)
+            .setDescription(`Olá **${discordUser.username}**, seu tempo de descanso de 20 minutos terminou!\nVocê já pode trabalhar novamente usando \`/work\`.`)
             .setTimestamp();
 
           await discordUser.send({ embeds: [dmEmbed] });
