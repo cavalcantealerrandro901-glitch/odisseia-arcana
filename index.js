@@ -1,7 +1,9 @@
+require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { Database } = require('st.db');
 const fs = require('fs');
 const path = require('path');
+const iniciarServidor = require('./server');
 
 const dbConfig = new Database({ filePath: './database/config.json' });
 
@@ -16,15 +18,16 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Função para carregar comandos recursivamente das pastas
+// Carregar Comandos
 function carregarComandos(dir) {
   const arquivos = fs.readdirSync(dir);
   for (const arquivo of arquivos) {
-    const caminho = path.join(dir, arquivo);
+    const caminho = path.resolve(dir, arquivo);
     const stat = fs.statSync(caminho);
     if (stat.isDirectory()) {
       carregarComandos(caminho);
     } else if (arquivo.endsWith('.js')) {
+      delete require.cache[require.resolve(caminho)];
       const cmd = require(caminho);
       if (cmd.name) {
         client.commands.set(cmd.name, cmd);
@@ -37,16 +40,18 @@ if (fs.existsSync('./commands')) {
   carregarComandos('./commands');
 }
 
-// Carregar Eventos e Logs
+// Carregar Eventos de Logs
 if (fs.existsSync('./events/logsEvents.js')) {
   require('./events/logsEvents')(client);
 }
 
+// Quando o Bot estiver Pronto
 client.once('ready', () => {
-  console.log(`🤖 Bot online com sucesso como ${client.user.tag}!`);
+  console.log(`🤖 Bot online como ${client.user.tag}!`);
+  iniciarServidor(); // Inicia o Servidor Web
 });
 
-// Manipulador de Mensagens com Prefixo Dinâmico
+// Manipulador de Mensagens (Comandos por Prefixo Dinâmico)
 client.on('messageCreate', async (message) => {
   if (message.author.bot || !message.guild) return;
 
@@ -66,7 +71,7 @@ client.on('messageCreate', async (message) => {
   try {
     await command.execute(message, args, client);
   } catch (error) {
-    console.error(`Erro ao executar o comando ${commandName}:`, error);
+    console.error(`Erro ao executar ${commandName}:`, error);
     message.reply('❌ Ocorreu um erro ao executar este comando.');
   }
 });
@@ -81,15 +86,14 @@ client.on('interactionCreate', async (interaction) => {
   try {
     await command.executeSlash(interaction, client);
   } catch (error) {
-    console.error(`Erro ao executar o slash command ${interaction.commandName}:`, error);
-    const msgErro = '❌ Ocorreu um erro ao executar este comando por barra.';
+    console.error(`Erro ao executar slash ${interaction.commandName}:`, error);
+    const msg = '❌ Ocorreu um erro ao executar este comando por barra.';
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({ content: msgErro, ephemeral: true });
+      await interaction.followUp({ content: msg, ephemeral: true });
     } else {
-      await interaction.reply({ content: msgErro, ephemeral: true });
+      await interaction.reply({ content: msg, ephemeral: true });
     }
   }
 });
 
-// Substitua pelo seu token ou certifique-se de que ele está no seu .env / config
-client.login(process.env.TOKEN || 'SEU_TOKEN_AQUI');
+client.login(process.env.TOKEN);
