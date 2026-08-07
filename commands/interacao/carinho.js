@@ -20,7 +20,17 @@ const GIFS_CARINHO = [
   'https://media.giphy.com/media/kHOts8AniA2ve/giphy.gif',
   'https://media.giphy.com/media/1043fC1f3r9c5O/giphy.gif',
   'https://media.giphy.com/media/SnoT50sIqT5a0/giphy.gif',
-  'https://media.giphy.com/media/l41YoV54ZT3T0kM4M/giphy.gif'
+  'https://media.giphy.com/media/l41YoV54ZT3T0kM4M/giphy.gif',
+  'https://media.giphy.com/media/3o7TKMInJ1R209X64U/giphy.gif',
+  'https://media.giphy.com/media/26AHInP0E8Y21vR0s/giphy.gif',
+  'https://media.giphy.com/media/l0G183A8pT5008S4U/giphy.gif',
+  'https://media.giphy.com/media/3o6ozrA565aIn4rO3U/giphy.gif',
+  'https://media.giphy.com/media/xT39D30uS2PIn0vA4M/giphy.gif',
+  'https://media.giphy.com/media/3o7TKL33InS800S02Y/giphy.gif',
+  'https://media.giphy.com/media/l0HlE22P884U9V90S/giphy.gif',
+  'https://media.giphy.com/media/26AHF28S13v8084S0/giphy.gif',
+  'https://media.giphy.com/media/3o6ozv08yX32InX3U4/giphy.gif',
+  'https://media.giphy.com/media/xT39D4S02InA0u180M/giphy.gif'
 ];
 
 module.exports = {

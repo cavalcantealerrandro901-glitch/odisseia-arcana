@@ -20,7 +20,17 @@ const GIFS_BEIJO = [
   'https://media.giphy.com/media/e25Y1pP7604E0/giphy.gif',
   'https://media.giphy.com/media/k5aB5a3iPq7f2/giphy.gif',
   'https://media.giphy.com/media/bGm9883JmgZtm/giphy.gif',
-  'https://media.giphy.com/media/12VXIxKaGX35hm/giphy.gif'
+  'https://media.giphy.com/media/12VXIxKaGX35hm/giphy.gif',
+  'https://media.giphy.com/media/lGpr3q3Wnt2g/giphy.gif',
+  'https://media.giphy.com/media/vdbrUjzrUEy2I/giphy.gif',
+  'https://media.giphy.com/media/nnP9B38R2gJ60/giphy.gif',
+  'https://media.giphy.com/media/u011jM8fJmH04/giphy.gif',
+  'https://media.giphy.com/media/QGc80334L80na/giphy.gif',
+  'https://media.giphy.com/media/hnNyVPIXgVS3M/giphy.gif',
+  'https://media.giphy.com/media/26AHPxxnSw1L9T1rW/giphy.gif',
+  'https://media.giphy.com/media/3o7TKL33S1a9fUvIn6/giphy.gif',
+  'https://media.giphy.com/media/D0G8J2R4g26S0/giphy.gif',
+  'https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif'
 ];
 
 module.exports = {
