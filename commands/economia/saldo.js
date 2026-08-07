@@ -3,18 +3,18 @@ const User = require('../../models/User');
 
 module.exports = {
   name: 'saldo',
-  aliases: ['carteira', 'banco', 'bal', 'money'],
-  description: 'Veja o seu saldo ou o de outro membro',
+  aliases: ['atm', 'bal', 'balance', 'carteira', 'banco', 'money', 'patrimonio'],
+  description: 'Exibe o saldo total do usuário',
   slashData: new SlashCommandBuilder()
     .setName('saldo')
-    .setDescription('Veja o seu saldo ou o de outro membro')
+    .setDescription('Exibe o saldo total do usuário')
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Membro para ver o saldo')
+        .setDescription('Membro para visualizar o saldo')
         .setRequired(false)
     ),
 
-  async execute(message, args, client) {
+  async execute(message, args, client, prefix) {
     const target = message.mentions.users.first() || message.author;
     return mostrarSaldo(message, target, false);
   },
@@ -27,21 +27,25 @@ module.exports = {
 
 async function mostrarSaldo(contexto, alvo, isSlash = false) {
   const guildId = isSlash ? contexto.guildId : contexto.guild.id;
+  const autor = isSlash ? contexto.user : contexto.author;
 
   let perfil = await User.findOne({ userId: alvo.id, guildId });
-  if (!perfil) perfil = await User.create({ userId: alvo.id, guildId });
+  if (!perfil) {
+    perfil = await User.create({ userId: alvo.id, guildId });
+  }
 
-  const total = perfil.carteira + perfil.banco;
+  const carteira = perfil.carteira || 0;
+  const banco = perfil.banco || 0;
+  const saldoTotal = carteira + banco;
 
   const embed = new EmbedBuilder()
     .setTitle(`💰 Saldo de ${alvo.username}`)
     .setThumbnail(alvo.displayAvatarURL({ dynamic: true }))
-    .setColor('#00FF7F')
+    .setColor('#2ECC71')
     .addFields(
-      { name: '💵 Carteira', value: `\`R$ ${perfil.carteira.toLocaleString('pt-BR')}\``, inline: true },
-      { name: '🏦 Banco', value: `\`R$ ${perfil.banco.toLocaleString('pt-BR')}\``, inline: true },
-      { name: '💎 Total', value: `\`R$ ${total.toLocaleString('pt-BR')}\``, inline: false }
+      { name: '💵 Saldo', value: `\`R$ ${saldoTotal.toLocaleString('pt-BR')}\``, inline: false }
     )
+    .setFooter({ text: `Solicitado por ${autor.username}` })
     .setTimestamp();
 
   return isSlash ? contexto.reply({ embeds: [embed] }) : contexto.reply({ embeds: [embed] });
