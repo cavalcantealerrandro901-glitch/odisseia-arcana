@@ -33,11 +33,16 @@ module.exports = {
 
 async function getGif(endpoint) {
   try {
-    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`);
+    const res = await fetch(`https://nekos.best/api/v2/${endpoint}`, {
+      headers: { 'User-Agent': 'DiscordBot/1.0' }
+    });
+    if (!res.ok) return null;
     const data = await res.json();
-    return data.results[0]?.url || '';
-  } catch {
-    return '';
+    const url = data.results?.[0]?.url;
+    return (url && url.startsWith('http')) ? url : null;
+  } catch (err) {
+    console.error('Erro na API de GIF:', err.message);
+    return null;
   }
 }
 
@@ -57,8 +62,9 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
   const embed = new EmbedBuilder()
     .setDescription(`${emoji} **${currentAuthor.username}** deu um ${nomeAcao} em **${currentTarget.username}**!`)
     .setColor(cor)
-    .setImage(gif)
     .setTimestamp();
+
+  if (gif) embed.setImage(gif);
 
   const payload = {
     content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
@@ -88,8 +94,9 @@ async function executarInteracao(contexto, autor, alvo, endpoint, nomeAcao, emoj
     const novoEmbed = new EmbedBuilder()
       .setDescription(`${emoji} **${currentAuthor.username}** devolveu o ${nomeAcao} para **${currentTarget.username}**!`)
       .setColor(cor)
-      .setImage(novoGif)
       .setTimestamp();
+
+    if (novoGif) novoEmbed.setImage(novoGif);
 
     await i.update({
       content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,

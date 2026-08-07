@@ -1,59 +1,68 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
-const Guild = require('../../models/Guild');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const Guild = require('../../database/schemas/Guild');
 
 module.exports = {
   name: 'prefixo',
   aliases: ['setprefix', 'prefix'],
-  description: 'Altera ou visualiza o prefixo do bot no servidor',
+  description: 'Altera o prefixo de comandos do servidor',
   slashData: new SlashCommandBuilder()
     .setName('prefixo')
-    .setDescription('Altera ou visualiza o prefixo do servidor')
+    .setDescription('Altera o prefixo de comandos do servidor')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addStringOption(opt =>
-      opt.setName('novo')
-        .setDescription('O novo prefixo para o servidor')
-        .setRequired(false)
+      opt.setName('novo_prefixo')
+        .setDescription('O novo prefixo para o bot neste servidor')
+        .setRequired(true)
     ),
 
-  async execute(message, args, client, prefixAtual) {
-    const novoPrefixo = args[0];
-
-    if (!novoPrefixo) {
-      return message.reply(`📌 O prefixo atual neste servidor é: \`${prefixAtual}\`\nPara alterar, use: \`${prefixAtual}prefixo <novo_prefixo>\``);
+  async execute(message, args, client, prefix) {
+    if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
+      return message.reply('❌ Você precisa da permissão de **Administrador** para alterar o prefixo!');
     }
 
-    if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
-      return message.reply('❌ Você precisa de permissão de **Administrador** para alterar o prefixo!');
+    const novoPrefixo = args[0];
+    if (!novoPrefixo) {
+      return message.reply(`❌ Informe o novo prefixo! Exemplo: \`${prefix}prefixo !\``);
+    }
+
+    if (novoPrefixo.length > 5) {
+      return message.reply('❌ O prefixo não pode ter mais de 5 caracteres.');
     }
 
     await Guild.findOneAndUpdate(
       { guildId: message.guild.id },
       { prefix: novoPrefixo },
-      { upsert: true, new: true }
+      { returnDocument: 'after', upsert: true }
     );
 
-    return message.reply(`✅ Prefixo alterado com sucesso para: \`${novoPrefixo}\``);
+    const embed = new EmbedBuilder()
+      .setColor('#2ECC71')
+      .setTitle('⚙️ Prefixo Alterado!')
+      .setDescription(`O prefixo do servidor foi alterado com sucesso para: \`${novoPrefixo}\``)
+      .setTimestamp();
+
+    return message.reply({ embeds: [embed] });
   },
 
   async executeSlash(interaction, client) {
-    const novoPrefixo = interaction.options.getString('novo');
+    const novoPrefixo = interaction.options.getString('novo_prefixo');
 
-    let guildConfig = await Guild.findOne({ guildId: interaction.guildId });
-    const prefixAtual = guildConfig?.prefix || process.env.PREFIX || '!';
-
-    if (!novoPrefixo) {
-      return interaction.reply({ content: `📌 O prefixo atual neste servidor é: \`${prefixAtual}\``, flags: [MessageFlags.Ephemeral] });
-    }
-
-    if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
-      return interaction.reply({ content: '❌ Você precisa de permissão de **Administrador** para alterar o prefixo!', flags: [MessageFlags.Ephemeral] });
+    if (novoPrefixo.length > 5) {
+      return interaction.reply({ content: '❌ O prefixo não pode ter mais de 5 caracteres.', ephemeral: true });
     }
 
     await Guild.findOneAndUpdate(
-      { guildId: interaction.guildId },
+      { guildId: interaction.guild.id },
       { prefix: novoPrefixo },
-      { upsert: true, new: true }
+      { returnDocument: 'after', upsert: true }
     );
 
-    return interaction.reply({ content: `✅ Prefixo alterado com sucesso para: \`${novoPrefixo}\`` });
+    const embed = new EmbedBuilder()
+      .setColor('#2ECC71')
+      .setTitle('⚙️ Prefixo Alterado!')
+      .setDescription(`O prefixo do servidor foi alterado com sucesso para: \`${novoPrefixo}\``)
+      .setTimestamp();
+
+    return interaction.reply({ embeds: [embed] });
   }
 };
