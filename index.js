@@ -12,18 +12,30 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// 1. Servidor HTTP para Keep-Alive no Render
+// ----------------------------------------------------
+// 1. SERVIDOR HTTP DE ALTA DISPONIBILIDADE (RENDER)
+// ----------------------------------------------------
 const PORT = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-  res.end('🤖 Bot Online e Operacional!');
+  res.end('🤖 Bot Online e Operacional 24/7!');
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🌐 [HTTP] Servidor Web ativo na porta ${PORT}`);
+  console.log(`🌐 [HTTP] Servidor Web escutando na porta ${PORT}`);
 });
 
-// 2. Cliente Discord
+// Prevenir queda do processo em caso de falhas de rede
+process.on('unhandledRejection', (reason) => {
+  console.error('⚠️ [PROMISE ERRO]:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('💥 [EXCEÇÃO ERRO]:', err);
+});
+
+// ----------------------------------------------------
+// 2. CONFIGURAÇÃO DO CLIENTE DISCORD
+// ----------------------------------------------------
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -37,7 +49,9 @@ client.commands = new Collection();
 client.prefixCommands = new Collection();
 const DEFAULT_PREFIX = process.env.PREFIX || '!';
 
-// 3. Database & Schemas
+// ----------------------------------------------------
+// 3. MONGODB DATABASE SCHEMAS
+// ----------------------------------------------------
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 
 const guildSchema = new mongoose.Schema({
@@ -69,9 +83,11 @@ if (mongoUri) {
   mongoose.connect(mongoUri)
     .then(() => console.log('🌿 [DATABASE] Conectado ao MongoDB!'))
     .catch(err => console.error('❌ [DATABASE] Erro MongoDB:', err.message));
+} else {
+  console.warn('⚠️ [DATABASE] MONGO_URI não definida nas variáveis de ambiente!');
 }
 
-// Prefixo Helper
+// Helper Prefixo
 const prefixCache = new Map();
 client.getPrefix = async (guildId) => {
   if (!guildId) return DEFAULT_PREFIX;
@@ -88,19 +104,9 @@ client.getPrefix = async (guildId) => {
   return DEFAULT_PREFIX;
 };
 
-client.setPrefix = async (guildId, newPrefix) => {
-  if (!guildId) return;
-  prefixCache.set(guildId, newPrefix);
-  if (mongoose.connection.readyState === 1) {
-    await GuildModel.findOneAndUpdate({ guildId }, { prefix: newPrefix }, { upsert: true });
-  }
-};
-
-// Algoritmo de Similaridade
+// Algoritmo Levenshtein (Sugestão de comando)
 function getLevenshteinDistance(a, b) {
-  const matrix = Array.from({ length: a.length + 1 }, () => 
-    Array(b.length + 1).fill(0)
-  );
+  const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
   for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
   for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
 
@@ -117,99 +123,9 @@ function getLevenshteinDistance(a, b) {
   return matrix[a.length][b.length];
 }
 
-// Cron de Dívidas
-const checkDebts = async () => {
-  if (mongoose.connection.readyState !== 1) return;
-
-  try {
-    const usersWithDebt = await UserModel.find({ debt: { $gt: 0 } });
-    const now = new Date();
-
-    for (const user of usersWithDebt) {
-      if (!user.debtDueDate) continue;
-
-      const timeDiff = user.debtDueDate.getTime() - now.getTime();
-      const hoursLeft = timeDiff / (1000 * 60 * 60);
-
-      if (hoursLeft <= 6 && hoursLeft > 0 && !user.debtNotified) {
-        try {
-          const discordUser = await client.users.fetch(user.userId);
-          const warnEmbed = new EmbedBuilder()
-            .setTitle('⚠️ Alerta de Vencimento de Dívida!')
-            .setColor('#FEE75C')
-            .setDescription(`Sua dívida bancária de **$${user.debt.toLocaleString()}** vence em breve!\n\nPague pelo comando \`/banco\` para evitar a multa de **9,99%**.`)
-            .setTimestamp();
-
-          await discordUser.send({ embeds: [warnEmbed] });
-          user.debtNotified = true;
-          await user.save();
-        } catch (e) {}
-      }
-
-      if (now > user.debtDueDate) {
-        const penalty = Math.floor(user.debt * 0.0999);
-        user.debt += penalty;
-
-        const newDueDate = new Date();
-        newDueDate.setHours(newDueDate.getHours() + 24);
-        user.debtDueDate = newDueDate;
-        user.debtNotified = false;
-
-        await user.save();
-
-        try {
-          const discordUser = await client.users.fetch(user.userId);
-          const penaltyEmbed = new EmbedBuilder()
-            .setTitle('❌ Dívida Vencida - Multa Aplicada!')
-            .setColor('#ED4245')
-            .setDescription(`O prazo expirou! Sua dívida recebeu uma multa de **9,99%** (+$${penalty.toLocaleString()}).\n\n**Novo total:** $${user.debt.toLocaleString()}`)
-            .setTimestamp();
-
-          await discordUser.send({ embeds: [penaltyEmbed] });
-        } catch (e) {}
-      }
-    }
-  } catch (err) {}
-};
-
-setInterval(checkDebts, 5 * 60 * 1000);
-
-// Cron de Avisos de Trabalho
-const checkWorkCooldowns = async () => {
-  if (mongoose.connection.readyState !== 1) return;
-
-  try {
-    const cooldown = 20 * 60 * 1000;
-    const now = new Date();
-
-    const usersToNotify = await UserModel.find({ 
-      workNotified: false, 
-      lastWork: { $ne: null } 
-    });
-
-    for (const user of usersToNotify) {
-      if (now - new Date(user.lastWork) >= cooldown) {
-        try {
-          const discordUser = await client.users.fetch(user.userId);
-          const dmEmbed = new EmbedBuilder()
-            .setTitle('🔔 Trabalho Disponível!')
-            .setColor('#57F287')
-            .setDescription(`Olá **${discordUser.username}**, seu tempo de descanso de 20 minutos terminou!\nVocê já pode trabalhar novamente usando \`/work\`.`)
-            .setTimestamp();
-
-          await discordUser.send({ embeds: [dmEmbed] });
-        } catch (e) {}
-
-        user.workNotified = true;
-        await user.save();
-      }
-    }
-  } catch (err) {}
-};
-
-setInterval(checkWorkCooldowns, 60 * 1000);
-
-// Carregador de Comandos
+// ----------------------------------------------------
+// 4. CARREGADOR DE COMANDOS
+// ----------------------------------------------------
 const slashCommandsArray = [];
 
 const loadCommands = () => {
@@ -241,22 +157,23 @@ const loadCommands = () => {
 
 loadCommands();
 
-client.once('clientReady', async () => {
+// Evento Ready
+client.once('ready', async () => {
   console.log(`⚡ [ONLINE] Bot logado como: ${client.user.tag}`);
 
   if (slashCommandsArray.length > 0) {
     try {
-      console.log('🔄 Sincronizando Slash Commands no Discord...');
+      console.log('🔄 Registrando Slash Commands no Discord...');
       const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
       await rest.put(Routes.applicationCommands(client.user.id), { body: slashCommandsArray });
-      console.log('✅ Slash Commands sincronizados com sucesso!');
+      console.log('✅ Slash Commands sincronizados!');
     } catch (e) {
-      console.error('❌ Erro ao registrar Slash Commands:', e.message);
+      console.error('❌ Erro Slash Commands:', e.message);
     }
   }
 });
 
-// Evento de Interações
+// Interações (Slash + Modais)
 client.on('interactionCreate', async interaction => {
   if (interaction.isModalSubmit()) {
     let userData = await UserModel.findOne({ userId: interaction.user.id });
@@ -264,7 +181,7 @@ client.on('interactionCreate', async interaction => {
 
     if (interaction.customId === `modal_loan_${interaction.user.id}`) {
       const amount = parseInt(interaction.fields.getTextInputValue('loan_amount'), 10);
-      if (isNaN(amount) || amount <= 0) return interaction.reply({ content: '❌ Digite um valor numérico válido!', ephemeral: true });
+      if (isNaN(amount) || amount <= 0) return interaction.reply({ content: '❌ Digite um valor válido!', ephemeral: true });
 
       const debtWithInterest = Math.floor(amount * 1.07);
       const dueDate = new Date();
@@ -277,7 +194,7 @@ client.on('interactionCreate', async interaction => {
       await userData.save();
 
       return interaction.reply({
-        content: `✅ **Empréstimo Aprovado!**\n• **Valor Recebido:** $${amount.toLocaleString()}\n• **Dívida Total (7% juros):** $${debtWithInterest.toLocaleString()}`,
+        content: `✅ **Empréstimo Aprovado!**\n• **Recebido:** $${amount.toLocaleString()}\n• **Dívida:** $${debtWithInterest.toLocaleString()}`,
         ephemeral: true
       });
     }
@@ -310,7 +227,7 @@ client.on('interactionCreate', async interaction => {
       await userData.save();
 
       return interaction.reply({
-        content: `✅ **Pagamento Realizado!**\n• **Pago:** $${payAmount.toLocaleString()}\n• **Dívida Restante:** $${userData.debt.toLocaleString()}`,
+        content: `✅ **Pagamento Realizado!**\n• **Pago:** $${payAmount.toLocaleString()}\n• **Restante:** $${userData.debt.toLocaleString()}`,
         ephemeral: true
       });
     }
@@ -320,37 +237,18 @@ client.on('interactionCreate', async interaction => {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
-    let userData = null;
-    if (mongoose.connection.readyState === 1) {
-      userData = await UserModel.findOne({ userId: interaction.user.id });
-      if (!userData) userData = await UserModel.create({ userId: interaction.user.id });
-    }
-
     interaction.prefix = await client.getPrefix(interaction.guildId);
     interaction.author = interaction.user;
-
-    if (interaction.member && userData) {
-      interaction.member.wallet = userData.wallet || 0;
-      interaction.member.bank = userData.bank || 0;
-      interaction.member.debt = userData.debt || 0;
-      interaction.member.debtDueDate = userData.debtDueDate || null;
-      interaction.member.lastDaily = userData.lastDaily || null;
-      interaction.member.dailyStreak = userData.dailyStreak || 0;
-      interaction.member.lastWork = userData.lastWork || null;
-      interaction.member.workNotified = userData.workNotified ?? true;
-      interaction.member.workLevel = userData.workLevel || 1;
-      interaction.member.workXp = userData.workXp || 0;
-    }
 
     try {
       await command.execute(interaction, client, true);
     } catch (err) {
-      console.error(`❌ Erro no comando /${interaction.commandName}:`, err);
+      console.error(`❌ Erro no /${interaction.commandName}:`, err);
     }
   }
 });
 
-// Evento de Mensagens
+// Evento Mensagens (Prefixo + AFK)
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
 
@@ -359,27 +257,22 @@ client.on('messageCreate', async message => {
   if (mongoose.connection.readyState === 1) {
     let authorData = await UserModel.findOne({ userId: message.author.id });
     if (authorData && authorData.afkTimestamp) {
-      const isAfkCmd = message.content.startsWith(`${currentPrefix}afk`);
-      
-      if (!isAfkCmd) {
+      if (!message.content.startsWith(`${currentPrefix}afk`)) {
         authorData.afkReason = null;
         authorData.afkTimestamp = null;
         await authorData.save();
-        message.reply(`👋 Bem-vindo(a) de volta, **${message.author.username}**! Removi seu status de AFK.`).catch(() => {});
+        message.reply(`👋 Bem-vindo(a) de volta, **${message.author.username}**! AFK removido.`).catch(() => {});
       }
     }
 
     if (message.mentions.users.size > 0) {
       for (const [id, user] of message.mentions.users) {
         if (user.id === message.author.id || user.bot) continue;
-        
         const mentionedData = await UserModel.findOne({ userId: user.id });
         if (mentionedData && mentionedData.afkTimestamp) {
           const timePassed = Math.floor((Date.now() - new Date(mentionedData.afkTimestamp).getTime()) / 1000 / 60);
-          const timeStr = timePassed < 1 ? 'menos de 1 minuto' : `${timePassed} min`;
-          const reason = mentionedData.afkReason || 'Sem motivo informado';
-
-          message.reply(`💤 **${user.username}** está AFK: **${reason}** *(há ${timeStr})*`).catch(() => {});
+          const timeStr = timePassed < 1 ? 'menos de 1 min' : `${timePassed} min`;
+          message.reply(`💤 **${user.username}** está AFK: **${mentionedData.afkReason || 'Sem motivo'}** *(há ${timeStr})*`).catch(() => {});
         }
       }
     }
@@ -389,7 +282,6 @@ client.on('messageCreate', async message => {
 
   const args = message.content.slice(currentPrefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
-
   const command = client.prefixCommands.get(commandName);
 
   if (!command) {
@@ -405,40 +297,25 @@ client.on('messageCreate', async message => {
       }
     }
 
-    let suggestionText = '';
-    if (bestMatch && lowestDistance <= 3) {
-      suggestionText = ` Talvez você quis dizer \`${currentPrefix}${bestMatch}\`?`;
-    }
-
-    return message.reply(`❌ O comando \`${currentPrefix}${commandName}\` não existe.${suggestionText}\nSe não for, use o \`/ajuda\` ou \`${currentPrefix}ajuda\` e veja os nossos comandos disponíveis.`);
-  }
-
-  let userData = null;
-  if (mongoose.connection.readyState === 1) {
-    userData = await UserModel.findOne({ userId: message.author.id });
-    if (!userData) userData = await UserModel.create({ userId: message.author.id });
+    let suggestionText = bestMatch && lowestDistance <= 3 ? ` Talvez você quis dizer \`${currentPrefix}${bestMatch}\`?` : '';
+    return message.reply(`❌ O comando \`${currentPrefix}${commandName}\` não existe.${suggestionText}\nUse \`/ajuda\` ou \`${currentPrefix}ajuda\` para ver os comandos.`);
   }
 
   message.prefix = currentPrefix;
-  if (message.member && userData) {
-    message.member.wallet = userData.wallet || 0;
-    message.member.bank = userData.bank || 0;
-    message.member.debt = userData.debt || 0;
-    message.member.debtDueDate = userData.debtDueDate || null;
-    message.member.lastDaily = userData.lastDaily || null;
-    message.member.dailyStreak = userData.dailyStreak || 0;
-    message.member.lastWork = userData.lastWork || null;
-    message.member.workNotified = userData.workNotified ?? true;
-    message.member.workLevel = userData.workLevel || 1;
-    message.member.workXp = userData.workXp || 0;
-  }
 
   try {
     await command.execute(message, client, false, args);
   } catch (err) {
-    console.error(`❌ Erro no comando !${commandName}:`, err);
+    console.error(`❌ Erro no !${commandName}:`, err);
   }
 });
 
+// Login do Bot
 const token = process.env.TOKEN;
-if (token) client.login(token);
+if (token) {
+  client.login(token).catch(err => {
+    console.error('❌ [DISCORD LOGIN ERRO]: Verifique se o TOKEN está correto no Render!', err.message);
+  });
+} else {
+  console.error('❌ [TOKEN FALTANDO]: Cadastre a variável TOKEN nas Environment Variables do Render!');
+}
