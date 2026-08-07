@@ -12,13 +12,16 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// 1. Servidor HTTP (Uptime)
+// 1. Servidor HTTP para o Render (Health Check)
+const PORT = process.env.PORT || 3000;
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
   res.end('🤖 Bot Online e Operacional!');
 });
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🌐 [HTTP] Servidor rodando na porta ${PORT}`));
+
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🌐 [HTTP] Servidor Web ativo na porta ${PORT}`);
+});
 
 // 2. Cliente Discord
 const client = new Client({
@@ -114,18 +117,7 @@ function getLevenshteinDistance(a, b) {
   return matrix[a.length][b.length];
 }
 
-// Cálculo de Prazos por Valor de Empréstimo
-function getLoanDays(amount) {
-  if (amount < 10000) return 1;
-  if (amount < 50000) return 2;
-  if (amount < 100000) return 3;
-  if (amount < 200000) return 4;
-  if (amount < 500000) return 5;
-  if (amount < 1000000) return 7;
-  return 10;
-}
-
-// Cron de Dívidas: Aviso PV + Multa 9,99%
+// Cron de Dívidas
 const checkDebts = async () => {
   if (mongoose.connection.readyState !== 1) return;
 
@@ -182,7 +174,7 @@ const checkDebts = async () => {
 
 setInterval(checkDebts, 5 * 60 * 1000);
 
-// Cron de Avisos de Trabalho (Work) no PV
+// Cron de Avisos de Trabalho
 const checkWorkCooldowns = async () => {
   if (mongoose.connection.readyState !== 1) return;
 
@@ -264,7 +256,7 @@ client.once('clientReady', async () => {
   }
 });
 
-// Evento de Interações (Slash + Modais)
+// Evento de Interações
 client.on('interactionCreate', async interaction => {
   if (interaction.isModalSubmit()) {
     let userData = await UserModel.findOne({ userId: interaction.user.id });
@@ -275,9 +267,8 @@ client.on('interactionCreate', async interaction => {
       if (isNaN(amount) || amount <= 0) return interaction.reply({ content: '❌ Digite um valor numérico válido!', ephemeral: true });
 
       const debtWithInterest = Math.floor(amount * 1.07);
-      const days = getLoanDays(amount);
       const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + days);
+      dueDate.setDate(dueDate.getDate() + 3);
 
       userData.bank += amount;
       userData.debt = debtWithInterest;
@@ -286,7 +277,7 @@ client.on('interactionCreate', async interaction => {
       await userData.save();
 
       return interaction.reply({
-        content: `✅ **Empréstimo Aprovado!**\n• **Valor Recebido:** $${amount.toLocaleString()}\n• **Dívida Total (7% juros):** $${debtWithInterest.toLocaleString()}\n• **Prazo:** ${days} dias (Vencimento: ${dueDate.toLocaleDateString('pt-BR')})`,
+        content: `✅ **Empréstimo Aprovado!**\n• **Valor Recebido:** $${amount.toLocaleString()}\n• **Dívida Total (7% juros):** $${debtWithInterest.toLocaleString()}`,
         ephemeral: true
       });
     }
@@ -299,7 +290,7 @@ client.on('interactionCreate', async interaction => {
       if (payAmount > userData.debt) payAmount = userData.debt;
 
       const totalBalance = userData.wallet + userData.bank;
-      if (totalBalance < payAmount) return interaction.reply({ content: '❌ Saldo insuficiente (Carteira + Banco)!', ephemeral: true });
+      if (totalBalance < payAmount) return interaction.reply({ content: '❌ Saldo insuficiente!', ephemeral: true });
 
       if (userData.wallet >= payAmount) {
         userData.wallet -= payAmount;
@@ -359,13 +350,12 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Evento de Mensagens (Prefixo + Lógica AFK + Sugestão)
+// Evento de Mensagens
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
 
   const currentPrefix = await client.getPrefix(message.guild.id);
 
-  // 1. Lógica de Remoção de AFK
   if (mongoose.connection.readyState === 1) {
     let authorData = await UserModel.findOne({ userId: message.author.id });
     if (authorData && authorData.afkTimestamp) {
@@ -379,7 +369,6 @@ client.on('messageCreate', async message => {
       }
     }
 
-    // 2. Lógica de Aviso se Mencionar Usuário AFK
     if (message.mentions.users.size > 0) {
       for (const [id, user] of message.mentions.users) {
         if (user.id === message.author.id || user.bot) continue;
@@ -403,7 +392,6 @@ client.on('messageCreate', async message => {
 
   const command = client.prefixCommands.get(commandName);
 
-  // Mensagem sem Embed caso o comando não exista
   if (!command) {
     const availableCommands = Array.from(client.prefixCommands.keys());
     let bestMatch = null;
