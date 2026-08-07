@@ -1,8 +1,17 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 const { Client, GatewayIntentBits, Collection, REST, Routes, MessageFlags } = require('discord.js');
 const mongoose = require('mongoose');
+
+// 🌐 Servidor HTTP para o UptimeRobot manter o bot 24/7 no Render
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.write('Bot online e rodando 24/7!');
+  res.end();
+}).listen(PORT, () => console.log(`🌐 Servidor Web ativo na porta ${PORT}`));
 
 const client = new Client({
   intents: [
