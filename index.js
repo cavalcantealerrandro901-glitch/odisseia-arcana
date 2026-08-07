@@ -1,146 +1,10 @@
-const { Client, GatewayIntentBits, Collection, MessageFlags } = require('discord.js');
+const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const mongoose = require('mongoose');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
 
-const Guild = require('./database/schemas/Guild');
-
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
-});
-
-client.commands = new Collection();
-client.aliases = new Collection();
-client.prefixes = new Map(); // Cache em memória RAM para prefixos
-
-async function getPrefix(guildId, defaultPrefix = '!') {
-  if (!guildId) return defaultPrefix;
-
-  if (client.prefixes.has(guildId)) {
-    return client.prefixes.get(guildId);
-  }
-
-  try {
-    const guildData = await Guild.findOne({ guildId }).lean();
-    const prefix = guildData?.prefix || defaultPrefix;
-    client.prefixes.set(guildId, prefix);
-    return prefix;
-  } catch (err) {
-    console.error('❌ [DATABASE] Erro ao buscar prefixo:', err.message);
-    return defaultPrefix;
-  }
-}
-
-// Carregamento dinâmico e logs de registro dos comandos
-console.log('📦 [SISTEMA] Inicializando carregamento de comandos...');
-let totalComandos = 0;
-
-const commandsPath = path.join(__dirname, 'commands');
-if (fs.existsSync(commandsPath)) {
-  const commandFolders = fs.readdirSync(commandsPath);
-  for (const folder of commandFolders) {
-    const folderPath = path.join(commandsPath, folder);
-    if (!fs.lstatSync(folderPath).isDirectory()) continue;
-
-    const commandFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
-    for (const file of commandFiles) {
-      const filePath = path.join(folderPath, file);
-      const command = require(filePath);
-
-      if (command.name) {
-        client.commands.set(command.name, command);
-        totalComandos++;
-        console.log(`  └─ 📁 [${folder.toUpperCase()}] Comando registrado: /${command.name}`);
-
-        if (command.aliases && Array.isArray(command.aliases)) {
-          command.aliases.forEach(alias => client.aliases.set(alias, command.name));
-        }
-      }
-    }
-  }
-}
-console.log(`✅ [SISTEMA] Sucesso! Total de ${totalComandos} comandos registrados na memória.\n`);
-
-// Evento de inicialização
-client.once('clientReady', () => {
-  console.log(`⚡ [ONLINE] Bot online e pronto para uso como: ${client.user.tag}`);
-});
-
-// Evento de Mensagens (Comandos por Prefixo)
-client.on('messageCreate', async (message) => {
-  if (message.author.bot || !message.guild) return;
-
-  const prefix = await getPrefix(message.guild.id);
-
-  if (!message.content.startsWith(prefix)) return;
-
-  const args = message.content.slice(prefix.length).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
-
-  const cmdNameResolved = client.commands.has(commandName) 
-    ? commandName 
-    : client.aliases.get(commandName);
-
-  const command = client.commands.get(cmdNameResolved);
-
-  if (!command) return;
-
-  console.log(`💬 [PREFIXO] ${message.author.tag} usou '${prefix}${commandName}' no servidor '${message.guild.name}'`);
-
-  try {
-    await command.execute(message, args, client, prefix);
-  } catch (error) {
-    console.error(`❌ [ERRO PREFIXO] Falha ao executar '${commandName}':`, error);
-    message.reply('❌ Ocorreu um erro ao executar este comando.').catch(() => {});
-  }
-});
-
-// Evento de Interações (Slash Commands, Modais e Botões)
-client.on('interactionCreate', async (interaction) => {
-  try {
-    if (interaction.isChatInputCommand()) {
-      const command = client.commands.get(interaction.commandName);
-      if (command) {
-        console.log(`⚡ [SLASH] ${interaction.user.tag} executou '/${interaction.commandName}' no servidor '${interaction.guild?.name || 'DM'}'`);
-        
-        if (command.executeSlash) {
-          await command.executeSlash(interaction, client);
-        }
-      }
-    }
-  } catch (error) {
-    console.error(`❌ [ERRO INTERAÇÃO] Falha na execução:`, error);
-    const errMessage = { content: '❌ Ocorreu um erro ao processar esta ação.', flags: [MessageFlags.Ephemeral] };
-    
-    if (interaction.deferred || interaction.replied) {
-      await interaction.followUp(errMessage).catch(() => {});
-    } else {
-      await interaction.reply(errMessage).catch(() => {});
-    }
-  }
-});
-
-// Conexão com o Banco de Dados e Login
-const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI;
-const TOKEN = process.env.TOKEN || process.env.DISCORD_TOKEN;
-
-if (MONGO_URI) {
-  mongoose.connect(MONGO_URI)
-    .then(() => console.log('🍃 [DATABASE] Conectado com sucesso ao MongoDB!'))
-    .catch(err => console.error('❌ [DATABASE] Erro ao conectar no MongoDB:', err));
-} else {
-  console.warn('⚠️ [DATABASE] Aviso: Nenhuma URL do MongoDB foi informada no arquivo .env');
-}
-
-client.login(TOKEN);
-
-// --- Servidor HTTP para o Render ---
-const http = require('http');
+// Servidor HTTP simples para satisfazer a exigência de porta do Render
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
   res.end('🤖 O Bot do Discord está online e operando!');
@@ -149,3 +13,82 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`🌐 [SERVIDOR] Servidor HTTP rodando na porta ${PORT}`);
 });
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildExpressions
+  ]
+});
+
+client.commands = new Collection();
+
+// Conexão com o MongoDB Atlas
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+if (mongoUri) {
+  mongoose.connect(mongoUri)
+    .then(() => console.log('🌿 [DATABASE] Conectado com sucesso ao MongoDB!'))
+    .catch(err => console.error('❌ [DATABASE] Erro ao conectar no MongoDB:', err));
+} else {
+  console.warn('⚠️ [DATABASE] Nenhuma URI do MongoDB encontrada nas variáveis de ambiente!');
+}
+
+client.once('ready', () => {
+  console.log(`⚡ [ONLINE] Bot online e pronto para uso como: ${client.user.tag}`);
+});
+
+// Carregador automático de comandos
+const loadCommands = () => {
+  console.log('📦 [SISTEMA] Inicializando carregamento de comandos...');
+  let totalCommands = 0;
+  const categoriesPath = path.join(__dirname, 'src', 'commands');
+  
+  if (fs.existsSync(categoriesPath)) {
+    const categories = fs.readdirSync(categoriesPath);
+    for (const category of categories) {
+      const categoryPath = path.join(categoriesPath, category);
+      if (fs.statSync(categoryPath).isDirectory()) {
+        const commandFiles = fs.readdirSync(categoryPath).filter(file => file.endsWith('.js'));
+        for (const file of commandFiles) {
+          const filePath = path.join(categoryPath, file);
+          const command = require(filePath);
+          if ('data' in command && 'execute' in command) {
+            client.commands.set(command.data.name, command);
+            console.log(`   └─ 📁 [${category.toUpperCase()}] Comando registrado: /${command.data.name}`);
+            totalCommands++;
+          }
+        }
+      }
+    }
+  }
+  console.log(`✅ [SISTEMA] Sucesso! Total de ${totalCommands} comandos registrados na memória.`);
+};
+
+loadCommands();
+
+// Manipulador de interações com proteção contra duplo envio (evita erro 40060)
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isChatInputCommand()) return;
+
+  const command = client.commands.get(interaction.commandName);
+  if (!command) return;
+
+  try {
+    await command.execute(interaction);
+  } catch (error) {
+    console.error(`[ERRO INTERAÇÃO] Falha na execução do comando /${interaction.commandName}:`, error);
+    
+    const errorMessage = { content: '❌ Ocorreu um erro ao executar este comando!', ephemeral: true };
+    
+    if (interaction.replied || interaction.deferred) {
+      await interaction.followUp(errorMessage).catch(() => {});
+    } else {
+      await interaction.reply(errorMessage).catch(() => {});
+    }
+  }
+});
+
+client.login(process.env.TOKEN);
