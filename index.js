@@ -18,9 +18,6 @@ client.commands = new Collection();
 client.aliases = new Collection();
 client.prefixes = new Map(); // Cache em memória RAM para prefixos
 
-/**
- * Busca o prefixo em 0ms consultando a RAM.
- */
 async function getPrefix(guildId, defaultPrefix = '!') {
   if (!guildId) return defaultPrefix;
 
@@ -34,12 +31,15 @@ async function getPrefix(guildId, defaultPrefix = '!') {
     client.prefixes.set(guildId, prefix);
     return prefix;
   } catch (err) {
-    console.error('Erro ao buscar prefixo:', err.message);
+    console.error('❌ [DATABASE] Erro ao buscar prefixo:', err.message);
     return defaultPrefix;
   }
 }
 
-// Carregamento dinâmico de comandos das pastas
+// Carregamento dinâmico e logs de registro dos comandos
+console.log('📦 [SISTEMA] Inicializando carregamento de comandos...');
+let totalComandos = 0;
+
 const commandsPath = path.join(__dirname, 'commands');
 if (fs.existsSync(commandsPath)) {
   const commandFolders = fs.readdirSync(commandsPath);
@@ -54,6 +54,9 @@ if (fs.existsSync(commandsPath)) {
 
       if (command.name) {
         client.commands.set(command.name, command);
+        totalComandos++;
+        console.log(`  └─ 📁 [${folder.toUpperCase()}] Comando registrado: /${command.name}`);
+
         if (command.aliases && Array.isArray(command.aliases)) {
           command.aliases.forEach(alias => client.aliases.set(alias, command.name));
         }
@@ -61,10 +64,11 @@ if (fs.existsSync(commandsPath)) {
     }
   }
 }
+console.log(`✅ [SISTEMA] Sucesso! Total de ${totalComandos} comandos registrados na memória.\n`);
 
-// Evento de inicialização atualizado para clientReady
+// Evento de inicialização
 client.once('clientReady', () => {
-  console.log(`⚡ Bot online e otimizado como: ${client.user.tag}`);
+  console.log(`⚡ [ONLINE] Bot online e pronto para uso como: ${client.user.tag}`);
 });
 
 // Evento de Mensagens (Comandos por Prefixo)
@@ -86,10 +90,12 @@ client.on('messageCreate', async (message) => {
 
   if (!command) return;
 
+  console.log(`💬 [PREFIXO] ${message.author.tag} usou '${prefix}${commandName}' no servidor '${message.guild.name}'`);
+
   try {
     await command.execute(message, args, client, prefix);
   } catch (error) {
-    console.error(`❌ Erro no comando ${commandName}:`, error);
+    console.error(`❌ [ERRO PREFIXO] Falha ao executar '${commandName}':`, error);
     message.reply('❌ Ocorreu um erro ao executar este comando.').catch(() => {});
   }
 });
@@ -99,12 +105,16 @@ client.on('interactionCreate', async (interaction) => {
   try {
     if (interaction.isChatInputCommand()) {
       const command = client.commands.get(interaction.commandName);
-      if (command && command.executeSlash) {
-        await command.executeSlash(interaction, client);
+      if (command) {
+        console.log(`⚡ [SLASH] ${interaction.user.tag} executou '/${interaction.commandName}' no servidor '${interaction.guild?.name || 'DM'}'`);
+        
+        if (command.executeSlash) {
+          await command.executeSlash(interaction, client);
+        }
       }
     }
   } catch (error) {
-    console.error(`❌ Erro na interação:`, error);
+    console.error(`❌ [ERRO INTERAÇÃO] Falha na execução:`, error);
     const errMessage = { content: '❌ Ocorreu um erro ao processar esta ação.', flags: [MessageFlags.Ephemeral] };
     
     if (interaction.deferred || interaction.replied) {
@@ -121,10 +131,10 @@ const TOKEN = process.env.TOKEN || process.env.DISCORD_TOKEN;
 
 if (MONGO_URI) {
   mongoose.connect(MONGO_URI)
-    .then(() => console.log('🍃 Conectado ao MongoDB!'))
-    .catch(err => console.error('❌ Erro de conexão com MongoDB:', err));
+    .then(() => console.log('🍃 [DATABASE] Conectado com sucesso ao MongoDB!'))
+    .catch(err => console.error('❌ [DATABASE] Erro ao conectar no MongoDB:', err));
 } else {
-  console.warn('⚠️ Aviso: Nenhuma URL do MongoDB foi informada no .env');
+  console.warn('⚠️ [DATABASE] Aviso: Nenhuma URL do MongoDB foi informada no arquivo .env');
 }
 
 client.login(TOKEN);
