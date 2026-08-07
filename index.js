@@ -20,7 +20,6 @@ client.prefixes = new Map(); // Cache em memória RAM para prefixos
 
 /**
  * Busca o prefixo em 0ms consultando a RAM.
- * Só consulta o MongoDB se o servidor ainda não estiver no cache.
  */
 async function getPrefix(guildId, defaultPrefix = '!') {
   if (!guildId) return defaultPrefix;
@@ -63,7 +62,8 @@ if (fs.existsSync(commandsPath)) {
   }
 }
 
-client.once('ready', () => {
+// Evento de inicialização atualizado para clientReady
+client.once('clientReady', () => {
   console.log(`⚡ Bot online e otimizado como: ${client.user.tag}`);
 });
 
@@ -94,19 +94,20 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-// Evento de Interações (Slash Commands)
+// Evento de Interações (Slash Commands, Modais e Botões)
 client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  const command = client.commands.get(interaction.commandName);
-  if (!command || !command.executeSlash) return;
-
   try {
-    await command.executeSlash(interaction, client);
+    if (interaction.isChatInputCommand()) {
+      const command = client.commands.get(interaction.commandName);
+      if (command && command.executeSlash) {
+        await command.executeSlash(interaction, client);
+      }
+    }
   } catch (error) {
-    console.error(`❌ Erro no slash command ${interaction.commandName}:`, error);
-    const errMessage = { content: '❌ Ocorreu um erro ao executar este comando.', flags: [MessageFlags.Ephemeral] };
-    if (interaction.replied || interaction.deferred) {
+    console.error(`❌ Erro na interação:`, error);
+    const errMessage = { content: '❌ Ocorreu um erro ao processar esta ação.', flags: [MessageFlags.Ephemeral] };
+    
+    if (interaction.deferred || interaction.replied) {
       await interaction.followUp(errMessage).catch(() => {});
     } else {
       await interaction.reply(errMessage).catch(() => {});
