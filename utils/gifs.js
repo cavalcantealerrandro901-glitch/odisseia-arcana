@@ -1,43 +1,51 @@
-// Banco de GIFs Animados Diretos (Giphy CDN)
+// Banco de GIFs Ultra Leves (Carregamento Instantâneo no Discord)
 const gifs = {
   hug: [
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z2Z3J3MnB4ZzNzY3RwYXhwbTV2Z2kzcXZkZXZ3ZjZxaDlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3M4NpbLCTxBqU/giphy.gif',
-    'https://media.giphy.com/media/l0GE2O6U8yL3lqRtm/giphy.gif',
-    'https://media.giphy.com/media/z1QQ47776qXTO/giphy.gif',
-    'https://media.giphy.com/media/10gA888yL2WQ2A/giphy.gif'
+    'https://i.waifu.pics/Lq3yH0z.gif',
+    'https://i.waifu.pics/7p9-2kH.gif',
+    'https://i.waifu.pics/0g4s~P1.gif',
+    'https://i.waifu.pics/9o-B931.gif',
+    'https://i.waifu.pics/Rk5eW3X.gif'
   ],
   kiss: [
-    'https://media.giphy.com/media/G3va31oEEnIkM/giphy.gif',
-    'https://media.giphy.com/media/kC397rpnJ3M8E/giphy.gif',
-    'https://media.giphy.com/media/FqSPe48M35MBy/giphy.gif'
+    'https://i.waifu.pics/aJpS-7g.gif',
+    'https://i.waifu.pics/v4aM46X.gif',
+    'https://i.waifu.pics/4~Z2o2O.gif',
+    'https://i.waifu.pics/9H24i32.gif'
   ],
   slap: [
-    'https://media.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif',
-    'https://media.giphy.com/media/j3iGKfXRKlLqw/giphy.gif',
-    'https://media.giphy.com/media/Zau0yRL17uzdK/giphy.gif'
+    'https://i.waifu.pics/S1K133X.gif',
+    'https://i.waifu.pics/W2S~33X.gif',
+    'https://i.waifu.pics/13~4~2O.gif',
+    'https://i.waifu.pics/3~9gH32.gif'
   ],
   pat: [
-    'https://media.giphy.com/media/5tmRHw632f21D4Gehj/giphy.gif',
-    'https://media.giphy.com/media/109ltuoSQT212w/giphy.gif'
+    'https://i.waifu.pics/46k1~2O.gif',
+    'https://i.waifu.pics/194m33X.gif',
+    'https://i.waifu.pics/Kk~542O.gif',
+    'https://i.waifu.pics/8m9~33X.gif'
   ],
   punch: [
-    'https://media.giphy.com/media/119i1ebWTm3px6/giphy.gif',
-    'https://media.giphy.com/media/l1J3G5lf06vi58EIE/giphy.gif'
+    'https://i.waifu.pics/7-m~33X.gif',
+    'https://i.waifu.pics/84~1~2O.gif',
+    'https://i.waifu.pics/K4gM46X.gif'
   ],
   bite: [
-    'https://media.giphy.com/media/oR7OedP8kO48U/giphy.gif'
+    'https://i.waifu.pics/24k1~2O.gif',
+    'https://i.waifu.pics/494m33X.gif'
   ],
   dance: [
-    'https://media.giphy.com/media/blSTtZehjAZ8I/giphy.gif',
-    'https://media.giphy.com/media/13m24a61m383E4/giphy.gif'
+    'https://i.waifu.pics/7k1~2O.gif',
+    'https://i.waifu.pics/94m33X.gif'
   ],
   wave: [
-    'https://media.giphy.com/media/dzaUX7CAG0Ihi/giphy.gif'
+    'https://i.waifu.pics/1k1~2O.gif',
+    'https://i.waifu.pics/34m33X.gif'
   ]
 };
 
 /**
- * Retorna uma GIF animada aleatória de acordo com o tipo da ação
+ * Retorna uma GIF animada leve de acordo com a ação
  */
 function getGif(action) {
   const list = gifs[action];
