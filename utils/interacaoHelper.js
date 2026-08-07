@@ -2,12 +2,12 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const { getGif } = require('./gifs');
 
 /**
- * Gerencia as interações e deforma uma cadeia de respostas marcando mensagens anteriores
+ * Gerencia as interações e forma uma cadeia de respostas marcando mensagens anteriores
  */
 async function executarInteracao({ contexto, autor, alvo, client, endpoint, nomeAcao, emoji, cor, isSlash }) {
   if (isSlash) await contexto.deferReply();
 
-  const gifInicial = getGif(endpoint);
+  const gifInicial = await getGif(endpoint);
   const embedInicial = new EmbedBuilder()
     .setDescription(`${emoji} **${autor.username}** deu ${nomeAcao} **${alvo.username}**!`)
     .setColor(cor)
@@ -28,7 +28,7 @@ async function executarInteracao({ contexto, autor, alvo, client, endpoint, nome
 
     // O Bot devolve em 1.5s marcando a mensagem original enviada
     setTimeout(async () => {
-      const gifDevolucao = getGif(endpoint);
+      const gifDevolucao = await getGif(endpoint);
       const embedDevolucao = new EmbedBuilder()
         .setDescription(`🤖⚡ **${client.user.username}** não deixou barato e devolveu ${nomeAcao} **${autor.username}**!`)
         .setColor('#E74C3C')
@@ -39,7 +39,7 @@ async function executarInteracao({ contexto, autor, alvo, client, endpoint, nome
       await contexto.channel.send({
         content: `<@${autor.id}>`,
         embeds: [embedDevolucao],
-        reply: { messageReference: mensagemInicial.id } // Marca a mensagem anterior!
+        reply: { messageReference: mensagemInicial.id }
       }).catch(() => {});
     }, 1500);
 
@@ -64,7 +64,7 @@ async function executarInteracao({ contexto, autor, alvo, client, endpoint, nome
     ? await contexto.editReply(payloadInicial)
     : await contexto.reply(payloadInicial);
 
-  // Inicia o loop de devolucao
+  // Inicia o loop de devolução
   criarColetorDevolucao(mensagemInicial, autor, alvo, endpoint, nomeAcao, emoji, cor);
 }
 
@@ -88,8 +88,8 @@ function criarColetorDevolucao(mensagemAlvo, autorAtual, alvoAtual, endpoint, no
 
     await i.update({ components: [new ActionRowBuilder().addComponents(buttonDesativado)] }).catch(() => {});
 
-    // 2. Prepara o novo embed e botão para a réplica
-    const novoGif = getGif(endpoint);
+    // 2. Busca a nova GIF e prepara a réplica
+    const novoGif = await getGif(endpoint);
     const novoEmbed = new EmbedBuilder()
       .setDescription(`${emoji} **${alvoAtual.username}** devolveu ${nomeAcao} **${autorAtual.username}**!`)
       .setColor(cor)
@@ -104,15 +104,15 @@ function criarColetorDevolucao(mensagemAlvo, autorAtual, alvoAtual, endpoint, no
 
     const novaRow = new ActionRowBuilder().addComponents(novoBotao);
 
-    // 3. Envia a NOVA mensagem RESPONDENDO/MARCANDO a mensagem antiga
+    // 3. Envia a nova mensagem marcando/respondendo à anterior
     const novaMensagem = await i.channel.send({
       content: `<@${alvoAtual.id}> <@${autorAtual.id}>`,
       embeds: [novoEmbed],
       components: [novaRow],
-      reply: { messageReference: mensagemAlvo.id } // <--- Responde diretamente a mensagem anterior
+      reply: { messageReference: mensagemAlvo.id }
     });
 
-    // 4. Continua a corrente (inverte o alvo com o autor na nova mensagem)
+    // 4. Continua o ciclo
     criarColetorDevolucao(novaMensagem, alvoAtual, autorAtual, endpoint, nomeAcao, emoji, cor);
   });
 

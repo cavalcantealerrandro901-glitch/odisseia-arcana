@@ -1,56 +1,34 @@
-// Banco de GIFs Ultra Leves (Carregamento Instantâneo no Discord)
-const gifs = {
-  hug: [
-    'https://i.waifu.pics/Lq3yH0z.gif',
-    'https://i.waifu.pics/7p9-2kH.gif',
-    'https://i.waifu.pics/0g4s~P1.gif',
-    'https://i.waifu.pics/9o-B931.gif',
-    'https://i.waifu.pics/Rk5eW3X.gif'
-  ],
-  kiss: [
-    'https://i.waifu.pics/aJpS-7g.gif',
-    'https://i.waifu.pics/v4aM46X.gif',
-    'https://i.waifu.pics/4~Z2o2O.gif',
-    'https://i.waifu.pics/9H24i32.gif'
-  ],
-  slap: [
-    'https://i.waifu.pics/S1K133X.gif',
-    'https://i.waifu.pics/W2S~33X.gif',
-    'https://i.waifu.pics/13~4~2O.gif',
-    'https://i.waifu.pics/3~9gH32.gif'
-  ],
-  pat: [
-    'https://i.waifu.pics/46k1~2O.gif',
-    'https://i.waifu.pics/194m33X.gif',
-    'https://i.waifu.pics/Kk~542O.gif',
-    'https://i.waifu.pics/8m9~33X.gif'
-  ],
-  punch: [
-    'https://i.waifu.pics/7-m~33X.gif',
-    'https://i.waifu.pics/84~1~2O.gif',
-    'https://i.waifu.pics/K4gM46X.gif'
-  ],
-  bite: [
-    'https://i.waifu.pics/24k1~2O.gif',
-    'https://i.waifu.pics/494m33X.gif'
-  ],
-  dance: [
-    'https://i.waifu.pics/7k1~2O.gif',
-    'https://i.waifu.pics/94m33X.gif'
-  ],
-  wave: [
-    'https://i.waifu.pics/1k1~2O.gif',
-    'https://i.waifu.pics/34m33X.gif'
-  ]
-};
-
 /**
- * Retorna uma GIF animada leve de acordo com a ação
+ * Busca uma GIF animada em tempo real através das APIs oficiais Waifu.pics e Nekos.best
  */
-function getGif(action) {
-  const list = gifs[action];
-  if (!list || list.length === 0) return null;
-  return list[Math.floor(Math.random() * list.length)];
+async function getGif(action) {
+  const category = action.toLowerCase();
+
+  // 1ª Tentativa: Waifu.pics API
+  try {
+    const response = await fetch(`https://api.waifu.pics/sfw/${category}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.url) return data.url;
+    }
+  } catch (error) {
+    console.error(`Erro na API Waifu.pics (${category}):`, error.message);
+  }
+
+  // 2ª Tentativa (Fallback): Nekos.best API
+  try {
+    const response = await fetch(`https://nekos.best/api/v2/${category}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.results && data.results[0] && data.results[0].url) {
+        return data.results[0].url;
+      }
+    }
+  } catch (error) {
+    console.error(`Erro na API Nekos.best (${category}):`, error.message);
+  }
+
+  return null;
 }
 
-module.exports = { getGif, gifs };
+module.exports = { getGif };
