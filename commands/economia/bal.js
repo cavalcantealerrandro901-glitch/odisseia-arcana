@@ -1,33 +1,50 @@
-const { EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { Database } = require('st.db');
 const db = new Database({ filePath: './database/economia.json' });
 
 module.exports = {
   name: 'bal',
-  aliases: ['saldo', 'almas', 'carteira'],
-  description: 'Consulta o saldo de Almas via prefixo',
+  aliases: ['balance'],
+  description: 'Exibe o saldo total acumulado de almas (Carteira + Banco)',
+  slashData: new SlashCommandBuilder()
+    .setName('bal')
+    .setDescription('Exibe o saldo total de almas de um usuário')
+    .addUserOption(opt =>
+      opt.setName('usuario')
+        .setDescription('Selecione o usuário para consultar')
+        .setRequired(false)
+    ),
+
   async execute(message, args, client) {
-    const target = message.mentions.users.first() || message.author;
-
-    const almas = (await db.get(`almas_${target.id}`)) || 0;
-    const banco = (await db.get(`banco_${target.id}`)) || 0;
-    const total = almas + banco;
-
-    const embed = new EmbedBuilder()
-      .setTitle(`✨ Carteira Arcana — ${target.username}`)
-      .setColor('#2ecc71')
-      .setThumbnail(target.displayAvatarURL({ dynamic: true }))
-      .addFields(
-        { name: '👛 Carteira', value: `\`${almas.toLocaleString('pt-BR')}\` Almas`, inline: true },
-        { name: '🏦 Banco', value: `\`${banco.toLocaleString('pt-BR')}\` Almas`, inline: true },
-        { name: '💰 Total', value: `\`${total.toLocaleString('pt-BR')}\` Almas`, inline: false }
-      )
-      .setFooter({ 
-        text: `Solicitado por ${message.author.tag}`, 
-        iconURL: message.author.displayAvatarURL({ dynamic: true }) 
-      })
-      .setTimestamp();
-
-    return message.reply({ embeds: [embed] });
+    let targetUser = message.mentions.users.first() || message.author;
+    return exibirBalTotal(message, targetUser, false);
   },
+
+  async executeSlash(interaction, client) {
+    const targetUser = interaction.options.getUser('usuario') || interaction.user;
+    return exibirBalTotal(interaction, targetUser, true);
+  }
 };
+
+async function exibirBalTotal(contexto, targetUser, isSlash = false) {
+  const userId = targetUser.id;
+  const carteira = (await db.get(`carteira_${userId}`)) || 0;
+  const banco = (await db.get(`banco_${userId}`)) || 0;
+  const total = carteira + banco;
+  const autor = isSlash ? contexto.user : contexto.author;
+
+  const embed = new EmbedBuilder()
+    .setAuthor({ 
+      name: `Balanço Total — ${targetUser.globalName || targetUser.username}`, 
+      iconURL: targetUser.displayAvatarURL() 
+    })
+    .setColor('#FFD700')
+    .setDescription(`🔮 **Patrimônio Total:** \`${total.toLocaleString('pt-BR')}\` almas`)
+    .setFooter({ 
+      text: `Solicitado por ${autor.username}`, 
+      iconURL: autor.displayAvatarURL() 
+    })
+    .setTimestamp();
+
+  return contexto.reply({ embeds: [embed] });
+}
