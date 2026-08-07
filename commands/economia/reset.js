@@ -1,108 +1,100 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
-const { Database } = require('st.db');
-const db = new Database({ filePath: './database/economia.json' });
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const User = require('../../models/User');
+
+/**
+ * Converte strings formatadas (1k, 1.5m, 2b, 1t) em números inteiros.
+ */
+function parseAmount(str) {
+  if (str === null || str === undefined) return null;
+  const match = str.toString().toLowerCase().match(/^(\d+(?:\.\d+)?)\s*([kmbt]?)$/);
+  if (!match) return null;
+
+  let value = parseFloat(match[1]);
+  const multiplier = match[2];
+
+  switch (multiplier) {
+    case 'k': value *= 1e3; break;
+    case 'm': value *= 1e6; break;
+    case 'b': value *= 1e9; break;
+    case 't': value *= 1e12; break;
+  }
+
+  return Math.floor(value);
+}
 
 module.exports = {
   name: 'reset',
-  aliases: ['resetar', 'zerar', 'clear-saldo', 'removeralmas'],
-  description: 'Reseta ou remove uma quantidade de almas de um ou mais usuários (Apenas Admins)',
+  aliases: ['resetar', 'setmoney', 'setar'],
+  description: 'Reseta ou define o saldo de um usuário (aceita 1k, 1m, 1b, etc)',
   slashData: new SlashCommandBuilder()
     .setName('reset')
-    .setDescription('Reseta ou remove almas de um usuário')
+    .setDescription('Reseta ou define o saldo de um usuário')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption(opt =>
       opt.setName('usuario')
-        .setDescription('Selecione o usuário para resetar')
+        .setDescription('Usuário que terá o saldo alterado')
         .setRequired(true)
     )
-    .addIntegerOption(opt =>
-      opt.setName('quantidade')
-        .setDescription('Quantidade a remover (deixe em branco para ZERAR TUDO)')
+    .addStringOption(opt =>
+      opt.setName('valor')
+        .setDescription('Novo valor do saldo (ex: 0, 100, 1k, 1.5m, 2b)')
         .setRequired(false)
-        .setMinValue(1)
     ),
 
-  async execute(message, args, client) {
-    // Verificação de permissão (Administrador ou Gerenciar Servidor)
-    if (!message.member.permissions.has(PermissionFlagsBits.Administrator) && 
-        !message.member.permissions.has(PermissionFlagsBits.ManageGuild)) {
-      return message.reply('❌ Você precisa ter permissão de **Administrador** para usar este comando!');
+  async execute(message, args, client, prefix) {
+    if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
+      return message.reply('❌ Você precisa da permissão de **Administrador** para usar este comando!');
     }
 
-    // Filtrar menções válidas (ignora bots)
-    const mencoes = message.mentions.users.filter(u => !u.bot);
-
-    if (mencoes.size === 0) {
-      return message.reply('⚠️ Mencione pelo menos um usuário para resetar!\nExemplo para zerar tudo: `O.reset @Usuario1 @Usuario2`\nExemplo para tirar valor específico: `O.reset 500 @Usuario1 @Usuario2`');
+    const target = message.mentions.users.first();
+    if (!target) {
+      return message.reply(`❌ Mencione quem terá o saldo alterado! Exemplo: \`${prefix}reset @membro 1k\``);
     }
 
-    // Procurar por número nos argumentos
-    const argQuant = args.find(a => !isNaN(a) && parseInt(a) > 0);
-    const quantidade = argQuant ? parseInt(argQuant) : null;
+    const inputValor = args[1] || '0';
+    const novoValor = parseAmount(inputValor);
 
-    return processarReset(message, message.author, Array.from(mencoes.values()), quantidade, false);
+    if (novoValor === null || isNaN(novoValor) || novoValor < 0) {
+      return message.reply('❌ Digite um valor válido! Ex: `0`, `100`, `1k`, `1.5m`, `2b`.');
+    }
+
+    return processarReset(message, target, novoValor, false);
   },
 
   async executeSlash(interaction, client) {
-    if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
-      return interaction.reply({ 
-        content: '❌ Você precisa de permissão de Administrador para usar este comando!', 
-        flags: [MessageFlags.Ephemeral] 
-      });
+    const target = interaction.options.getUser('usuario');
+    const inputValor = interaction.options.getString('valor') || '0';
+    const novoValor = parseAmount(inputValor);
+
+    if (novoValor === null || isNaN(novoValor) || novoValor < 0) {
+      return interaction.reply({ content: '❌ Digite um valor válido! Ex: `0`, `100`, `1k`, `1.5m`, `2b`.', ephemeral: true });
     }
 
-    const targetUser = interaction.options.getUser('usuario');
-    const quantidade = interaction.options.getInteger('quantidade'); // Pode ser null se não informado
-
-    return processarReset(interaction, interaction.user, [targetUser], quantidade, true);
+    return processarReset(interaction, target, novoValor, true);
   }
 };
 
-async function processarReset(contexto, autor, usuarios, quantidade, isSlash = false) {
-  const resumo = [];
+async function processarReset(contexto, usuario, novoSaldo, isSlash) {
+  try {
+    await User.findOneAndUpdate(
+      { userId: usuario.id },
+      { $set: { money: novoSaldo, wallet: novoSaldo, bank: 0 } },
+      { returnDocument: 'after', upsert: true }
+    );
 
-  for (const usuario of usuarios) {
-    const userId = usuario.id;
-    const carteira = (await db.get(`carteira_${userId}`)) || 0;
-    const banco = (await db.get(`banco_${userId}`)) || 0;
+    const valorFormatado = novoSaldo.toLocaleString('pt-BR');
 
-    if (quantidade === null) {
-      // Zerar TUDO (Carteira + Banco)
-      await db.set(`carteira_${userId}`, 0);
-      await db.set(`banco_${userId}`, 0);
-      resumo.push(`• ${usuario}: Saldo totalmente **zerado** *(Carteira + Banco)*`);
-    } else {
-      // Descontar valor específico (priorizando a carteira e depois o banco)
-      let sobrou = quantidade;
-      let novaCarteira = carteira;
-      let novoBanco = banco;
+    const embed = new EmbedBuilder()
+      .setColor('#2ECC71')
+      .setTitle('🔄 Saldo Atualizado!')
+      .setDescription(`O saldo de ${usuario} foi definido para **💰 ${valorFormatado}** (\`${novoSaldo}\`).`)
+      .setTimestamp();
 
-      if (novaCarteira >= sobrou) {
-        novaCarteira -= sobrou;
-        sobrou = 0;
-      } else {
-        sobrou -= novaCarteira;
-        novaCarteira = 0;
-        novoBanco = Math.max(0, novoBanco - sobrou);
-      }
-
-      await db.set(`carteira_${userId}`, novaCarteira);
-      await db.set(`banco_${userId}`, novoBanco);
-
-      resumo.push(`• ${usuario}: Removidas \`${quantidade.toLocaleString('pt-BR')}\` almas`);
-    }
-  }
-
-  const embed = new EmbedBuilder()
-    .setTitle('🔄 Reset de Saldo Concluído')
-    .setAuthor({ name: autor.globalName || autor.username, iconURL: autor.displayAvatarURL() })
-    .setColor('#FF0000')
-    .setDescription(resumo.join('\n'))
-    .setTimestamp();
-
-  if (isSlash) {
-    return contexto.reply({ embeds: [embed] });
-  } else {
-    return contexto.reply({ embeds: [embed] });
+    const payload = { embeds: [embed] };
+    return isSlash ? contexto.reply(payload) : contexto.reply(payload);
+  } catch (error) {
+    console.error('Erro ao resetar saldo:', error);
+    const errorMsg = '❌ Ocorreu um erro ao atualizar o saldo no banco de dados.';
+    return isSlash ? contexto.reply({ content: errorMsg, ephemeral: true }) : contexto.reply(errorMsg);
   }
 }
