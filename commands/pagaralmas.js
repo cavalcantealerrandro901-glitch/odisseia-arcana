@@ -9,16 +9,16 @@ const mongoose = require('mongoose');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('pay')
-    .setDescription('Transfere dinheiro (ou Pix) para um ou mais usuários.')
+    .setName('pagaralmas')
+    .setDescription('Transfere almas para um ou mais usuários.')
     .addIntegerOption(opt => 
       opt.setName('quantia')
-        .setDescription('Valor a ser transferido para cada pessoa')
+        .setDescription('Quantidade de almas a ser transferida para cada pessoa')
         .setRequired(true)
         .setMinValue(1))
     .addUserOption(opt => 
       opt.setName('usuario1')
-        .setDescription('Primeiro usuário a receber')
+        .setDescription('Primeiro usuário a receber as almas')
         .setRequired(true))
     .addUserOption(opt => 
       opt.setName('usuario2')
@@ -28,15 +28,14 @@ module.exports = {
       opt.setName('usuario3')
         .setDescription('Terceiro usuário (opcional)')
         .setRequired(false)),
-  name: 'pay',
-  aliases: ['pix', 'transferir', 'pagar'],
-  description: 'Transfere dinheiro/Pix para um ou mais usuários.',
+  name: 'pagaralmas',
+  aliases: ['pagar-almas', 'payalmas', 'doaralmas', 'transferiralmas'],
+  description: 'Transfere almas para um ou mais usuários.',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;
     let targets = [];
     let amount = 0;
 
-    // Processamento dos Argumentos (Slash ou Prefixo)
     if (isSlash) {
       amount = ctx.options.getInteger('quantia');
       const u1 = ctx.options.getUser('usuario1');
@@ -47,7 +46,6 @@ module.exports = {
       if (u2) targets.push(u2);
       if (u3) targets.push(u3);
     } else {
-      // Exemplo prefixo: !pay 1000 @user1 @user2 ou !pix 1000 @user
       amount = parseInt(args.find(a => !isNaN(a) && !a.includes('<@')), 10);
       
       if (ctx.mentions && ctx.mentions.users.size > 0) {
@@ -55,7 +53,7 @@ module.exports = {
       }
 
       if (!amount || isNaN(amount) || amount <= 0 || targets.length === 0) {
-        return ctx.reply('❌ **Uso correto:** `!pay <quantia> @usuario1 [@usuario2...]` ou `!pix <quantia> @usuario`');
+        return ctx.reply('❌ **Uso correto:** `!pagaralmas <quantia> @usuario1 [@usuario2...]`');
       }
     }
 
@@ -67,7 +65,7 @@ module.exports = {
     }
 
     if (targets.some(u => u.id === author.id)) {
-      return ctx.reply('❌ Você não pode transferir dinheiro para você mesmo!');
+      return ctx.reply('❌ Você não pode transferir almas para você mesmo!');
     }
 
     const totalCost = amount * targets.length;
@@ -76,34 +74,33 @@ module.exports = {
     let senderData = await UserModel.findOne({ userId: author.id });
     if (!senderData) senderData = new UserModel({ userId: author.id });
 
-    if ((senderData.wallet || 0) < totalCost) {
-      return ctx.reply(`❌ **Saldo Insuficiente!** Você precisa de **$${totalCost.toLocaleString()}** na carteira para enviar **$${amount.toLocaleString()}** para ${targets.length} pessoa(s), mas possui apenas **$${(senderData.wallet || 0).toLocaleString()}**.`);
+    if ((senderData.souls || 0) < totalCost) {
+      return ctx.reply(`❌ **Almas Insuficientes!** Você precisa de 🔮 **${totalCost.toLocaleString()} almas** para enviar **${amount.toLocaleString()} almas** para ${targets.length} pessoa(s), mas possui apenas 🔮 **${(senderData.souls || 0).toLocaleString()} almas**.`);
     }
 
-    // Lista de quem precisa aceitar (Remetente + Destinatários)
+    // Pessoas necessárias para confirmar (Remetente + Destinatários)
     const requiredConfirmations = new Set([author.id, ...targets.map(t => t.id)]);
     const confirmedUsers = new Set();
 
-    // Botões de Ação
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-        .setCustomId('accept_transfer')
+        .setCustomId('accept_soul_transfer')
         .setLabel('✅ Aceitar Transferência')
         .setStyle(ButtonStyle.Success),
       new ButtonBuilder()
-        .setCustomId('cancel_transfer')
+        .setCustomId('cancel_soul_transfer')
         .setLabel('❌ Cancelar')
         .setStyle(ButtonStyle.Danger)
     );
 
     const targetMentions = targets.map(t => `<@${t.id}>`).join(', ');
 
-    const initialText = `⚠️ **TRANSFERÊNCIA INICIADA!**\n\n` +
-      `O usuário <@${author.id}> está prestes a transferir **$${amount.toLocaleString()}** para cada um dos seguintes usuários: ${targetMentions}.\n` +
-      `*(Custo total para o remetente: **$${totalCost.toLocaleString()}**)*\n\n` +
+    const initialText = `🔮 **TRANSFERÊNCIA DE ALMAS INICIADA!**\n\n` +
+      `O usuário <@${author.id}> está prestes a transferir 🔮 **${amount.toLocaleString()} almas** para cada um dos seguintes usuários: ${targetMentions}.\n` +
+      `*(Custo total para o remetente: 🔮 **${totalCost.toLocaleString()} almas**)*\n\n` +
       `📜 **REGRAS E CONSEQUÊNCIAS:**\n` +
       `• Esta ação é **permanente e irreversível** após a confirmação de todos.\n` +
-      `• Transferências fraudulentas ou suspeitas podem resultar em banimento do sistema de economia.\n` +
+      `• Transferências fraudulentas ou suspeitas podem resultar em sanções no servidor.\n` +
       `• **Todos os envolvidos** (<@${author.id}> e os destinatários) precisam clicar no botão **Aceitar** para concluir.\n\n` +
       `⏳ *Aguardando confirmações (0/${requiredConfirmations.size})...*`;
 
@@ -113,7 +110,6 @@ module.exports = {
       fetchReply: true
     });
 
-    // Coletor de Botões (Tempo limite de 60 segundos)
     const collector = initialMsg.createMessageComponentCollector({
       componentType: ComponentType.Button,
       time: 60000 
@@ -122,20 +118,20 @@ module.exports = {
     collector.on('collect', async (interaction) => {
       if (!requiredConfirmations.has(interaction.user.id)) {
         return interaction.reply({
-          content: '❌ Você não faz parte desta transferência!',
+          content: '❌ Você não faz parte desta transferência de almas!',
           ephemeral: true
         });
       }
 
-      if (interaction.customId === 'cancel_transfer') {
+      if (interaction.customId === 'cancel_soul_transfer') {
         collector.stop('cancelled');
         return interaction.reply({
-          content: `❌ A transferência foi cancelada por <@${interaction.user.id}>.`,
+          content: `❌ A transferência de almas foi cancelada por <@${interaction.user.id}>.`,
           ephemeral: false
         });
       }
 
-      if (interaction.customId === 'accept_transfer') {
+      if (interaction.customId === 'accept_soul_transfer') {
         if (confirmedUsers.has(interaction.user.id)) {
           return interaction.reply({
             content: '⚠️ Você já aceitou esta transferência! Aguardando os demais.',
@@ -163,47 +159,46 @@ module.exports = {
 
     collector.on('end', async (_, reason) => {
       if (reason === 'completed') {
-        // Recarregar dados para evitar falhas
         let freshSender = await UserModel.findOne({ userId: author.id });
-        if (!freshSender || (freshSender.wallet || 0) < totalCost) {
+        if (!freshSender || (freshSender.souls || 0) < totalCost) {
           return initialMsg.edit({
-            content: '❌ **Erro:** O remetente não possui mais saldo suficiente para concluir a transferência!',
+            content: '❌ **Erro:** O remetente não possui mais almas suficientes para concluir a transferência!',
             components: []
           });
         }
 
         // Descontar do remetente
-        freshSender.wallet -= totalCost;
+        freshSender.souls -= totalCost;
         await freshSender.save();
 
         // Adicionar aos destinatários
         for (const target of targets) {
           let tData = await UserModel.findOne({ userId: target.id });
           if (!tData) tData = new UserModel({ userId: target.id });
-          tData.wallet = (tData.wallet || 0) + amount;
+          tData.souls = (tData.souls || 0) + amount;
           await tData.save();
         }
 
-        // Calcular Ranks do Servidor
-        const allUsers = await UserModel.find().sort({ wallet: -1 });
+        // Ranks baseados no total de almas
+        const allUsers = await UserModel.find().sort({ souls: -1 });
         const getRank = (uId) => {
           const idx = allUsers.findIndex(u => u.userId === uId);
           return idx !== -1 ? `#${idx + 1}` : '#?';
         };
 
         const senderRank = getRank(author.id);
-        const senderBalance = freshSender.wallet;
+        const senderSouls = freshSender.souls;
 
-        let resultText = `✅ **TRANSFERÊNCIA CONCLUÍDA COM SUCESSO!**\n\n` +
-          ` O usuário <@${author.id}> transferiu **$${amount.toLocaleString()}** para cada destinatário (Total: **$${totalCost.toLocaleString()}**).\n` +
-          `📊 <@${author.id}> agora possui **$${senderBalance.toLocaleString()}** e está no **Rank ${senderRank}** do servidor.\n\n` +
+        let resultText = `✅ **TRANSFERÊNCIA DE ALMAS CONCLUÍDA COM SUCESSO!**\n\n` +
+          `O usuário <@${author.id}> transferiu 🔮 **${amount.toLocaleString()} almas** para cada destinatário (Total: 🔮 **${totalCost.toLocaleString()} almas**).\n` +
+          `📊 <@${author.id}> agora possui 🔮 **${senderSouls.toLocaleString()} almas** e está no **Rank ${senderRank} de Almas** do servidor.\n\n` +
           `--- **Destinatários:** ---\n`;
 
         for (const target of targets) {
           const tData = await UserModel.findOne({ userId: target.id });
-          const tBal = tData ? tData.wallet : 0;
+          const tSouls = tData ? tData.souls : 0;
           const tRank = getRank(target.id);
-          resultText += `• O usuário <@${target.id}> recebeu **$${amount.toLocaleString()}**, agora possui **$${tBal.toLocaleString()}** e está no **Rank ${tRank}** do servidor.\n`;
+          resultText += `• O usuário <@${target.id}> recebeu 🔮 **${amount.toLocaleString()} almas**, agora possui 🔮 **${tSouls.toLocaleString()} almas** e está no **Rank ${tRank} de Almas** do servidor.\n`;
         }
 
         await initialMsg.edit({
@@ -213,7 +208,7 @@ module.exports = {
 
       } else if (reason !== 'cancelled') {
         await initialMsg.edit({
-          content: '⏰ **Tempo Esgotado!** A transferência foi cancelada pois nem todos confirmaram a tempo.',
+          content: '⏰ **Tempo Esgotado!** A transferência de almas foi cancelada pois nem todos confirmaram a tempo.',
           components: []
         });
       }
