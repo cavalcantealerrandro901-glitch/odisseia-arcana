@@ -1,24 +1,26 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
   name: 'meme',
-  aliases: ['memes', 'humor', 'engracado'],
-  description: 'Exibe um meme aleatório',
+  aliases: ['memes', 'humor', 'engracado', 'videomeme'],
+  description: 'Envia um vídeo de meme aleatório',
   slashData: new SlashCommandBuilder()
     .setName('meme')
-    .setDescription('Exibe um meme aleatório'),
+    .setDescription('Envia um vídeo de meme aleatório'),
 
   async execute(message, args, client, prefix) {
-    return enviarMeme(message, false);
+    return enviarMemeVideo(message, false);
   },
 
   async executeSlash(interaction, client) {
-    return enviarMeme(interaction, true);
+    // Evita timeout do Discord avisando que o bot está processando
+    await interaction.deferReply();
+    return enviarMemeVideo(interaction, true);
   }
 };
 
-async function enviarMeme(contexto, isSlash = false) {
-  const subreddits = ['memes', 'dankmemes', 'HUEstation', 'EU_NEV'];
+async function enviarMemeVideo(contexto, isSlash = false) {
+  const subreddits = ['memevideos', 'shitposting', 'Unexpected', 'HUEstation', 'dankvideos'];
   const subreddit = subreddits[Math.floor(Math.random() * subreddits.length)];
 
   try {
@@ -26,20 +28,14 @@ async function enviarMeme(contexto, isSlash = false) {
     const data = await res.json();
 
     if (data && data.url) {
-      const embed = new EmbedBuilder()
-        .setTitle(data.title || 'Meme')
-        .setURL(data.postLink || data.url)
-        .setImage(data.url)
-        .setColor('#F1C40F')
-        .setFooter({ text: `👍 ${data.ups || 0} | r/${data.subreddit}` })
-        .setTimestamp();
-
-      return isSlash ? contexto.reply({ embeds: [embed] }) : contexto.reply({ embeds: [embed] });
+      const content = `🎬 **${data.title}** *(r/${data.subreddit})*\n${data.url}`;
+      
+      return isSlash ? contexto.editReply({ content }) : contexto.reply({ content });
     }
   } catch (error) {
-    console.error('Erro ao procurar meme:', error);
+    console.error('Erro ao procurar vídeo meme:', error);
   }
 
-  const msg = '❌ Não foi possível carregar um meme neste momento.';
-  return isSlash ? contexto.reply({ content: msg }) : contexto.reply({ content: msg });
+  const msg = '❌ Não foi possível carregar um vídeo de meme neste momento.';
+  return isSlash ? contexto.editReply({ content: msg }) : contexto.reply({ content: msg });
 }
