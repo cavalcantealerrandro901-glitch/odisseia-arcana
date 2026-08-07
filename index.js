@@ -1,315 +1,209 @@
-require('dotenv').config();
-const { 
-  Client, 
-  GatewayIntentBits, 
-  Collection, 
-  REST, 
-  Routes, 
-  EmbedBuilder 
-} = require('discord.js');
+const { Client, GatewayIntentBits, Collection, REST, Routes, EmbedBuilder } = require('discord.js');
 const mongoose = require('mongoose');
-const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// 1. SERVIDOR HTTP PARA O RENDER
-const PORT = process.env.PORT || 3000;
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-  res.end('🤖 Bot Online e Operacional 24/7!');
-});
-
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🌐 [HTTP] Servidor Web escutando na porta ${PORT}`);
-});
-
-process.on('unhandledRejection', (reason) => {
-  console.error('⚠️ [PROMISE ERRO]:', reason);
-});
-process.on('uncaughtException', (err) => {
-  console.error('💥 [EXCEÇÃO ERRO]:', err);
-});
-
-// 2. CONFIGURAÇÃO DO CLIENTE DISCORD
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildModeration
   ]
 });
 
 client.commands = new Collection();
-client.prefixCommands = new Collection();
 
-const DEFAULT_PREFIX = process.env.PREFIX || process.env.PREFIX_BOT || '!';
-const BOT_TOKEN = process.env.TOKEN || process.env.DISCORD_TOKEN;
-
-// 3. MONGODB DATABASE SCHEMAS (ATUALIZADO COM ALMAS E INVENTÁRIO)
-const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
-
-const guildSchema = new mongoose.Schema({
-  guildId: { type: String, required: true, unique: true },
-  prefix: { type: String, default: DEFAULT_PREFIX }
-});
-
-const userSchema = new mongoose.Schema({
-  userId: { type: String, required: true, unique: true },
-  wallet: { type: Number, default: 0 },
-  bank: { type: Number, default: 0 },
-  souls: { type: Number, default: 0 },
-  inventory: { type: [String], default: [] },
-  debt: { type: Number, default: 0 },
-  debtDueDate: { type: Date, default: null },
-  debtNotified: { type: Boolean, default: false },
-  lastDaily: { type: Date, default: null },
-  dailyStreak: { type: Number, default: 0 },
-  lastWork: { type: Date, default: null },
-  workNotified: { type: Boolean, default: true },
-  workLevel: { type: Number, default: 1 },
-  workXp: { type: Number, default: 0 },
-  afkReason: { type: String, default: null },
-  afkTimestamp: { type: Date, default: null }
-});
-
-const GuildModel = mongoose.models.Guild || mongoose.model('Guild', guildSchema);
-const UserModel = mongoose.models.User || mongoose.model('User', userSchema);
-
-if (mongoUri) {
-  mongoose.connect(mongoUri)
-    .then(() => console.log('🌿 [DATABASE] Conectado ao MongoDB!'))
-    .catch(err => console.error('❌ [DATABASE] Erro MongoDB:', err.message));
-} else {
-  console.warn('⚠️ [DATABASE] MONGO_URI não definida!');
-}
-
-// Helper Prefixo
-const prefixCache = new Map();
-client.getPrefix = async (guildId) => {
-  if (!guildId) return DEFAULT_PREFIX;
-  if (prefixCache.has(guildId)) return prefixCache.get(guildId);
-
-  try {
-    if (mongoose.connection.readyState === 1) {
-      const data = await GuildModel.findOne({ guildId });
-      const prefix = data?.prefix || DEFAULT_PREFIX;
-      prefixCache.set(guildId, prefix);
-      return prefix;
-    }
-  } catch (err) {}
-  return DEFAULT_PREFIX;
-};
-
-// Algoritmo Levenshtein
-function getLevenshteinDistance(a, b) {
-  const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
-
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost
-      );
-    }
-  }
-  return matrix[a.length][b.length];
-}
-
-// 4. CARREGADOR DE COMANDOS
+// Carregar Comandos Dinamicamente
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 const slashCommandsArray = [];
 
-const loadCommands = () => {
-  const commandsPath = path.join(__dirname, 'commands');
-  if (!fs.existsSync(commandsPath)) return;
-
-  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-  for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    delete require.cache[require.resolve(filePath)];
-    const command = require(filePath);
-
-    if (command.data && command.name) {
-      client.commands.set(command.name, command);
-      client.prefixCommands.set(command.name, command);
-
-      if (command.aliases && Array.isArray(command.aliases)) {
-        for (const alias of command.aliases) {
-          client.prefixCommands.set(alias, command);
-        }
-      }
-
-      slashCommandsArray.push(command.data.toJSON());
-      console.log(`├─ 🚀 [CARREGADO] ${command.name}`);
-    }
+for (const file of commandFiles) {
+  const filePath = path.join(commandsPath, file);
+  const command = require(filePath);
+  if ('data' in command && 'execute' in command) {
+    client.commands.set(command.data.name, command);
+    slashCommandsArray.push(command.data.toJSON());
+  } else if ('name' in command && 'execute' in command) {
+    client.commands.set(command.name, command);
   }
-};
+}
 
-loadCommands();
+// Conexão com o MongoDB (Usa variável de ambiente do Render/Termux ou string padrão)
+const MONGO_URI = process.env.MONGO_URI || 'SUA_URL_DO_MONGODB_AQUI';
 
-// Evento Ready
 client.once('ready', async () => {
-  console.log(`⚡ [ONLINE] Bot logado como: ${client.user.tag}`);
+  console.log(`🤖 Bot ligado como ${client.user.tag}!`);
 
-  if (slashCommandsArray.length > 0 && BOT_TOKEN) {
-    try {
-      console.log('🔄 Registrando Slash Commands no Discord...');
-      const rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
-      await rest.put(Routes.applicationCommands(client.user.id), { body: slashCommandsArray });
-      console.log('✅ Slash Commands sincronizados!');
-    } catch (e) {
-      console.error('❌ Erro Slash Commands:', e.message);
-    }
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log('📦 Conectado ao MongoDB com sucesso!');
+  } catch (error) {
+    console.error('❌ Erro ao conectar ao MongoDB:', error);
+  }
+
+  // Registrar Slash Commands Globalmente
+  const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+  try {
+    console.log('🔄 Atualizando Slash Commands (/)...');
+    await rest.put(
+      Routes.applicationCommands(client.user.id),
+      { body: slashCommandsArray },
+    );
+    console.log('✨ Slash Commands registrados com sucesso!');
+  } catch (error) {
+    console.error(error);
   }
 });
 
-// Interações
+// Manipulador de Slash Commands e Botões
 client.on('interactionCreate', async interaction => {
-  if (interaction.isModalSubmit()) {
-    let userData = await UserModel.findOne({ userId: interaction.user.id });
-    if (!userData) userData = new UserModel({ userId: interaction.user.id });
-
-    if (interaction.customId === `modal_loan_${interaction.user.id}`) {
-      const amount = parseInt(interaction.fields.getTextInputValue('loan_amount'), 10);
-      if (isNaN(amount) || amount <= 0) return interaction.reply({ content: '❌ Digite um valor válido!', ephemeral: true });
-
-      const debtWithInterest = Math.floor(amount * 1.07);
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + 3);
-
-      userData.bank += amount;
-      userData.debt = debtWithInterest;
-      userData.debtDueDate = dueDate;
-      userData.debtNotified = false;
-      await userData.save();
-
-      return interaction.reply({
-        content: `✅ **Empréstimo Aprovado!**\n• **Recebido:** $${amount.toLocaleString()}\n• **Dívida:** $${debtWithInterest.toLocaleString()}`,
-        ephemeral: true
-      });
-    }
-
-    if (interaction.customId === `modal_pay_${interaction.user.id}`) {
-      const input = interaction.fields.getTextInputValue('pay_amount').toLowerCase();
-      let payAmount = input === 'tudo' ? userData.debt : parseInt(input, 10);
-
-      if (isNaN(payAmount) || payAmount <= 0) return interaction.reply({ content: '❌ Valor inválido!', ephemeral: true });
-      if (payAmount > userData.debt) payAmount = userData.debt;
-
-      const totalBalance = userData.wallet + userData.bank;
-      if (totalBalance < payAmount) return interaction.reply({ content: '❌ Saldo insuficiente!', ephemeral: true });
-
-      if (userData.wallet >= payAmount) {
-        userData.wallet -= payAmount;
-      } else {
-        const remaining = payAmount - userData.wallet;
-        userData.wallet = 0;
-        userData.bank -= remaining;
-      }
-
-      userData.debt -= payAmount;
-      if (userData.debt <= 0) {
-        userData.debt = 0;
-        userData.debtDueDate = null;
-        userData.debtNotified = false;
-      }
-
-      await userData.save();
-
-      return interaction.reply({
-        content: `✅ **Pagamento Realizado!**\n• **Pago:** $${payAmount.toLocaleString()}\n• **Restante:** $${userData.debt.toLocaleString()}`,
-        ephemeral: true
-      });
-    }
-  }
-
   if (interaction.isChatInputCommand()) {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
-
-    interaction.prefix = await client.getPrefix(interaction.guildId);
-    interaction.author = interaction.user;
-
     try {
       await command.execute(interaction, client, true);
-    } catch (err) {
-      console.error(`❌ Erro no /${interaction.commandName}:`, err);
+    } catch (error) {
+      console.error(error);
+      const errReply = { content: '❌ Ocorreu um erro ao executar este comando!', ephemeral: true };
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp(errReply);
+      } else {
+        await interaction.reply(errReply);
+      }
     }
   }
 });
 
-// Evento Mensagens
+// Manipulador de Comandos por Prefixo (!)
+const PREFIX = '!';
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
+  if (!message.content.startsWith(PREFIX)) return;
 
-  const currentPrefix = await client.getPrefix(message.guild.id);
-
-  if (mongoose.connection.readyState === 1) {
-    let authorData = await UserModel.findOne({ userId: message.author.id });
-    if (authorData && authorData.afkTimestamp) {
-      if (!message.content.startsWith(`${currentPrefix}afk`)) {
-        authorData.afkReason = null;
-        authorData.afkTimestamp = null;
-        await authorData.save();
-        message.reply(`👋 Bem-vindo(a) de volta, **${message.author.username}**! AFK removido.`).catch(() => {});
-      }
-    }
-
-    if (message.mentions.users.size > 0) {
-      for (const [id, user] of message.mentions.users) {
-        if (user.id === message.author.id || user.bot) continue;
-        const mentionedData = await UserModel.findOne({ userId: user.id });
-        if (mentionedData && mentionedData.afkTimestamp) {
-          const timePassed = Math.floor((Date.now() - new Date(mentionedData.afkTimestamp).getTime()) / 1000 / 60);
-          const timeStr = timePassed < 1 ? 'menos de 1 min' : `${timePassed} min`;
-          message.reply(`💤 **${user.username}** está AFK: **${mentionedData.afkReason || 'Sem motivo'}** *(há ${timeStr})*`).catch(() => {});
-        }
-      }
-    }
-  }
-
-  if (!message.content.startsWith(currentPrefix)) return;
-
-  const args = message.content.slice(currentPrefix.length).trim().split(/ +/);
+  const args = message.content.slice(PREFIX.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
-  const command = client.prefixCommands.get(commandName);
 
-  if (!command) {
-    const availableCommands = Array.from(client.prefixCommands.keys());
-    let bestMatch = null;
-    let lowestDistance = Infinity;
-
-    for (const cmd of availableCommands) {
-      const dist = getLevenshteinDistance(commandName, cmd);
-      if (dist < lowestDistance) {
-        lowestDistance = dist;
-        bestMatch = cmd;
-      }
-    }
-
-    let suggestionText = bestMatch && lowestDistance <= 3 ? ` Talvez você quis dizer \`${currentPrefix}${bestMatch}\`?` : '';
-    return message.reply(`❌ O comando \`${currentPrefix}${commandName}\` não existe.${suggestionText}\nUse \`/ajuda\` ou \`${currentPrefix}ajuda\` para ver os comandos.`);
-  }
-
-  message.prefix = currentPrefix;
+  const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+  if (!command) return;
 
   try {
     await command.execute(message, client, false, args);
-  } catch (err) {
-    console.error(`❌ Erro no !${commandName}:`, err);
+  } catch (error) {
+    console.error(error);
+    message.reply('❌ Ocorreu um erro ao executar este comando!');
   }
 });
 
-// Login do Bot
-if (BOT_TOKEN) {
-  client.login(BOT_TOKEN).catch(err => {
-    console.error('❌ [DISCORD LOGIN ERRO]: Verifique se o DISCORD_TOKEN está correto no Render!', err.message);
-  });
-} else {
-  console.error('❌ [TOKEN FALTANDO]: Variável DISCORD_TOKEN / TOKEN não encontrada!');
+// --- SISTEMA DE LOGS AUTOMÁTICOS ---
+async function sendLog(guild, embed) {
+  try {
+    const GuildConfig = mongoose.models.GuildConfig || mongoose.model('GuildConfig');
+    const config = await GuildConfig.findOne({ guildId: guild.id });
+    if (!config || !config.logChannelId) return;
+
+    const logChannel = guild.channels.cache.get(config.logChannelId);
+    if (logChannel) {
+      await logChannel.send({ embeds: [embed] });
+    }
+  } catch (e) {
+    console.error('Erro ao enviar log:', e);
+  }
 }
+
+client.on('messageDelete', async (message) => {
+  if (!message.guild || message.author?.bot) return;
+  const embed = new EmbedBuilder()
+    .setTitle('🗑️ Mensagem Deletada')
+    .setColor(0xe74c3c)
+    .addFields(
+      { name: 'Autor', value: `${message.author} (\`${message.author.tag}\`)`, inline: true },
+      { name: 'Canal', value: `${message.channel}`, inline: true },
+      { name: 'Conteúdo', value: message.content ? message.content.substring(0, 1024) : '*[Conteúdo vazio / Mídia]*' }
+    )
+    .setTimestamp();
+  await sendLog(message.guild, embed);
+});
+
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+  if (!oldMessage.guild || oldMessage.author?.bot || oldMessage.content === newMessage.content) return;
+  const embed = new EmbedBuilder()
+    .setTitle('✏️ Mensagem Editada')
+    .setColor(0xf39c12)
+    .addFields(
+      { name: 'Autor', value: `${oldMessage.author} (\`${oldMessage.author.tag}\`)`, inline: false },
+      { name: 'Canal', value: `${oldMessage.channel}`, inline: false },
+      { name: 'Antiga', value: oldMessage.content ? oldMessage.content.substring(0, 512) : '*[Vazio]*', inline: false },
+      { name: 'Nova', value: newMessage.content ? newMessage.content.substring(0, 512) : '*[Vazio]*', inline: false }
+    )
+    .setTimestamp();
+  await sendLog(oldMessage.guild, embed);
+});
+
+client.on('guildMemberRemove', async (member) => {
+  const embed = new EmbedBuilder()
+    .setTitle('📤 Membro Saiu / Expulso')
+    .setColor(0xe67e22)
+    .setDescription(`O membro **${member.user.tag}** (\`${member.user.id}\`) saiu do servidor.`)
+    .setThumbnail(member.user.displayAvatarURL())
+    .setTimestamp();
+  await sendLog(member.guild, embed);
+});
+
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+  if (oldMember.nickname !== newMember.nickname) {
+    const embed = new EmbedBuilder()
+      .setTitle('📝 Apelido (Nick) Alterado')
+      .setColor(0x3498db)
+      .setDescription(`Usuário: ${newMember.user} (\`${newMember.user.tag}\`)`)
+      .addFields(
+        { name: 'Antigo Nick', value: oldMember.nickname || oldMember.user.username, inline: true },
+        { name: 'Novo Nick', value: newMember.nickname || newMember.user.username, inline: true }
+      )
+      .setTimestamp();
+    await sendLog(newMember.guild, embed);
+  }
+});
+
+client.on('channelCreate', async (channel) => {
+  if (!channel.guild) return;
+  const embed = new EmbedBuilder()
+    .setTitle('📁 Canal Criado')
+    .setColor(0x2ecc71)
+    .setDescription(`O canal **${channel.name}** (\`${channel.type}\`) foi criado.`)
+    .setTimestamp();
+  await sendLog(channel.guild, embed);
+});
+
+client.on('channelDelete', async (channel) => {
+  if (!channel.guild) return;
+  const embed = new EmbedBuilder()
+    .setTitle('📁 Canal Deletado')
+    .setColor(0xe74c3c)
+    .setDescription(`O canal **${channel.name}** foi deletado.`)
+    .setTimestamp();
+  await sendLog(channel.guild, embed);
+});
+
+client.on('roleCreate', async (role) => {
+  const embed = new EmbedBuilder()
+    .setTitle('🏷️ Cargo Criado')
+    .setColor(0x2ecc71)
+    .setDescription(`O cargo **${role.name}** foi criado.`)
+    .setTimestamp();
+  await sendLog(role.guild, embed);
+});
+
+client.on('roleDelete', async (role) => {
+  const embed = new EmbedBuilder()
+    .setTitle('🏷️ Cargo Deletado')
+    .setColor(0xe74c3c)
+    .setDescription(`O cargo **${role.name}** foi deletado.`)
+    .setTimestamp();
+  await sendLog(role.guild, embed);
+});
+
+// Login do Bot usando variável de ambiente
+client.login(process.env.DISCORD_TOKEN);

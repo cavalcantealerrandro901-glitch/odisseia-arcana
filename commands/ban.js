@@ -1,78 +1,144 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { 
+  SlashCommandBuilder, 
+  EmbedBuilder, 
+  ActionRowBuilder, 
+  ButtonBuilder, 
+  ButtonStyle, 
+  ComponentType, 
+  PermissionFlagsBits 
+} = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('ban')
-    .setDescription('Bane um usuário do servidor (Apenas Moderadores).')
-    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+    .setDescription('Bane um usuário do servidor com confirmação.')
     .addUserOption(opt => 
       opt.setName('usuario')
-        .setDescription('O usuário que será banido')
+        .setDescription('Usuário que deseja banir')
         .setRequired(true))
     .addStringOption(opt => 
       opt.setName('motivo')
         .setDescription('Motivo do banimento')
-        .setRequired(false)),
+        .setRequired(false))
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
   name: 'ban',
-  category: 'Geral',
-  aliases: ['banir'],
-  description: 'Bane um usuário do servidor.',
+  category: 'Moderação',
+  description: 'Bane um usuário do servidor com painel de confirmação.',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;
-    const member = ctx.member;
-    const guild = ctx.guild;
-
-    if (!guild) return ctx.reply('❌ Este comando só pode ser usado dentro de um servidor.');
-
-    // Verificação de permissão no modo por prefixo
-    if (!isSlash && !member.permissions.has(PermissionFlagsBits.BanMembers)) {
-      return ctx.reply('❌ Você precisa da permissão de **Banir Membros** para usar este comando.');
+    
+    // Verificar permissão de quem executou
+    const member = ctx.guild.members.cache.get(author.id);
+    if (!member.permissions.has(PermissionFlagsBits.BanMembers)) {
+      return ctx.reply({ content: '❌ Você não tem permissão para usar este comando!', ephemeral: true });
     }
 
-    let targetUser;
-    let reason = 'Nenhum motivo fornecido.';
+    let targetUser = null;
+    let reason = 'Nenhum motivo especificado.';
 
     if (isSlash) {
       targetUser = ctx.options.getUser('usuario');
       reason = ctx.options.getString('motivo') || reason;
     } else {
-      targetUser = ctx.mentions.users.first() || (args[0] ? await client.users.fetch(args[0]).catch(() => null) : null);
+      if (ctx.mentions && ctx.mentions.users.size > 0) {
+        targetUser = ctx.mentions.users.first();
+      } else if (args[0]) {
+        targetUser = client.users.cache.get(args[0].replace(/[<@!>]/g, ''));
+      }
       if (args.length > 1) {
-        const reasonArgs = args.filter(a => !a.includes('<@') && a !== targetUser?.id);
-        if (reasonArgs.length > 0) reason = reasonArgs.join(' ');
+        reason = args.slice(1).join(' ');
       }
     }
 
     if (!targetUser) {
-      return ctx.reply('❌ Mencione um usuário válido ou forneça o ID dele.\nExemplo: `!ban @usuario Motivo aqui`');
+      return ctx.reply('❌ Você precisa mencionar ou fornecer o ID de um usuário válido para banir!');
     }
 
     if (targetUser.id === author.id) {
       return ctx.reply('❌ Você não pode banir a si mesmo!');
     }
 
-    if (targetUser.id === guild.ownerId) {
-      return ctx.reply('❌ Você não pode banir o dono do servidor!');
+    if (targetUser.id === client.user.id) {
+      return ctx.reply('❌ Você não pode me banir!');
     }
 
-    const targetMember = await guild.members.fetch(targetUser.id).catch(() => null);
+    // Criar Embed de Confirmação
+    const confirmEmbed = new EmbedBuilder()
+      .setTitle('⚠️ Confirmação de Banimento')
+      .setColor(0xe74c3c)
+      .setDescription(`Você tem certeza que deseja banir o usuário **${targetUser.tag}** (\`${targetUser.id}\`)?\n\n**Motivo:** ${reason}`)
+      .setFooter({ text: `Painel de segurança • Solicitação de ${author.username}` })
+      .setTimestamp();
 
-    if (targetMember) {
-      if (!targetMember.bannable) {
-        return ctx.reply('❌ Eu não tenho permissão para banir este usuário (o cargo dele é superior ou igual ao meu).');
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('confirm_ban')
+        .setLabel('Confirmar Banimento')
+        .setStyle(ButtonStyle.Danger)
+        .setEmoji('🔨'),
+      new ButtonBuilder()
+        .setCustomId('cancel_ban')
+        .setLabel('Cancelar')
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji('✖️')
+    );
+
+    const replyMsg = await ctx.reply({
+      embeds: [confirmEmbed],
+      components: [row],
+      fetchReply: true
+    });
+
+    const collector = replyMsg.createMessageComponentCollector({
+      componentType: ComponentType.Button,
+      time: 30000 // 30 segundos para confirmar
+    });
+
+    collector.on('collect', async (interaction) => {
+      if (interaction.user.id !== author.id) {
+        return interaction.reply({ content: '❌ Apenas quem executou o comando pode interagir com estes botões.', ephemeral: true });
       }
 
-      if (member.roles.highest.position <= targetMember.roles.highest.position && author.id !== guild.ownerId) {
-        return ctx.reply('❌ Você não pode banir um usuário que possui um cargo igual ou superior ao seu!');
+      if (interaction.customId === 'cancel_ban') {
+        const cancelEmbed = new EmbedBuilder()
+          .setTitle('❌ Banimento Cancelado')
+          .setColor(0x95a5a6)
+          .setDescription(`O banimento de **${targetUser.tag}** foi cancelado.`);
+        
+        await interaction.update({ embeds: [cancelEmbed], components: [] });
+        collector.stop();
+        return;
       }
-    }
 
-    try {
-      await guild.members.ban(targetUser.id, { reason: `${reason} (Banido por ${author.tag})` });
-      await ctx.reply(`🔨 **USUÁRIO BANIDO!**\n• **Usuário:** ${targetUser.tag} (\`${targetUser.id}\`)\n• **Motivo:** ${reason}\n• **Autor:** ${author.tag}`);
-    } catch (err) {
-      console.error('Erro ao banir:', err);
-      await ctx.reply('❌ Ocorreu um erro ao tentar banir o usuário.');
-    }
+      if (interaction.customId === 'confirm_ban') {
+        try {
+          await ctx.guild.members.ban(targetUser.id, { reason: `Banido por ${author.tag} — Motivo: ${reason}` });
+
+          const successEmbed = new EmbedBuilder()
+            .setTitle('🔨 Usuário Banido com Sucesso')
+            .setColor(0x2ecc71)
+            .setDescription(`O usuário **${targetUser.tag}** foi banido do servidor.\n\n**Motivo:** ${reason}`)
+            .setTimestamp();
+
+          await interaction.update({ embeds: [successEmbed], components: [] });
+        } catch (err) {
+          console.error(err);
+          await interaction.update({ content: '❌ Não foi possível banir este usuário. Verifique minhas permissões e se o cargo dele é inferior ao meu.', embeds: [], components: [] });
+        }
+        collector.stop();
+      }
+    });
+
+    collector.on('end', async (collected, reasonTime) => {
+      if (reasonTime === 'time') {
+        try {
+          const timeoutEmbed = new EmbedBuilder()
+            .setTitle('⏰ Tempo Expirado')
+            .setColor(0x7f8c8d)
+            .setDescription('O tempo para confirmar o banimento expirou.');
+          await replyMsg.edit({ embeds: [timeoutEmbed], components: [] });
+        } catch (e) {}
+      }
+    });
   }
 };
