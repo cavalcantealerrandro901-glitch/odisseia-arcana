@@ -7,4 +7,4 @@ const GuildSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Guild', GuildSchema);
+module.exports = mongoose.models.Guild || mongoose.model('Guild', GuildSchema);
