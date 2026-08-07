@@ -2,33 +2,31 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentTyp
 const { getGif } = require('./gifs');
 
 /**
- * Gerencia todas as interações do bot (Tapa, Abraço, Soco, Carinho, Morder)
+ * Gerencia as interações e deforma uma cadeia de respostas marcando mensagens anteriores
  */
 async function executarInteracao({ contexto, autor, alvo, client, endpoint, nomeAcao, emoji, cor, isSlash }) {
-  // 🤖 CENÁRIO 1: A ação foi feita contra o próprio BOT (Aeternos)
+  if (isSlash) await contexto.deferReply();
+
+  const gifInicial = getGif(endpoint);
+  const embedInicial = new EmbedBuilder()
+    .setDescription(`${emoji} **${autor.username}** deu ${nomeAcao} **${alvo.username}**!`)
+    .setColor(cor)
+    .setTimestamp();
+
+  if (gifInicial) embedInicial.setImage(gifInicial);
+
+  // 🤖 CENÁRIO 1: Ação feita contra o próprio BOT (Aeternos)
   if (alvo.id === client.user.id) {
-    if (isSlash) await contexto.deferReply();
-
-    const gifInicial = getGif(endpoint);
-    const embedInicial = new EmbedBuilder()
-      .setDescription(`${emoji} **${autor.username}** deu ${nomeAcao} **${client.user.username}**!`)
-      .setColor(cor)
-      .setTimestamp();
-
-    if (gifInicial) embedInicial.setImage(gifInicial);
-
     const payloadInicial = {
       content: `<@${autor.id}> <@${client.user.id}>`,
       embeds: [embedInicial]
     };
 
-    if (isSlash) {
-      await contexto.editReply(payloadInicial);
-    } else {
-      await contexto.reply(payloadInicial);
-    }
+    const mensagemInicial = isSlash 
+      ? await contexto.editReply(payloadInicial)
+      : await contexto.reply(payloadInicial);
 
-    // O Bot não deixa barato: Devolve a ação automaticamente em 1.5s
+    // O Bot devolve em 1.5s marcando a mensagem original enviada
     setTimeout(async () => {
       const gifDevolucao = getGif(endpoint);
       const embedDevolucao = new EmbedBuilder()
@@ -38,29 +36,17 @@ async function executarInteracao({ contexto, autor, alvo, client, endpoint, nome
 
       if (gifDevolucao) embedDevolucao.setImage(gifDevolucao);
 
-      const payloadDevolucao = {
+      await contexto.channel.send({
         content: `<@${autor.id}>`,
-        embeds: [embedDevolucao]
-      };
-
-      if (isSlash) {
-        await contexto.followUp(payloadDevolucao).catch(() => {});
-      } else {
-        await contexto.channel.send(payloadDevolucao).catch(() => {});
-      }
+        embeds: [embedDevolucao],
+        reply: { messageReference: mensagemInicial.id } // Marca a mensagem anterior!
+      }).catch(() => {});
     }, 1500);
 
     return;
   }
 
-  // 👥 CENÁRIO 2: Interação normal entre dois usuários (com Botão Devolver)
-  if (isSlash) await contexto.deferReply();
-
-  let currentAuthor = autor;
-  let currentTarget = alvo;
-
-  const gif = getGif(endpoint);
-
+  // 👥 CENÁRIO 2: Interação entre Usuários (Cadeia de devoluções marcando a mensagem antiga)
   const button = new ButtonBuilder()
     .setCustomId('devolver_acao')
     .setLabel('Devolver 🔄')
@@ -68,55 +54,78 @@ async function executarInteracao({ contexto, autor, alvo, client, endpoint, nome
 
   const row = new ActionRowBuilder().addComponents(button);
 
-  const embed = new EmbedBuilder()
-    .setDescription(`${emoji} **${currentAuthor.username}** deu ${nomeAcao} **${currentTarget.username}**!`)
-    .setColor(cor)
-    .setTimestamp();
-
-  if (gif) embed.setImage(gif);
-
-  const payload = {
-    content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
-    embeds: [embed],
+  const payloadInicial = {
+    content: `<@${autor.id}> <@${alvo.id}>`,
+    embeds: [embedInicial],
     components: [row]
   };
 
-  const mensagem = isSlash ? await contexto.editReply(payload) : await contexto.reply(payload);
+  const mensagemInicial = isSlash 
+    ? await contexto.editReply(payloadInicial)
+    : await contexto.reply(payloadInicial);
 
-  const collector = mensagem.createMessageComponentCollector({
+  // Inicia o loop de devolucao
+  criarColetorDevolucao(mensagemInicial, autor, alvo, endpoint, nomeAcao, emoji, cor);
+}
+
+function criarColetorDevolucao(mensagemAlvo, autorAtual, alvoAtual, endpoint, nomeAcao, emoji, cor) {
+  const collector = mensagemAlvo.createMessageComponentCollector({
     componentType: ComponentType.Button,
     time: 360000
   });
 
   collector.on('collect', async (i) => {
-    if (i.user.id !== currentTarget.id) {
+    if (i.user.id !== alvoAtual.id) {
       return i.reply({ content: '❌ Apenas quem recebeu a ação pode devolver!', flags: [MessageFlags.Ephemeral] });
     }
 
-    const temp = currentAuthor;
-    currentAuthor = currentTarget;
-    currentTarget = temp;
+    // 1. Marca o botão da mensagem anterior como desativado
+    const buttonDesativado = new ButtonBuilder()
+      .setCustomId('devolver_acao_done')
+      .setLabel('Devolvido! 🔄')
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(true);
 
+    await i.update({ components: [new ActionRowBuilder().addComponents(buttonDesativado)] }).catch(() => {});
+
+    // 2. Prepara o novo embed e botão para a réplica
     const novoGif = getGif(endpoint);
-
     const novoEmbed = new EmbedBuilder()
-      .setDescription(`${emoji} **${currentAuthor.username}** devolveu ${nomeAcao} **${currentTarget.username}**!`)
+      .setDescription(`${emoji} **${alvoAtual.username}** devolveu ${nomeAcao} **${autorAtual.username}**!`)
       .setColor(cor)
       .setTimestamp();
 
     if (novoGif) novoEmbed.setImage(novoGif);
 
-    await i.update({
-      content: `<@${currentAuthor.id}> <@${currentTarget.id}>`,
+    const novoBotao = new ButtonBuilder()
+      .setCustomId('devolver_acao')
+      .setLabel('Devolver 🔄')
+      .setStyle(ButtonStyle.Primary);
+
+    const novaRow = new ActionRowBuilder().addComponents(novoBotao);
+
+    // 3. Envia a NOVA mensagem RESPONDENDO/MARCANDO a mensagem antiga
+    const novaMensagem = await i.channel.send({
+      content: `<@${alvoAtual.id}> <@${autorAtual.id}>`,
       embeds: [novoEmbed],
-      components: [row]
+      components: [novaRow],
+      reply: { messageReference: mensagemAlvo.id } // <--- Responde diretamente a mensagem anterior
     });
+
+    // 4. Continua a corrente (inverte o alvo com o autor na nova mensagem)
+    criarColetorDevolucao(novaMensagem, alvoAtual, autorAtual, endpoint, nomeAcao, emoji, cor);
   });
 
-  collector.on('end', () => {
-    button.setDisabled(true);
-    const disabledRow = new ActionRowBuilder().addComponents(button);
-    mensagem.edit({ components: [disabledRow] }).catch(() => {});
+  collector.on('end', (collected, reason) => {
+    if (reason !== 'messageDelete') {
+      const buttonExpirado = new ButtonBuilder()
+        .setCustomId('devolver_acao_exp')
+        .setLabel('Devolver 🔄')
+        .setStyle(ButtonStyle.Secondary)
+        .setDisabled(true);
+
+      mensagemAlvo.edit({ components: [new ActionRowBuilder().addComponents(buttonExpirado)] }).catch(() => {});
+    }
   });
 }
 

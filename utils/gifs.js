@@ -1,53 +1,48 @@
-// Banco de imagens e GIFs centralizado do bot Aeternos (Links de CDNs estáveis)
+// Banco de GIFs Animados Diretos (Giphy CDN)
 const gifs = {
   hug: [
-    'https://i.imgur.com/r9aU297.gif',
-    'https://i.imgur.com/221i114.gif',
-    'https://i.imgur.com/4oAio2W.gif',
-    'https://i.imgur.com/3j3gA9s.gif'
+    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Z2Z3J3MnB4ZzNzY3RwYXhwbTV2Z2kzcXZkZXZ3ZjZxaDlsZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3M4NpbLCTxBqU/giphy.gif',
+    'https://media.giphy.com/media/l0GE2O6U8yL3lqRtm/giphy.gif',
+    'https://media.giphy.com/media/z1QQ47776qXTO/giphy.gif',
+    'https://media.giphy.com/media/10gA888yL2WQ2A/giphy.gif'
   ],
   kiss: [
-    'https://i.imgur.com/g11311s.gif',
-    'https://i.imgur.com/v10022s.gif',
-    'https://i.imgur.com/33aA11z.gif'
+    'https://media.giphy.com/media/G3va31oEEnIkM/giphy.gif',
+    'https://media.giphy.com/media/kC397rpnJ3M8E/giphy.gif',
+    'https://media.giphy.com/media/FqSPe48M35MBy/giphy.gif'
   ],
   slap: [
-    'https://i.imgur.com/mE13a0S.gif',
-    'https://i.imgur.com/43110aS.gif',
-    'https://i.imgur.com/2aB001x.gif'
+    'https://media.giphy.com/media/Gf3AUz3eBNbTW/giphy.gif',
+    'https://media.giphy.com/media/j3iGKfXRKlLqw/giphy.gif',
+    'https://media.giphy.com/media/Zau0yRL17uzdK/giphy.gif'
   ],
   pat: [
-    'https://i.imgur.com/21aB001.gif',
-    'https://i.imgur.com/32aB002.gif',
-    'https://i.imgur.com/45aB003.gif'
+    'https://media.giphy.com/media/5tmRHw632f21D4Gehj/giphy.gif',
+    'https://media.giphy.com/media/109ltuoSQT212w/giphy.gif'
   ],
   punch: [
-    'https://i.imgur.com/12aB004.gif',
-    'https://i.imgur.com/22aB005.gif'
+    'https://media.giphy.com/media/119i1ebWTm3px6/giphy.gif',
+    'https://media.giphy.com/media/l1J3G5lf06vi58EIE/giphy.gif'
   ],
   bite: [
-    'https://i.imgur.com/32aB006.gif',
-    'https://i.imgur.com/42aB007.gif'
+    'https://media.giphy.com/media/oR7OedP8kO48U/giphy.gif'
   ],
   dance: [
-    'https://i.imgur.com/52aB008.gif',
-    'https://i.imgur.com/62aB009.gif'
+    'https://media.giphy.com/media/blSTtZehjAZ8I/giphy.gif',
+    'https://media.giphy.com/media/13m24a61m383E4/giphy.gif'
   ],
   wave: [
-    'https://i.imgur.com/72aB010.gif'
+    'https://media.giphy.com/media/dzaUX7CAG0Ihi/giphy.gif'
   ]
 };
 
 /**
- * Retorna uma GIF aleatória de acordo com o tipo da ação
- * @param {string} action - Nome da ação (hug, kiss, slap, pat, punch, bite, dance, wave)
- * @returns {string|null} URL da imagem
+ * Retorna uma GIF animada aleatória de acordo com o tipo da ação
  */
 function getGif(action) {
   const list = gifs[action];
   if (!list || list.length === 0) return null;
-  const randomIndex = Math.floor(Math.random() * list.length);
-  return list[randomIndex];
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 module.exports = { getGif, gifs };
