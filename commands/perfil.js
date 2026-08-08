@@ -14,19 +14,13 @@ const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy',
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('perfil')
-    .setDescription('Exibe seu card de perfil e estatísticas de economia.')
-    .setNameLocalizations({
-      'en-US': 'profile',
-      'en-GB': 'profile'
-    })
-    .setDescriptionLocalizations({
-      'en-US': 'Displays your profile card and economy stats.',
-      'en-GB': 'Displays your profile card and economy stats.'
-    })
+    .setDescription('Exibe seu card de perfil estilizado.')
+    .setNameLocalizations({ 'en-US': 'profile' })
+    .setDescriptionLocalizations({ 'en-US': 'Displays your styled profile card.' })
     .addUserOption(option =>
       option.setName('membro')
-        .setDescription('Membro para ver o perfil (opcional)')
-        .setNameLocalizations({ 'en-US': 'member', 'en-GB': 'member' })
+        .setDescription('Membro para ver o perfil')
+        .setNameLocalizations({ 'en-US': 'member' })
         .setRequired(false)
     ),
   name: 'perfil',
@@ -40,7 +34,7 @@ module.exports = {
     let targetUser;
     if (isSlash) {
       targetUser = ctx.options.getUser('membro') || author;
-      await ctx.deferReply(); // O canvas leva um tempinho para desenhar
+      await ctx.deferReply(); 
     } else {
       targetUser = ctx.mentions.users.first() || (args[0] ? await client.users.fetch(args[0]).catch(() => null) : null) || author;
     }
@@ -50,22 +44,34 @@ module.exports = {
       userData = await UserEconomy.create({ userId: targetUser.id, guildId: guild.id, balance: 0 });
     }
 
-    // --- INÍCIO DO CANVAS (Criação do Card) ---
+    // --- INÍCIO DO CANVAS ---
     const canvas = createCanvas(800, 250);
     const context = canvas.getContext('2d');
 
-    // Fundo escuro do card
-    context.fillStyle = '#18191c';
+    // 1. Carregar a IMAGEM DE FUNDO (O seu Card)
+    // Se você tiver um link direto da imagem, coloque aqui embaixo no lugar dessa URL genérica:
+    const backgroundURL = 'https://photos.app.goo.gl/PiEPgFSTDLGLkLhs7'; // Substitua pelo link do seu card!
+    
+    try {
+      const background = await loadImage(backgroundURL);
+      context.drawImage(background, 0, 0, canvas.width, canvas.height);
+    } catch (err) {
+      // Se der erro na imagem, fica preto
+      context.fillStyle = '#18191c';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // 2. Camada escura transparente para destacar o texto
+    context.fillStyle = 'rgba(0, 0, 0, 0.6)'; // 60% escuro
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Detalhe de cor lateral (Roxo Aeternos)
-    context.fillStyle = '#9b59b6';
-    context.fillRect(0, 0, 15, canvas.height);
-
-    // Desenhar o Avatar Redondo
+    // 3. Desenhar o Avatar Redondo com borda
     context.save();
     context.beginPath();
     context.arc(125, 125, 75, 0, Math.PI * 2, true);
+    context.lineWidth = 8;
+    context.strokeStyle = '#9b59b6'; // Borda roxa
+    context.stroke();
     context.closePath();
     context.clip();
 
@@ -74,36 +80,30 @@ module.exports = {
     context.drawImage(avatar, 50, 50, 150, 150);
     context.restore();
 
-    // Borda ao redor do avatar
-    context.beginPath();
-    context.arc(125, 125, 75, 0, Math.PI * 2, true);
-    context.lineWidth = 6;
-    context.strokeStyle = '#9b59b6';
-    context.stroke();
-
-    // Nome do Usuário
+    // 4. Textos do Card
+    // Nome
     context.fillStyle = '#ffffff';
     context.font = 'bold 38px sans-serif';
-    context.fillText(targetUser.username, 230, 95);
+    context.fillText(targetUser.username, 240, 95);
 
-    // Subtítulo
-    context.fillStyle = '#a1a3a6';
-    context.font = '22px sans-serif';
-    context.fillText('Informações de Economia', 230, 130);
+    // Separador
+    context.fillStyle = '#9b59b6';
+    context.fillRect(240, 115, 500, 3);
 
     // Informações: Carteira, Banco e Sequência
-    context.fillStyle = '#ffffff';
+    context.fillStyle = '#f1c40f'; // Amarelo para dinheiro
     context.font = 'bold 24px sans-serif';
+    context.fillText(`🪙 Carteira: ${userData.balance.toLocaleString()}`, 240, 160);
     
-    // Alinhamento para simular colunas
-    context.fillText(`🪙 Carteira: ${userData.balance.toLocaleString()}`, 230, 185);
-    context.fillText(`🏦 Banco: ${userData.bank.toLocaleString()}`, 520, 185);
-    context.fillText(`🔥 Fogo Diário: ${userData.dailyStreak || 0} dias`, 230, 225);
+    context.fillStyle = '#3498db'; // Azul para banco
+    context.fillText(`🏦 Banco: ${userData.bank.toLocaleString()}`, 520, 160);
+    
+    context.fillStyle = '#e74c3c'; // Vermelho para sequência
+    context.fillText(`🔥 Fogo Diário: ${userData.dailyStreak || 0} dias`, 240, 205);
 
-    // Criar o anexo (imagem final)
+    // Criar o anexo e enviar
     const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'card_perfil.png' });
 
-    // Enviar a resposta
     if (isSlash) {
       return ctx.editReply({ files: [attachment] });
     } else {
