@@ -244,7 +244,9 @@ client.on('messageCreate', async message => {
   }
 });
 
-// Listeners de Logs
+// --- SISTEMA DE LOGS COMPLETO E ATUALIZADO ---
+
+// 1. Mensagem Deletada
 client.on('messageDelete', async message => {
   if (!message.guild || message.author?.bot) return;
   const embed = new EmbedBuilder()
@@ -259,6 +261,7 @@ client.on('messageDelete', async message => {
   await sendLog(message.guild, embed);
 });
 
+// 2. Mensagem Editada
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   if (!newMessage.guild || newMessage.author?.bot) return;
   if (oldMessage.content === newMessage.content) return;
@@ -275,7 +278,9 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
   await sendLog(newMessage.guild, embed);
 });
 
+// 3. Alteração de Apelido ou Foto de Perfil (Avatar)
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
+  // Apelido alterado
   if (oldMember.nickname !== newMember.nickname) {
     const embed = new EmbedBuilder()
       .setTitle('👤 Apelido Alterado')
@@ -290,6 +295,25 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   }
 });
 
+client.on('userUpdate', async (oldUser, newUser) => {
+  // Foto de perfil alterada
+  if (oldUser.avatar !== newUser.avatar) {
+    // Busca em quais guilds o usuário está para notificar os logs corretos
+    for (const [, guild] of client.guilds.cache) {
+      if (guild.members.cache.has(newUser.id)) {
+        const embed = new EmbedBuilder()
+          .setTitle('🖼️ Foto de Perfil Alterada')
+          .setColor(0x9b59b6)
+          .setDescription(`O usuário **${newUser.tag}** (\`${newUser.id}\`) alterou sua foto de perfil.`)
+          .setThumbnail(newUser.displayAvatarURL({ dynamic: true, size: 512 }))
+          .setTimestamp();
+        await sendLog(guild, embed);
+      }
+    }
+  }
+});
+
+// 4. Membro Banido
 client.on('guildBanAdd', async ban => {
   const embed = new EmbedBuilder()
     .setTitle('🔨 Membro Banido')
@@ -299,6 +323,33 @@ client.on('guildBanAdd', async ban => {
   await sendLog(ban.guild, embed);
 });
 
+// 5. Membro Expulso (Kick) ou Saiu do Servidor
+client.on('guildMemberRemove', async member => {
+  try {
+    const fetchedLogs = await member.guild.fetchAuditLogs({
+      limit: 1,
+      type: 20, // MEMBER_KICK
+    });
+    const kickLog = fetchedLogs.entries.first();
+
+    if (kickLog && kickLog.target.id === member.id && (Date.now() - kickLog.createdTimestamp < 5000)) {
+      const embed = new EmbedBuilder()
+        .setTitle('👢 Membro Expulso (Kick)')
+        .setColor(0xe67e22)
+        .addFields(
+          { name: 'Usuário', value: `${member.user.tag} (\`${member.id}\`)`, inline: true },
+          { name: 'Moderador', value: `${kickLog.executor} (\`${kickLog.executor.id}\`)`, inline: true },
+          { name: 'Motivo', value: kickLog.reason || 'Nenhum motivo informado.', inline: false }
+        )
+        .setTimestamp();
+      await sendLog(member.guild, embed);
+    }
+  } catch (err) {
+    // Ignora se não houver permissão de audit log
+  }
+});
+
+// 6. Criação e Exclusão de Canal
 client.on('channelCreate', async channel => {
   if (!channel.guild) return;
   const embed = new EmbedBuilder()
@@ -322,6 +373,28 @@ client.on('channelDelete', async channel => {
   await sendLog(channel.guild, embed);
 });
 
+// 7. Canal Editado
+client.on('channelUpdate', async (oldChannel, newChannel) => {
+  if (!newChannel.guild) return;
+  let changes = [];
+  if (oldChannel.name !== newChannel.name) changes.push(`**Nome:** \`${oldChannel.name}\` ➔ \`${newChannel.name}\``);
+  if (oldChannel.topic !== newChannel.topic) changes.push(`**Tópico alterado.**`);
+  if (oldChannel.rateLimitPerUser !== newChannel.rateLimitPerUser) changes.push(`**Modo lento alterado.**`);
+
+  if (changes.length > 0) {
+    const embed = new EmbedBuilder()
+      .setTitle('🛠️ Canal Editado')
+      .setColor(0x3498db)
+      .addFields(
+        { name: 'Canal', value: `${newChannel} (\`${newChannel.id}\`)`, inline: false },
+        { name: 'Modificações', value: changes.join('\n'), inline: false }
+      )
+      .setTimestamp();
+    await sendLog(newChannel.guild, embed);
+  }
+});
+
+// 8. Criação e Exclusão de Cargo
 client.on('roleCreate', async role => {
   const embed = new EmbedBuilder()
     .setTitle('✨ Cargo Criado')
