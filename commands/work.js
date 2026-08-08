@@ -2,7 +2,6 @@ const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 const mongoose = require('mongoose');
 
-// Atualizando o Schema para incluir o tempo do último trabalho (lastWork)
 const userEconomySchema = new mongoose.Schema({
   userId: String,
   guildId: String,
@@ -12,7 +11,6 @@ const userEconomySchema = new mongoose.Schema({
 });
 const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy', userEconomySchema);
 
-// Frases aleatórias de trabalho
 const workExpressions = [
   "Você caçou monstros na floresta sombria",
   "Você ajudou o ferreiro a forjar espadas",
@@ -27,14 +25,8 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('work')
     .setDescription('Trabalhe para ganhar almas na sua carteira.')
-    .setNameLocalizations({
-      'en-US': 'work',
-      'en-GB': 'work'
-    })
-    .setDescriptionLocalizations({
-      'en-US': 'Work to earn souls for your wallet.',
-      'en-GB': 'Work to earn souls for your wallet.'
-    }),
+    .setNameLocalizations({ 'en-US': 'work' })
+    .setDescriptionLocalizations({ 'en-US': 'Work to earn souls for your wallet.' }),
   name: 'work',
   aliases: ['trabalhar', 'w'],
   category: 'Economia',
@@ -45,13 +37,11 @@ module.exports = {
 
     if (isSlash) await ctx.deferReply();
 
-    // 1. Buscar ou criar perfil no banco de dados
     let userData = await UserEconomy.findOne({ userId: author.id, guildId: guild.id });
     if (!userData) {
       userData = await UserEconomy.create({ userId: author.id, guildId: guild.id, balance: 0, lastWork: 0 });
     }
 
-    // 2. Sistema de Cooldown (Tempo de espera de 2 horas = 7200000 ms)
     const cooldownTime = 2 * 60 * 60 * 1000;
     const timeSinceLastWork = Date.now() - (userData.lastWork || 0);
 
@@ -64,16 +54,14 @@ module.exports = {
       return isSlash ? ctx.editReply(msgCooldown) : ctx.reply(msgCooldown);
     }
 
-    // 3. Calcular ganhos aleatórios e escolher frase
-    const earnings = Math.floor(Math.random() * (500 - 100 + 1)) + 100; // Entre 100 e 500 almas
+    const earnings = Math.floor(Math.random() * (500 - 100 + 1)) + 100;
     const randomExpression = workExpressions[Math.floor(Math.random() * workExpressions.length)];
 
-    // 4. Salvar novos dados
     userData.balance += earnings;
     userData.lastWork = Date.now();
     await userData.save();
 
-    // --- INÍCIO DO CANVAS (Card de Trabalho) ---
+    // --- INÍCIO DO CANVAS ---
     const canvas = createCanvas(700, 200);
     const context = canvas.getContext('2d');
 
@@ -109,10 +97,10 @@ module.exports = {
     context.font = 'bold 32px sans-serif';
     context.fillText('Trabalho Concluído!', 190, 70);
 
-    // A Frase de Expressão
+    // A Frase de Expressão (Limite de 480px para não vazar do card)
     context.fillStyle = '#a1a3a6';
     context.font = '20px sans-serif';
-    context.fillText(`${randomExpression} e ganhou:`, 190, 110);
+    context.fillText(`${randomExpression} e ganhou:`, 190, 110, 480); 
 
     // O Valor Ganho
     context.fillStyle = '#2ecc71';
@@ -125,15 +113,14 @@ module.exports = {
     context.textAlign = 'right';
     context.fillText(`Saldo Atual: ${userData.balance.toLocaleString()}`, 670, 180);
 
-    // --- FIM DO CANVAS ---
-
+    // Criar o anexo
     const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'card_work.png' });
-    const textMessage = `✨ **${author.username}**, ${randomExpression.toLowerCase()}!`;
 
+    // Enviando APENAS o card, sem texto fora dele
     if (isSlash) {
-      return ctx.editReply({ content: textMessage, files: [attachment] });
+      return ctx.editReply({ files: [attachment] });
     } else {
-      return ctx.reply({ content: textMessage, files: [attachment] });
+      return ctx.reply({ files: [attachment] });
     }
   }
 };
