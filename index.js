@@ -5,12 +5,12 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 
-// Servidor web básico para o Render não reclamar de portas
+// Servidor web para o Render
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.status(200).send('Odisseia Arcana Bot está online e operacional!');
+  res.status(200).send('Aeternos Bot está online e operacional!');
 });
 
 app.listen(PORT, () => {
@@ -29,12 +29,12 @@ const client = new Client({
 client.commands = new Collection();
 client.aliases = new Collection();
 
-// Conectar ao MongoDB
+// Conexão MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('📦 Conectado ao MongoDB com sucesso!'))
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
-// Schema do AFK integrado para garantir funcionamento automático
+// Schema do AFK integrado
 const afkSchema = new mongoose.Schema({
   userId: String,
   guildId: String,
@@ -43,7 +43,7 @@ const afkSchema = new mongoose.Schema({
 });
 const Afk = mongoose.models.Afk || mongoose.model('Afk', afkSchema);
 
-// Carregar comandos da pasta commands (ignorando backups ou arquivos inválidos)
+// Carregar Comandos da pasta commands
 const commandsPath = path.join(__dirname, 'commands');
 if (fs.existsSync(commandsPath)) {
   const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js') && !file.endsWith('.bak'));
@@ -67,9 +67,8 @@ if (fs.existsSync(commandsPath)) {
 }
 
 client.on('clientReady', async () => {
-  console.log(`🤖 Bot ligado como ${client.user.tag}!`);
+  console.log(`🤖 Bot Aeternos ligado como ${client.user.tag}!`);
 
-  // Registrar comandos Slash globais
   const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
   const commandsData = client.commands.map(cmd => cmd.data.toJSON());
 
@@ -109,7 +108,7 @@ client.on('interactionCreate', async interaction => {
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
 
-  // 1. Sistema de AFK: Verificar se quem enviou a mensagem estava AFK
+  // 1. Sistema de AFK (Remover ao falar)
   try {
     const userAfk = await Afk.findOne({ userId: message.author.id, guildId: message.guild.id });
     if (userAfk) {
@@ -121,7 +120,7 @@ client.on('messageCreate', async message => {
       setTimeout(() => msgBack.delete().catch(() => {}), 5000);
     }
 
-    // 2. Sistema de AFK: Verificar se mencionou alguém que está AFK
+    // 2. Sistema de AFK (Avisar se mencionou alguém AFK)
     if (message.mentions.users.size > 0) {
       for (const [id, user] of message.mentions.users) {
         const targetAfk = await Afk.findOne({ userId: id, guildId: message.guild.id });
@@ -147,7 +146,7 @@ client.on('messageCreate', async message => {
     console.error('Erro no sistema AFK:', afkErr);
   }
 
-  // 3. Comandos por Prefixo
+  // 3. Comandos por Prefixo e Tratamento de Erros/Comando Inexistente
   const prefix = process.env.PREFIX_BOT || '!';
   if (!message.content.startsWith(prefix)) return;
 
@@ -155,7 +154,10 @@ client.on('messageCreate', async message => {
   const commandName = args.shift().toLowerCase();
 
   const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
-  if (!command) return;
+  
+  if (!command) {
+    return message.reply(`❌ O comando \`${prefix}${commandName}\` não existe. Use \`${prefix}ajuda\` (ou o comando \`/ajuda\`) para ver a lista completa de comandos disponíveis!`);
+  }
 
   try {
     await command.execute(message, client, false, args);
