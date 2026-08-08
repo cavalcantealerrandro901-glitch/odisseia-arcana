@@ -36,9 +36,9 @@ function getJobInfo(xp) {
 }
 
 module.exports = {
-  // Configuração do Slash Command (/almas)
+  // Configuração do Slash Command (/ver-almas)
   data: new SlashCommandBuilder()
-    .setName('almas')
+    .setName('ver-almas')
     .setDescription('Veja o seu saldo de almas ou o de outro usuário.')
     .addUserOption(option =>
       option.setName('usuario')
@@ -46,7 +46,7 @@ module.exports = {
         .setRequired(false)
     ),
   
-  // Configuração para Prefixo (!atm, !bal, !saldo)
+  // Configuração para Prefixo (!atm, !bal, !saldo, !almas)
   name: 'atm',
   aliases: ['bal', 'saldo', 'carteira', 'almas'],
   category: 'Economia',
