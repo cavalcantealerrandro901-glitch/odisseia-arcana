@@ -62,7 +62,18 @@ const logSchema = new mongoose.Schema({
 });
 const LogConfig = mongoose.models.LogConfig || mongoose.model('LogConfig', logSchema);
 
-// Carregar Comandos da pasta commands
+// Dicionário de traduções automáticas para os comandos
+const translations = {
+  'ajuda': { en: 'help', desc: 'Shows the interactive help center.' },
+  'work': { en: 'work', desc: 'Work to earn coins for your wallet.' },
+  'addmoney': { en: 'addmoney', desc: 'Adds coins to a member balance.' },
+  'perfil': { en: 'profile', desc: 'Displays your economy profile.' },
+  'enviar': { en: 'send', desc: 'Sends an official message through the bot.' },
+  'logs': { en: 'logs', desc: 'Configures the server log system.' },
+  'limpar': { en: 'clear', desc: 'Clears messages from the channel.' }
+};
+
+// Carregar Comandos da pasta commands com automação de tradução
 const commandsPath = path.join(__dirname, 'commands');
 if (fs.existsSync(commandsPath)) {
   const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js') && !file.endsWith('.bak'));
@@ -70,6 +81,15 @@ if (fs.existsSync(commandsPath)) {
     const filePath = path.join(commandsPath, file);
     try {
       const command = require(filePath);
+
+      // Automação: Injeta as localizações em inglês automaticamente
+      if (command.data && translations[command.data.name]) {
+        const t = translations[command.data.name];
+        if (typeof command.data.setNameLocalizations === 'function') {
+          command.data.setNameLocalizations({ 'en-US': t.en, 'en-GB': t.en });
+        }
+      }
+
       if ('data' in command && 'execute' in command) {
         client.commands.set(command.data.name, command);
         if (command.aliases && Array.isArray(command.aliases)) {
