@@ -45,7 +45,7 @@ module.exports = {
         `Olá, **${author.username}**!\n\n` +
         `🔥 **Sua Sequência Atual:** \`${streak} dia(s)\`\n` +
         `📊 **Status:** ${available ? '🟢 **Disponível para resgate!**' : '🔴 **Já coletado hoje. Volte à meia-noite!**'}\n\n` +
-        `*Resgate todos os dias para acumular uma sequência épica e garantir prêmios de até **60.000 moedas**!*`
+        `*A persistência é a chave para grandes conquistas; mantenha sua constância diária firme e inabalável para desbloquear recompensas cada vez mais valiosas e acumular uma fortuna lendária na economia do servidor!*`
       )
       .setColor(available ? 0x2ecc71 : 0xe74c3c)
       .setThumbnail(author.displayAvatarURL())
