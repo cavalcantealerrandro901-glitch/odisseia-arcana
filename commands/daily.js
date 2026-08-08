@@ -12,7 +12,6 @@ const userEconomySchema = new mongoose.Schema({
 });
 const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy', userEconomySchema);
 
-// Função para verificar se já virou o dia (reset à meia-noite)
 function isNewDay(lastTimestamp) {
   if (!lastTimestamp) return true;
   const lastDate = new Date(lastTimestamp);
@@ -34,7 +33,7 @@ module.exports = {
 
     let userData = await UserEconomy.findOne({ userId: author.id, guildId: guild.id });
     if (!userData) {
-      userData = new UserEconomy({ userId: author.id, guildId: guild.id, balance: 500 });
+      userData = await UserEconomy.create({ userId: author.id, guildId: guild.id, balance: 500 });
     }
 
     const available = isNewDay(userData.lastDaily);
@@ -72,11 +71,14 @@ module.exports = {
     collector.on('collect', async i => {
       if (i.customId === 'claim_daily_btn') {
         let freshData = await UserEconomy.findOne({ userId: author.id, guildId: guild.id });
+        if (!freshData) {
+          freshData = await UserEconomy.create({ userId: author.id, guildId: guild.id, balance: 500 });
+        }
+
         if (!isNewDay(freshData.lastDaily)) {
           return await i.reply({ content: '❌ Você já resgatou sua recompensa hoje!', ephemeral: true });
         }
 
-        // Verifica se perdeu o dia (intervalo maior que 1 dia entre as reivindicações)
         if (freshData.lastDaily) {
           const lastDate = new Date(freshData.lastDaily);
           const now = new Date();
@@ -85,7 +87,7 @@ module.exports = {
           const diffDays = Math.round((currentMidnight - lastMidnight) / (1000 * 60 * 60 * 24));
 
           if (diffDays > 1) {
-            freshData.dailyStreak = 1; // Reseta se passou mais de 1 dia sem coletar
+            freshData.dailyStreak = 1;
           } else {
             freshData.dailyStreak = (freshData.dailyStreak || 0) + 1;
           }
@@ -93,13 +95,12 @@ module.exports = {
           freshData.dailyStreak = 1;
         }
 
-        // Cálculo do prêmio progressivo (de 2k até o teto de 60k)
         let reward = 2000 + (freshData.dailyStreak - 1) * 2000;
         if (reward > 60000) reward = 60000;
 
         freshData.balance += reward;
         freshData.lastDaily = Date.now();
-        freshData.lastNotified = new Date().toDateString(); // Marca como notificado hoje
+        freshData.lastNotified = new Date().toDateString();
         await freshData.save();
 
         const successEmbed = new EmbedBuilder()
