@@ -1,8 +1,8 @@
-const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
+const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 const mongoose = require('mongoose');
 
-// Schema atualizado com XP
+// Schema com XP e Cooldown
 const userEconomySchema = new mongoose.Schema({
   userId: String,
   guildId: String,
@@ -37,7 +37,7 @@ function getJobInfo(xp) {
   return { currentJob, nextJob };
 }
 
-// Primeiras mensagens (Ação realizada)
+// Mensagens principais
 const workExpressions = [
   "Você caçou monstros na floresta sombria",
   "Você ajudou o ferreiro a forjar espadas",
@@ -48,7 +48,7 @@ const workExpressions = [
   "Você trabalhou como guarda na capital"
 ];
 
-// Segundas mensagens (Mensagem extra logo embaixo)
+// Mensagens secundárias
 const subExpressions = [
   "O mestre da guilda ficou impressionado com seu esforço!",
   "Você aprendeu novos truques e aprimorou suas habilidades.",
@@ -78,15 +78,16 @@ module.exports = {
       userData = await UserEconomy.create({ userId: author.id, guildId: guild.id, balance: 0, lastWork: 0, xp: 0 });
     }
 
-    const cooldownTime = 2 * 60 * 60 * 1000; // 2 horas
+    // Cooldown de 20 Minutos = 1.200.000 ms
+    const cooldownTime = 20 * 60 * 1000;
     const timeSinceLastWork = Date.now() - (userData.lastWork || 0);
 
     if (timeSinceLastWork < cooldownTime) {
       const timeLeft = cooldownTime - timeSinceLastWork;
-      const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const minutes = Math.floor(timeLeft / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
       
-      const msgCooldown = `⏳ Você está cansado! Descanse por mais **${hours}h e ${minutes}m** antes de trabalhar novamente.`;
+      const msgCooldown = `⏳ Você está exausto! Descanse por mais **${minutes}m e ${seconds}s** antes de trabalhar novamente.`;
       return isSlash ? ctx.editReply(msgCooldown) : ctx.reply(msgCooldown);
     }
 
@@ -146,13 +147,13 @@ module.exports = {
     context.textAlign = 'right';
     context.fillText(`🏅 ${currentJob.name}`, 720, 55);
 
-    // 1ª Mensagem (Ação principal)
+    // 1ª Mensagem
     context.textAlign = 'left';
     context.fillStyle = '#a1a3a6';
     context.font = '19px sans-serif';
     context.fillText(`${randomExpression}`, 190, 92, 520);
 
-    // 2ª Mensagem (Nova mensagem extra solicitada)
+    // 2ª Mensagem
     context.fillStyle = '#3498db';
     context.font = 'italic 17px sans-serif';
     context.fillText(`💬 "${randomSubExpression}"`, 190, 122, 520);
@@ -178,6 +179,24 @@ module.exports = {
 
     const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'card_work.png' });
 
+    // --- AGENDADOR DE MENSAGEM NO PV (20 MINUTOS) ---
+    setTimeout(async () => {
+      try {
+        const dmEmbed = new EmbedBuilder()
+          .setTitle('⚡ Suas Energias Foram Restauradas!')
+          .setColor(0x2ecc71)
+          .setDescription(`Olá, **${author.username}**!\n\nSeu corpo e mente se recuperaram totalmente da sua última jornada. As guildas de **Odisseia Arcana** estão novamente solicitando os seus serviços!\n\n⚔️ **Não perca tempo:** Retorne ao servidor e utilize o comando \`/work\` para aceitar um novo trabalho e acumular mais almas e XP para o seu cargo!`)
+          .setFooter({ text: 'Odisseia Arcana • Sistema Notificador de Trabalho' })
+          .setTimestamp();
+
+        await author.send({ embeds: [dmEmbed] });
+      } catch (err) {
+        // Ignora caso o usuário esteja com o PV fechado
+        console.log(`Não foi possível enviar mensagem privada para ${author.tag}. DMs fechadas.`);
+      }
+    }, cooldownTime);
+
+    // Resposta do comando
     if (isSlash) {
       return ctx.editReply({ files: [attachment] });
     } else {
