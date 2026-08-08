@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const mongoose = require('mongoose');
 
 const userEconomySchema = new mongoose.Schema({
@@ -7,14 +7,23 @@ const userEconomySchema = new mongoose.Schema({
   balance: { type: Number, default: 0 },
   bank: { type: Number, default: 0 },
   dailyStreak: { type: Number, default: 0 },
-  lastDaily: { type: Number, default: 0 }
+  lastDaily: { type: Number, default: 0 },
+  lastNotified: { type: String, default: '' }
 });
 const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy', userEconomySchema);
+
+// Função para verificar se já virou o dia (reset à meia-noite)
+function isNewDay(lastTimestamp) {
+  if (!lastTimestamp) return true;
+  const lastDate = new Date(lastTimestamp);
+  const now = new Date();
+  return now.toDateString() !== lastDate.toDateString();
+}
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('daily')
-    .setDescription('Resgata sua recompensa diária com sequência (streak) de 2k a 60k moedas.'),
+    .setDescription('Resgata sua recompensa diária com botão interativo e sequência de 2k a 60k.'),
   name: 'daily',
   aliases: ['diario'],
   category: 'Economia',
@@ -28,44 +37,93 @@ module.exports = {
       userData = new UserEconomy({ userId: author.id, guildId: guild.id, balance: 500 });
     }
 
-    const now = Date.now();
-    const cooldownTime = 24 * 60 * 60 * 1000; // 24 horas
-    const timeDiff = now - userData.lastDaily;
-
-    if (userData.lastDaily && timeDiff < cooldownTime) {
-      const timeLeft = cooldownTime - timeDiff;
-      const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-      return ctx.reply({ content: `⏳ Você já resgatou seu diário hoje! Volte em **${hours}h ${minutes}m** para resgatar novamente.`, ephemeral: true });
-    }
-
-    // Se passar de 48 horas sem resgatar, a sequência reseta para 1. Caso contrário, incrementa.
-    if (userData.lastDaily && timeDiff > (cooldownTime * 2)) {
-      userData.dailyStreak = 1;
-    } else {
-      userData.dailyStreak = (userData.dailyStreak || 0) + 1;
-    }
-
-    // Cálculo da recompensa: Começa em 2.000 e aumenta conforme o streak até o teto de 60.000
-    let reward = 2000 + (userData.dailyStreak - 1) * 1500;
-    if (reward > 60000) reward = 60000;
-
-    userData.balance += reward;
-    userData.lastDaily = now;
-    await userData.save();
+    const available = isNewDay(userData.lastDaily);
+    const streak = userData.dailyStreak || 0;
 
     const embed = new EmbedBuilder()
-      .setTitle('🎁 Recompensa Diária Resgatada!')
-      .setColor(0xf1c40f)
-      .setDescription(`Você garantiu sua recompensa de hoje com sucesso!`)
-      .addFields(
-        { name: '🪙 Recompensa', value: `\`🪙 ${reward.toLocaleString()} moedas\``, inline: true },
-        { name: '🔥 Sequência', value: `\`${userData.dailyStreak} dia(s) seguidos\``, inline: true },
-        { name: '💰 Saldo Atual', value: `\`🪙 ${userData.balance.toLocaleString()} moedas\``, inline: false }
+      .setTitle('🎁 Central de Recompensas Diárias - Aeternos')
+      .setDescription(
+        `Olá, **${author.username}**!\n\n` +
+        `🔥 **Sua Sequência Atual:** \`${streak} dia(s)\`\n` +
+        `📊 **Status:** ${available ? '🟢 **Disponível para resgate!**' : '🔴 **Já coletado hoje. Volte à meia-noite!**'}\n\n` +
+        `*Resgate todos os dias para acumular uma sequência épica e garantir prêmios de até **60.000 moedas**!*`
       )
-      .setFooter({ text: `Aeternos • Continue ativando todos os dias para maximizar seus ganhos!` })
+      .setColor(available ? 0x2ecc71 : 0xe74c3c)
+      .setThumbnail(author.displayAvatarURL())
       .setTimestamp();
 
-    return ctx.reply({ embeds: [embed] });
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('claim_daily_btn')
+        .setLabel(available ? '✨ Coletar Recompensa' : '⏳ Indisponível (Já Coletado)')
+        .setStyle(available ? ButtonStyle.Success : ButtonStyle.Secondary)
+        .setDisabled(!available)
+    );
+
+    const response = await ctx.reply({ embeds: [embed], components: [row], fetchReply: true });
+
+    if (!available) return;
+
+    const collector = response.createMessageComponentCollector({
+      filter: i => i.user.id === author.id,
+      time: 60000
+    });
+
+    collector.on('collect', async i => {
+      if (i.customId === 'claim_daily_btn') {
+        let freshData = await UserEconomy.findOne({ userId: author.id, guildId: guild.id });
+        if (!isNewDay(freshData.lastDaily)) {
+          return await i.reply({ content: '❌ Você já resgatou sua recompensa hoje!', ephemeral: true });
+        }
+
+        // Verifica se perdeu o dia (intervalo maior que 1 dia entre as reivindicações)
+        if (freshData.lastDaily) {
+          const lastDate = new Date(freshData.lastDaily);
+          const now = new Date();
+          const lastMidnight = new Date(lastDate.getFullYear(), lastDate.getMonth(), lastDate.getDate());
+          const currentMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const diffDays = Math.round((currentMidnight - lastMidnight) / (1000 * 60 * 60 * 24));
+
+          if (diffDays > 1) {
+            freshData.dailyStreak = 1; // Reseta se passou mais de 1 dia sem coletar
+          } else {
+            freshData.dailyStreak = (freshData.dailyStreak || 0) + 1;
+          }
+        } else {
+          freshData.dailyStreak = 1;
+        }
+
+        // Cálculo do prêmio progressivo (de 2k até o teto de 60k)
+        let reward = 2000 + (freshData.dailyStreak - 1) * 2000;
+        if (reward > 60000) reward = 60000;
+
+        freshData.balance += reward;
+        freshData.lastDaily = Date.now();
+        freshData.lastNotified = new Date().toDateString(); // Marca como notificado hoje
+        await freshData.save();
+
+        const successEmbed = new EmbedBuilder()
+          .setTitle('🎉 Recompensa Diária Coletada com Sucesso!')
+          .setColor(0xf1c40f)
+          .setDescription(
+            `Parabéns, ${author}!\n\n` +
+            `🪙 **Prêmio:** \`+${reward.toLocaleString()} moedas\`\n` +
+            `🔥 **Sequência Atual:** \`${freshData.dailyStreak} dia(s)\`\n` +
+            `💰 **Novo Saldo:** \`${freshData.balance.toLocaleString()} moedas\``
+          )
+          .setTimestamp();
+
+        const disabledRow = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setCustomId('claimed_done')
+            .setLabel('✅ Resgatado Hoje')
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(true)
+        );
+
+        await i.update({ embeds: [successEmbed], components: [disabledRow] });
+        collector.stop();
+      }
+    });
   }
 };

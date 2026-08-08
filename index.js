@@ -34,7 +34,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('📦 Conectado ao MongoDB com sucesso!'))
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
-// Schema do AFK integrado
+// Schemas
 const afkSchema = new mongoose.Schema({
   userId: String,
   guildId: String,
@@ -42,6 +42,17 @@ const afkSchema = new mongoose.Schema({
   timestamp: Number
 });
 const Afk = mongoose.models.Afk || mongoose.model('Afk', afkSchema);
+
+const userEconomySchema = new mongoose.Schema({
+  userId: String,
+  guildId: String,
+  balance: { type: Number, default: 0 },
+  bank: { type: Number, default: 0 },
+  dailyStreak: { type: Number, default: 0 },
+  lastDaily: { type: Number, default: 0 },
+  lastNotified: { type: String, default: '' }
+});
+const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy', userEconomySchema);
 
 // Carregar Comandos da pasta commands
 const commandsPath = path.join(__dirname, 'commands');
@@ -82,6 +93,50 @@ client.on('clientReady', async () => {
   } catch (error) {
     console.error('❌ Erro ao registrar comandos slash:', error);
   }
+
+  // 🔔 Sistema de Notificação Automática no PV para o Daily
+  setInterval(async () => {
+    try {
+      const todayStr = new Date().toDateString();
+      const allEconomy = await UserEconomy.find({});
+      
+      for (const data of allEconomy) {
+        if (data.lastDaily) {
+          const lastDate = new Date(data.lastDaily);
+          const now = new Date();
+          const isDifferentDay = now.toDateString() !== lastDate.toDateString();
+          
+          if (isDifferentDay && data.lastNotified !== todayStr) {
+            try {
+              const user = await client.users.fetch(data.userId).catch(() => null);
+              if (user) {
+                const dmEmbed = new EmbedBuilder()
+                  .setTitle('🚨 SUA RECOMPENSA DIÁRIA ESTÁ DISPONÍVEL! 🎁')
+                  .setColor(0x3498db)
+                  .setDescription(
+                    `Olá, **${user.username}**!\n\n` +
+                    `O **Aeternos** veio te avisar que o seu **Daily** de hoje já resetou e está pronto para resgate!\n\n` +
+                    `🔥 **Sua Sequência Atual:** \`${data.dailyStreak || 0} dia(s)\`\n` +
+                    `🪙 Venha garantir entre **2k a 60k moedas** agora mesmo e mantenha sua sequência ativa!\n\n` +
+                    `*Abra o servidor e digite \`/daily\` para coletar!*`
+                  )
+                  .setTimestamp();
+
+                await user.send({ embeds: [dmEmbed] });
+                
+                data.lastNotified = todayStr;
+                await data.save();
+              }
+            } catch (dmErr) {
+              // Ignora se o usuário estiver com a DM fechada
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Erro no sistema de notificação do Daily:', err);
+    }
+  }, 30 * 60 * 1000); // Executa a verificação a cada 30 minutos
 });
 
 // Interações (Slash Commands)
@@ -146,7 +201,7 @@ client.on('messageCreate', async message => {
     console.error('Erro no sistema AFK:', afkErr);
   }
 
-  // 3. Comandos por Prefixo e Tratamento de Erros/Comando Inexistente
+  // 3. Comandos por Prefixo e Tratamento de Erros
   const prefix = process.env.PREFIX_BOT || '!';
   if (!message.content.startsWith(prefix)) return;
 
