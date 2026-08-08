@@ -221,5 +221,142 @@ client.on('messageCreate', async message => {
     await message.reply('❌ Houve um erro ao executar este comando por prefixo!');
   }
 });
+// Função auxiliar para enviar logs para o canal configurado da guilda
+async function sendLog(guild, embed) {
+  try {
+    const LogConfig = mongoose.models.LogConfig;
+    if (!LogConfig) return;
+    const config = await LogConfig.findOne({ guildId: guild.id });
+    if (!config || !config.channelId) return;
+
+    const logChannel = guild.channels.cache.get(config.channelId) || await guild.channels.fetch(config.channelId).catch(() => null);
+    if (logChannel) {
+      await logChannel.send({ embeds: [embed] });
+    }
+  } catch (err) {
+    console.error('Erro ao enviar log:', err);
+  }
+}
+
+// 1. Mensagem Deletada
+client.on('messageDelete', async message => {
+  if (!message.guild || message.author?.bot) return;
+
+  const embed = new EmbedBuilder()
+    .setTitle('🗑️ Mensagem Deletada')
+    .setColor(0xe74c3c)
+    .addFields(
+      { name: 'Autor', value: `${message.author} (\`${message.author.id}\`)`, inline: true },
+      { name: 'Canal', value: `${message.channel}`, inline: true },
+      { name: 'Conteúdo', value: message.content ? (message.content.length > 1024 ? message.content.substring(0, 1021) + '...' : message.content) : '*[Conteúdo vazio ou mídia]*', inline: false }
+    )
+    .setTimestamp();
+
+  await sendLog(message.guild, embed);
+});
+
+// 2. Mensagem Editada
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+  if (!newMessage.guild || newMessage.author?.bot) return;
+  if (oldMessage.content === newMessage.content) return;
+
+  const embed = new EmbedBuilder()
+    .setTitle('✏️ Mensagem Editada')
+    .setColor(0xf1c40f)
+    .addFields(
+      { name: 'Autor', value: `${newMessage.author} (\`${newMessage.author.id}\`)`, inline: true },
+      { name: 'Canal', value: `${newMessage.channel}`, inline: true },
+      { name: 'Antes', value: oldMessage.content ? (oldMessage.content.length > 1024 ? oldMessage.content.substring(0, 1021) + '...' : oldMessage.content) : '*[Desconhecido]*', inline: false },
+      { name: 'Depois', value: newMessage.content ? (newMessage.content.length > 1024 ? newMessage.content.substring(0, 1021) + '...' : newMessage.content) : '*[Desconhecido]*', inline: false }
+    )
+    .setTimestamp();
+
+  await sendLog(newMessage.guild, embed);
+});
+
+// 3. Alteração de Apelido (Nickname)
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
+  if (oldMember.nickname !== newMember.nickname) {
+    const embed = new EmbedBuilder()
+      .setTitle('👤 Apelido Alterado')
+      .setColor(0x3498db)
+      .addFields(
+        { name: 'Usuário', value: `${newMember.user} (\`${newMember.id}\`)`, inline: false },
+        { name: 'Antigo Apelido', value: `\`${oldMember.nickname || oldMember.user.username}\``, inline: true },
+        { name: 'Novo Apelido', value: `\`${newMember.nickname || newMember.user.username}\``, inline: true }
+      )
+      .setTimestamp();
+
+    await sendLog(newMember.guild, embed);
+  }
+});
+
+// 4. Membro Banido
+client.on('guildBanAdd', async ban => {
+  const embed = new EmbedBuilder()
+    .setTitle('🔨 Membro Banido')
+    .setColor(0xc0392b)
+    .addFields(
+      { name: 'Usuário', value: `${ban.user.tag} (\`${ban.user.id}\`)`, inline: false }
+    )
+    .setTimestamp();
+
+  await sendLog(ban.guild, embed);
+});
+
+// 5. Criação de Canal
+client.on('channelCreate', async channel => {
+  if (!channel.guild) return;
+  const embed = new EmbedBuilder()
+    .setTitle('📁 Canal Criado')
+    .setColor(0x2ecc71)
+    .addFields(
+      { name: 'Nome', value: `${channel.name} (\`${channel.id}\`)`, inline: true },
+      { name: 'Tipo', value: `${channel.type}`, inline: true }
+    )
+    .setTimestamp();
+
+  await sendLog(channel.guild, embed);
+});
+
+// 6. Exclusão de Canal
+client.on('channelDelete', async channel => {
+  if (!channel.guild) return;
+  const embed = new EmbedBuilder()
+    .setTitle('🗑️ Canal Excluído')
+    .setColor(0xe74c3c)
+    .addFields(
+      { name: 'Nome', value: `${channel.name} (\`${channel.id}\`)`, inline: true }
+    )
+    .setTimestamp();
+
+  await sendLog(channel.guild, embed);
+});
+
+// 7. Criação de Cargo
+client.on('roleCreate', async role => {
+  const embed = new EmbedBuilder()
+    .setTitle('✨ Cargo Criado')
+    .setColor(0x2ecc71)
+    .addFields(
+      { name: 'Nome', value: `${role.name} (\`${role.id}\`)`, inline: true }
+    )
+    .setTimestamp();
+
+  await sendLog(role.guild, embed);
+});
+
+// 8. Exclusão de Cargo
+client.on('roleDelete', async role => {
+  const embed = new EmbedBuilder()
+    .setTitle('❌ Cargo Excluído')
+    .setColor(0xe74c3c)
+    .addFields(
+      { name: 'Nome', value: `${role.name} (\`${role.id}\`)`, inline: true }
+    )
+    .setTimestamp();
+
+  await sendLog(role.guild, embed);
+});
 
 client.login(process.env.DISCORD_TOKEN);
