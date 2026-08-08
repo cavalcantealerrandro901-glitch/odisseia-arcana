@@ -23,6 +23,7 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildModeration,
   ],
 });
 
@@ -34,7 +35,7 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('📦 Conectado ao MongoDB com sucesso!'))
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
-// Schemas
+// Schemas Globais
 const afkSchema = new mongoose.Schema({
   userId: String,
   guildId: String,
@@ -50,9 +51,16 @@ const userEconomySchema = new mongoose.Schema({
   bank: { type: Number, default: 0 },
   dailyStreak: { type: Number, default: 0 },
   lastDaily: { type: Number, default: 0 },
+  lastWork: { type: Number, default: 0 },
   lastNotified: { type: String, default: '' }
 });
 const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy', userEconomySchema);
+
+const logSchema = new mongoose.Schema({
+  guildId: { type: String, unique: true },
+  channelId: String
+});
+const LogConfig = mongoose.models.LogConfig || mongoose.model('LogConfig', logSchema);
 
 // Carregar Comandos da pasta commands
 const commandsPath = path.join(__dirname, 'commands');
@@ -77,6 +85,21 @@ if (fs.existsSync(commandsPath)) {
   }
 }
 
+// Função auxiliar para enviar logs
+async function sendLog(guild, embed) {
+  try {
+    const config = await LogConfig.findOne({ guildId: guild.id });
+    if (!config || !config.channelId) return;
+
+    const logChannel = guild.channels.cache.get(config.channelId) || await guild.channels.fetch(config.channelId).catch(() => null);
+    if (logChannel) {
+      await logChannel.send({ embeds: [embed] });
+    }
+  } catch (err) {
+    console.error('Erro ao enviar log:', err);
+  }
+}
+
 client.on('clientReady', async () => {
   console.log(`🤖 Bot Aeternos ligado como ${client.user.tag}!`);
 
@@ -94,7 +117,7 @@ client.on('clientReady', async () => {
     console.error('❌ Erro ao registrar comandos slash:', error);
   }
 
-  // 🔔 Sistema de Notificação Automática no PV para o Daily
+  // 🔔 Sistema de Notificação Automática no PV para o Daily (Dramático e Elegante)
   setInterval(async () => {
     try {
       const todayStr = new Date().toDateString();
@@ -111,14 +134,14 @@ client.on('clientReady', async () => {
               const user = await client.users.fetch(data.userId).catch(() => null);
               if (user) {
                 const dmEmbed = new EmbedBuilder()
-                  .setTitle('🚨 SUA RECOMPENSA DIÁRIA ESTÁ DISPONÍVEL! 🎁')
-                  .setColor(0x3498db)
+                  .setTitle('⏳ As Areias do Destino Voltaram a Correr... ⚜️')
+                  .setColor(0x9b59b6)
                   .setDescription(
-                    `Olá, **${user.username}**!\n\n` +
-                    `O **Aeternos** veio te avisar que o seu **Daily** de hoje já resetou e está pronto para resgate!\n\n` +
-                    `🔥 **Sua Sequência Atual:** \`${data.dailyStreak || 0} dia(s)\`\n` +
-                    `🪙 Venha garantir entre **2k a 60k moedas** agora mesmo e mantenha sua sequência ativa!\n\n` +
-                    `*Abra o servidor e digite \`/daily\` para coletar!*`
+                    `Nobre **${user.username}**,\n\n` +
+                    `As brumas do tempo se dissiparam e o véu da meia-noite revelou o que há muito vos aguarda. ` +
+                    `O tesouro das eras — a vossa sagrada recompensa diária — encontra-se novamente restaurado e pronto para ser reivindicado.\n\n` +
+                    `🔥 **Sua Sequência Atual:** \`${data.dailyStreak || 0} dia(s) de inabalável devoção\`\n\n` +
+                    `*Não permita que a chama da vossa constância se apague nas sombras do esquecimento. Retorne ao santuário do servidor e digite \`/daily\` para garantir vossa fortuna!*`
                   )
                   .setTimestamp();
 
@@ -128,15 +151,15 @@ client.on('clientReady', async () => {
                 await data.save();
               }
             } catch (dmErr) {
-              // Ignora se o usuário estiver com a DM fechada
+              // Ignora caso o usuário esteja com a DM fechada
             }
           }
         }
       }
     } catch (err) {
-      console.error('Erro no sistema de notificação do Daily:', err);
+      console.error('Erro no sistema de notificação dramática do Daily:', err);
     }
-  }, 30 * 60 * 1000); // Executa a verificação a cada 30 minutos
+  }, 30 * 60 * 1000); // Verifica a cada 30 minutos
 });
 
 // Interações (Slash Commands)
@@ -159,11 +182,11 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-// Mensagens, Sistema de AFK e Comandos por Prefixo
+// Mensagens, Sistema de AFK, Comandos por Prefixo e Logs
 client.on('messageCreate', async message => {
   if (message.author.bot || !message.guild) return;
 
-  // 1. Sistema de AFK (Remover ao falar)
+  // 1. Sistema de AFK
   try {
     const userAfk = await Afk.findOne({ userId: message.author.id, guildId: message.guild.id });
     if (userAfk) {
@@ -175,7 +198,6 @@ client.on('messageCreate', async message => {
       setTimeout(() => msgBack.delete().catch(() => {}), 5000);
     }
 
-    // 2. Sistema de AFK (Avisar se mencionou alguém AFK)
     if (message.mentions.users.size > 0) {
       for (const [id, user] of message.mentions.users) {
         const targetAfk = await Afk.findOne({ userId: id, guildId: message.guild.id });
@@ -201,7 +223,7 @@ client.on('messageCreate', async message => {
     console.error('Erro no sistema AFK:', afkErr);
   }
 
-  // 3. Comandos por Prefixo e Tratamento de Erros
+  // 2. Comandos por Prefixo
   const prefix = process.env.PREFIX_BOT || '!';
   if (!message.content.startsWith(prefix)) return;
 
@@ -211,7 +233,7 @@ client.on('messageCreate', async message => {
   const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
   
   if (!command) {
-    return message.reply(`❌ O comando \`${prefix}${commandName}\` não existe. Use \`${prefix}ajuda\` (ou o comando \`/ajuda\`) para ver a lista completa de comandos disponíveis!`);
+    return message.reply(`❌ O comando \`${prefix}${commandName}\` não existe. Use \`${prefix}ajuda\` para ver a lista de comandos!`);
   }
 
   try {
@@ -221,45 +243,25 @@ client.on('messageCreate', async message => {
     await message.reply('❌ Houve um erro ao executar este comando por prefixo!');
   }
 });
-// Função auxiliar para enviar logs para o canal configurado da guilda
-async function sendLog(guild, embed) {
-  try {
-    const LogConfig = mongoose.models.LogConfig;
-    if (!LogConfig) return;
-    const config = await LogConfig.findOne({ guildId: guild.id });
-    if (!config || !config.channelId) return;
 
-    const logChannel = guild.channels.cache.get(config.channelId) || await guild.channels.fetch(config.channelId).catch(() => null);
-    if (logChannel) {
-      await logChannel.send({ embeds: [embed] });
-    }
-  } catch (err) {
-    console.error('Erro ao enviar log:', err);
-  }
-}
-
-// 1. Mensagem Deletada
+// Listeners de Logs
 client.on('messageDelete', async message => {
   if (!message.guild || message.author?.bot) return;
-
   const embed = new EmbedBuilder()
     .setTitle('🗑️ Mensagem Deletada')
     .setColor(0xe74c3c)
     .addFields(
       { name: 'Autor', value: `${message.author} (\`${message.author.id}\`)`, inline: true },
       { name: 'Canal', value: `${message.channel}`, inline: true },
-      { name: 'Conteúdo', value: message.content ? (message.content.length > 1024 ? message.content.substring(0, 1021) + '...' : message.content) : '*[Conteúdo vazio ou mídia]*', inline: false }
+      { name: 'Conteúdo', value: message.content ? (message.content.length > 1024 ? message.content.substring(0, 1021) + '...' : message.content) : '*[Vazio ou mídia]*', inline: false }
     )
     .setTimestamp();
-
   await sendLog(message.guild, embed);
 });
 
-// 2. Mensagem Editada
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   if (!newMessage.guild || newMessage.author?.bot) return;
   if (oldMessage.content === newMessage.content) return;
-
   const embed = new EmbedBuilder()
     .setTitle('✏️ Mensagem Editada')
     .setColor(0xf1c40f)
@@ -270,11 +272,9 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
       { name: 'Depois', value: newMessage.content ? (newMessage.content.length > 1024 ? newMessage.content.substring(0, 1021) + '...' : newMessage.content) : '*[Desconhecido]*', inline: false }
     )
     .setTimestamp();
-
   await sendLog(newMessage.guild, embed);
 });
 
-// 3. Alteração de Apelido (Nickname)
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
   if (oldMember.nickname !== newMember.nickname) {
     const embed = new EmbedBuilder()
@@ -286,25 +286,19 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         { name: 'Novo Apelido', value: `\`${newMember.nickname || newMember.user.username}\``, inline: true }
       )
       .setTimestamp();
-
     await sendLog(newMember.guild, embed);
   }
 });
 
-// 4. Membro Banido
 client.on('guildBanAdd', async ban => {
   const embed = new EmbedBuilder()
     .setTitle('🔨 Membro Banido')
     .setColor(0xc0392b)
-    .addFields(
-      { name: 'Usuário', value: `${ban.user.tag} (\`${ban.user.id}\`)`, inline: false }
-    )
+    .addFields({ name: 'Usuário', value: `${ban.user.tag} (\`${ban.user.id}\`)`, inline: false })
     .setTimestamp();
-
   await sendLog(ban.guild, embed);
 });
 
-// 5. Criação de Canal
 client.on('channelCreate', async channel => {
   if (!channel.guild) return;
   const embed = new EmbedBuilder()
@@ -315,47 +309,34 @@ client.on('channelCreate', async channel => {
       { name: 'Tipo', value: `${channel.type}`, inline: true }
     )
     .setTimestamp();
-
   await sendLog(channel.guild, embed);
 });
 
-// 6. Exclusão de Canal
 client.on('channelDelete', async channel => {
   if (!channel.guild) return;
   const embed = new EmbedBuilder()
     .setTitle('🗑️ Canal Excluído')
     .setColor(0xe74c3c)
-    .addFields(
-      { name: 'Nome', value: `${channel.name} (\`${channel.id}\`)`, inline: true }
-    )
+    .addFields({ name: 'Nome', value: `${channel.name} (\`${channel.id}\`)`, inline: true })
     .setTimestamp();
-
   await sendLog(channel.guild, embed);
 });
 
-// 7. Criação de Cargo
 client.on('roleCreate', async role => {
   const embed = new EmbedBuilder()
     .setTitle('✨ Cargo Criado')
     .setColor(0x2ecc71)
-    .addFields(
-      { name: 'Nome', value: `${role.name} (\`${role.id}\`)`, inline: true }
-    )
+    .addFields({ name: 'Nome', value: `${role.name} (\`${role.id}\`)`, inline: true })
     .setTimestamp();
-
   await sendLog(role.guild, embed);
 });
 
-// 8. Exclusão de Cargo
 client.on('roleDelete', async role => {
   const embed = new EmbedBuilder()
     .setTitle('❌ Cargo Excluído')
     .setColor(0xe74c3c)
-    .addFields(
-      { name: 'Nome', value: `${role.name} (\`${role.id}\`)`, inline: true }
-    )
+    .addFields({ name: 'Nome', value: `${role.name} (\`${role.id}\`)`, inline: true })
     .setTimestamp();
-
   await sendLog(role.guild, embed);
 });
 
