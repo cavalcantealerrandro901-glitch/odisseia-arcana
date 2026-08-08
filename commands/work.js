@@ -1,131 +1,139 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
+const { createCanvas, loadImage } = require('canvas');
 const mongoose = require('mongoose');
 
-// Tabela dos 7 Cargos, Recompensas e Requisitos de XP
-const RANKS = [
-  { level: 1, title: '🧹 Estagiário(a)', minPay: 200, maxPay: 500, minXp: 15, maxXp: 25, requiredXp: 100 },
-  { level: 2, title: '📋 Assistente Operacional', minPay: 600, maxPay: 1200, minXp: 20, maxXp: 30, requiredXp: 250 },
-  { level: 3, title: '💻 Analista Pleno', minPay: 1500, maxPay: 3000, minXp: 25, maxXp: 35, requiredXp: 500 },
-  { level: 4, title: '👔 Gerente de Setor', minPay: 3500, maxPay: 6500, minXp: 30, maxXp: 45, requiredXp: 1000 },
-  { level: 5, title: '📈 Diretor(a) Executivo(a)', minPay: 7000, maxPay: 12000, minXp: 40, maxXp: 55, requiredXp: 2000 },
-  { level: 6, title: '💎 Vice-Presidente', minPay: 13000, maxPay: 22000, minXp: 50, maxXp: 70, requiredXp: 4000 },
-  { level: 7, title: '👑 CEO / Sócio Majoritário', minPay: 25000, maxPay: 45000, minXp: 60, maxXp: 80, requiredXp: Infinity }
+// Atualizando o Schema para incluir o tempo do último trabalho (lastWork)
+const userEconomySchema = new mongoose.Schema({
+  userId: String,
+  guildId: String,
+  balance: { type: Number, default: 0 },
+  bank: { type: Number, default: 0 },
+  lastWork: { type: Number, default: 0 }
+});
+const UserEconomy = mongoose.models.UserEconomy || mongoose.model('UserEconomy', userEconomySchema);
+
+// Frases aleatórias de trabalho
+const workExpressions = [
+  "Você caçou monstros na floresta sombria",
+  "Você ajudou o ferreiro a forjar espadas",
+  "Você vendeu poções mágicas no mercado",
+  "Você escoltou uma caravana com sucesso",
+  "Você limpou o porão da guilda dos goblins",
+  "Você encontrou um baú perdido nas ruínas",
+  "Você trabalhou como guarda na capital"
 ];
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('work')
-    .setDescription('Trabalhe para ganhar salário, XP e subir na carreira profissional.'),
+    .setDescription('Trabalhe para ganhar almas na sua carteira.')
+    .setNameLocalizations({
+      'en-US': 'work',
+      'en-GB': 'work'
+    })
+    .setDescriptionLocalizations({
+      'en-US': 'Work to earn souls for your wallet.',
+      'en-GB': 'Work to earn souls for your wallet.'
+    }),
   name: 'work',
-  category: 'Geral',
-  aliases: ['trabalhar', 'job'],
-  description: 'Trabalhe para ganhar salário, XP e subir na carreira profissional.',
-  async execute(ctx, client, isSlash, args = []) {
+  aliases: ['trabalhar', 'w'],
+  category: 'Economia',
+  description: 'Trabalhe para ganhar almas.',
+  async execute(ctx, client, isSlash) {
     const author = ctx.author || ctx.user;
-    const UserModel = mongoose.models.User;
+    const guild = ctx.guild;
 
-    if (!UserModel) {
-      return ctx.reply({ content: '❌ Erro ao conectar ao banco de dados.' });
-    }
+    if (isSlash) await ctx.deferReply();
 
-    let userData = await UserModel.findOne({ userId: author.id });
+    // 1. Buscar ou criar perfil no banco de dados
+    let userData = await UserEconomy.findOne({ userId: author.id, guildId: guild.id });
     if (!userData) {
-      userData = await UserModel.create({ userId: author.id });
+      userData = await UserEconomy.create({ userId: author.id, guildId: guild.id, balance: 0, lastWork: 0 });
     }
 
-    const now = new Date();
-    const cooldown = 20 * 60 * 1000; // 20 minutos
-    const lastWork = userData.lastWork ? new Date(userData.lastWork) : null;
+    // 2. Sistema de Cooldown (Tempo de espera de 2 horas = 7200000 ms)
+    const cooldownTime = 2 * 60 * 60 * 1000;
+    const timeSinceLastWork = Date.now() - (userData.lastWork || 0);
 
-    if (lastWork && (now - lastWork) < cooldown) {
-      const remaining = cooldown - (now - lastWork);
-      const minutes = Math.floor(remaining / (1000 * 60));
-      const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-
-      const cdEmbed = new EmbedBuilder()
-        .setTitle('⏳ Cansaço de Turno!')
-        .setColor('#ED4245')
-        .setDescription(`Você precisa descansar antes de encarar o próximo turno de trabalho.\n\n⏱️ **Retorno em:** \`${minutes}m ${seconds}s\``)
-        .setTimestamp();
-
-      return ctx.reply({ embeds: [cdEmbed] });
+    if (timeSinceLastWork < cooldownTime) {
+      const timeLeft = cooldownTime - timeSinceLastWork;
+      const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      
+      const msgCooldown = `⏳ Você está cansado! Descanse por mais **${hours}h e ${minutes}m** antes de trabalhar novamente.`;
+      return isSlash ? ctx.editReply(msgCooldown) : ctx.reply(msgCooldown);
     }
 
-    // Identifica o cargo atual do usuário
-    let currentLevel = userData.workLevel || 1;
-    if (currentLevel < 1) currentLevel = 1;
-    if (currentLevel > 7) currentLevel = 7;
+    // 3. Calcular ganhos aleatórios e escolher frase
+    const earnings = Math.floor(Math.random() * (500 - 100 + 1)) + 100; // Entre 100 e 500 almas
+    const randomExpression = workExpressions[Math.floor(Math.random() * workExpressions.length)];
 
-    const rank = RANKS[currentLevel - 1];
-
-    // Sorteio de Salário e XP
-    const payGained = Math.floor(Math.random() * (rank.maxPay - rank.minPay + 1)) + rank.minPay;
-    const xpGained = Math.floor(Math.random() * (rank.maxXp - rank.minXp + 1)) + rank.minXp;
-
-    userData.wallet += payGained;
-    userData.workXp = (userData.workXp || 0) + xpGained;
-    userData.lastWork = now;
-    userData.workNotified = false;
-
-    // Checagem de Promoção / Subida de Cargo
-    let leveledUp = false;
-    let nextRankTitle = rank.title;
-
-    if (currentLevel < 7 && userData.workXp >= rank.requiredXp) {
-      userData.workXp -= rank.requiredXp;
-      userData.workLevel += 1;
-      currentLevel += 1;
-      leveledUp = true;
-      nextRankTitle = RANKS[currentLevel - 1].title;
-    }
-
+    // 4. Salvar novos dados
+    userData.balance += earnings;
+    userData.lastWork = Date.now();
     await userData.save();
 
-    const activeRank = RANKS[currentLevel - 1];
-    const xpProgress = activeRank.requiredXp === Infinity 
-      ? 'MAX' 
-      : `${userData.workXp}/${activeRank.requiredXp} XP`;
+    // --- INÍCIO DO CANVAS (Card de Trabalho) ---
+    const canvas = createCanvas(700, 200);
+    const context = canvas.getContext('2d');
 
-    // Visual do Embed
-    const embed = new EmbedBuilder()
-      .setTitle(`💼 Turno Finalizado — ${author.username}`)
-      .setColor(leveledUp ? '#FEE75C' : '#57F287')
-      .setThumbnail(author.displayAvatarURL({ dynamic: true }))
-      .setDescription(
-        leveledUp
-          ? `🎉 **PARABÉNS! VOCÊ FOI PROMOVIDO!**\nSua dedicação rendeu frutos e agora seu cargo é **${nextRankTitle}**!`
-          : `Você cumpriu mais um turno com excelência no seu cargo atual.`
-      )
-      .addFields(
-        { name: '🏷️ Cargo Atual', value: `\`${activeRank.title}\` *(Nível ${activeRank.level}/7)*`, inline: true },
-        { name: '💰 Salario Recebido', value: `\`+$${payGained.toLocaleString()}\``, inline: true },
-        { name: '⚡ XP Ganho', value: `\`+${xpGained} XP\``, inline: true },
-        { name: '📈 Progresso de Promoção', value: `\`${xpProgress}\``, inline: true },
-        { name: '💵 Carteira Total', value: `\`$${userData.wallet.toLocaleString()}\``, inline: true }
-      )
-      .setFooter({ text: 'Seu descanso dura 20 minutos. Avisaremos no PV quando puder trabalhar!' })
-      .setTimestamp();
+    // Fundo Escuro
+    context.fillStyle = '#18191c';
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-    await ctx.reply({ embeds: [embed] });
+    // Barra lateral de sucesso (Verde)
+    context.fillStyle = '#2ecc71';
+    context.fillRect(0, 0, 15, canvas.height);
 
-    // Enviar aviso no PV exatamente após 20 minutos
-    setTimeout(async () => {
-      try {
-        const checkUser = await UserModel.findOne({ userId: author.id });
-        if (checkUser && !checkUser.workNotified) {
-          const dmEmbed = new EmbedBuilder()
-            .setTitle('🔔 Turno Liberado!')
-            .setColor('#57F287')
-            .setDescription(`Olá **${author.username}**, o seu descanso de **20 minutos** terminou!\n\nVocê já pode trabalhar novamente no cargo de **${activeRank.title}** usando \`/work\` ou \`!work\`.`)
-            .setTimestamp();
+    // Desenhar o Avatar
+    context.save();
+    context.beginPath();
+    context.arc(100, 100, 60, 0, Math.PI * 2, true);
+    context.closePath();
+    context.clip();
 
-          await author.send({ embeds: [dmEmbed] });
-          checkUser.workNotified = true;
-          await checkUser.save();
-        }
-      } catch (e) {
-        // Ignora caso a DM do usuário esteja fechada
-      }
-    }, cooldown);
+    const avatarUrl = author.displayAvatarURL({ extension: 'png', size: 256 });
+    const avatar = await loadImage(avatarUrl);
+    context.drawImage(avatar, 40, 40, 120, 120);
+    context.restore();
+
+    // Borda do Avatar
+    context.beginPath();
+    context.arc(100, 100, 60, 0, Math.PI * 2, true);
+    context.lineWidth = 5;
+    context.strokeStyle = '#2ecc71';
+    context.stroke();
+
+    // Título Principal
+    context.fillStyle = '#ffffff';
+    context.font = 'bold 32px sans-serif';
+    context.fillText('Trabalho Concluído!', 190, 70);
+
+    // A Frase de Expressão
+    context.fillStyle = '#a1a3a6';
+    context.font = '20px sans-serif';
+    context.fillText(`${randomExpression} e ganhou:`, 190, 110);
+
+    // O Valor Ganho
+    context.fillStyle = '#2ecc71';
+    context.font = 'bold 38px sans-serif';
+    context.fillText(`+ ${earnings.toLocaleString()} Almas`, 190, 160);
+
+    // Saldo Total (canto inferior direito)
+    context.fillStyle = '#f1c40f';
+    context.font = '18px sans-serif';
+    context.textAlign = 'right';
+    context.fillText(`Saldo Atual: ${userData.balance.toLocaleString()}`, 670, 180);
+
+    // --- FIM DO CANVAS ---
+
+    const attachment = new AttachmentBuilder(canvas.toBuffer(), { name: 'card_work.png' });
+    const textMessage = `✨ **${author.username}**, ${randomExpression.toLowerCase()}!`;
+
+    if (isSlash) {
+      return ctx.editReply({ content: textMessage, files: [attachment] });
+    } else {
+      return ctx.reply({ content: textMessage, files: [attachment] });
+    }
   }
 };
