@@ -1,39 +1,52 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('avatar')
+    .setDescription('Exibe a foto de perfil (avatar) sua ou de outro usuário.')
+    .addUserOption(option =>
+      option.setName('usuario')
+        .setDescription('Selecione o usuário para ver o avatar')
+        .setRequired(false)
+    ),
+
   name: 'avatar',
   aliases: ['av', 'foto', 'pfp'],
   category: 'Utilidade',
   description: 'Exibe a foto de perfil (avatar) sua ou de outro usuário.',
 
   async execute(ctx, client, isSlash, args) {
-    // Garantir que roda apenas por mensagem de texto (prefixo)
-    const message = ctx;
-    const author = message.author;
+    let author, targetUser;
 
-    // 1. Identificar o usuário alvo (Menção, ID ou o próprio autor)
-    let targetUser = message.mentions?.users?.first();
+    if (isSlash) {
+      await ctx.deferReply();
+      author = ctx.user;
+      targetUser = ctx.options.getUser('usuario') || author;
+    } else {
+      author = ctx.author || ctx.user;
+      targetUser = ctx.mentions?.users?.first();
 
-    if (!targetUser && args && args[0]) {
-      try {
-        targetUser = await client.users.fetch(args[0]);
-      } catch (e) {
-        targetUser = null;
+      if (!targetUser && args && args[0]) {
+        try {
+          targetUser = await client.users.fetch(args[0]);
+        } catch (e) {
+          targetUser = null;
+        }
+      }
+
+      if (!targetUser) {
+        targetUser = author;
       }
     }
 
-    if (!targetUser) {
-      targetUser = author;
-    }
-
-    // 2. Gerar URLs do avatar em alta qualidade (1024px)
+    // URLs do avatar em alta qualidade
     const dynamicAvatar = targetUser.displayAvatarURL({ size: 1024 });
     const avatarPng = targetUser.displayAvatarURL({ extension: 'png', size: 1024 });
     const avatarJpg = targetUser.displayAvatarURL({ extension: 'jpg', size: 1024 });
     const avatarWebp = targetUser.displayAvatarURL({ extension: 'webp', size: 1024 });
     const avatarGif = targetUser.displayAvatarURL({ extension: 'gif', size: 1024 });
 
-    // 3. Criar a Embed
+    // Embed
     const embed = new EmbedBuilder()
       .setTitle(`🖼️ Foto de Perfil de ${targetUser.username}`)
       .setDescription(`[Clique aqui para abrir a imagem no navegador](${dynamicAvatar})`)
@@ -42,7 +55,7 @@ module.exports = {
       .setFooter({ text: `Solicitado por ${author.username}`, iconURL: author.displayAvatarURL() })
       .setTimestamp();
 
-    // 4. Criar botões com links diretos para download
+    // Botões de download
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setLabel('PNG')
@@ -58,7 +71,6 @@ module.exports = {
         .setURL(avatarWebp)
     );
 
-    // Se o avatar for animado (GIF), adiciona o botão de GIF
     if (targetUser.avatar && targetUser.avatar.startsWith('a_')) {
       row.addComponents(
         new ButtonBuilder()
@@ -68,7 +80,10 @@ module.exports = {
       );
     }
 
-    // Responder à mensagem
-    return message.reply({ embeds: [embed], components: [row] });
+    if (isSlash) {
+      return ctx.editReply({ embeds: [embed], components: [row] });
+    } else {
+      return ctx.reply({ embeds: [embed], components: [row] });
+    }
   }
 };
