@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const mongoose = require('mongoose');
+const { parseNumberInput } = require('../utils/parser');
 
 const userEconomySchema = new mongoose.Schema({
   userId: String,
@@ -21,9 +22,9 @@ module.exports = {
         .setDescription('O membro que receberá as moedas')
         .setRequired(true)
     )
-    .addIntegerOption(option =>
+    .addStringOption(option =>
       option.setName('quantidade')
-        .setDescription('A quantidade de moedas a ser adicionada')
+        .setDescription('A quantidade (ex: 2.2k, 3.4m, 500k)')
         .setRequired(true)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
@@ -35,22 +36,24 @@ module.exports = {
     const author = ctx.author || ctx.user;
     const guild = ctx.guild;
 
-    let targetUser, amount;
+    let targetUser, rawAmount;
 
     if (isSlash) {
       targetUser = ctx.options.getUser('membro');
-      amount = ctx.options.getInteger('quantidade');
+      rawAmount = ctx.options.getString('quantidade');
     } else {
       targetUser = ctx.mentions.users.first() || (args[0] ? await client.users.fetch(args[0]).catch(() => null) : null);
-      amount = parseInt(args[1]);
+      rawAmount = args[1];
     }
 
     if (!targetUser) {
       return ctx.reply({ content: '❌ Você precisa mencionar ou fornecer o ID de um usuário válido.', ephemeral: true });
     }
 
-    if (!amount || isNaN(amount) || amount <= 0) {
-      return ctx.reply({ content: '❌ Informe uma quantidade válida e maior que zero de moedas.', ephemeral: true });
+    const amount = parseNumberInput(rawAmount);
+
+    if (isNaN(amount) || amount <= 0) {
+      return ctx.reply({ content: '❌ Informe uma quantidade válida! Exemplos aceitos: \`2.2k\`, \`3.4m\`, \`500k\`, \`1.5b\` ou \`5000\`', ephemeral: true });
     }
 
     let userData = await UserEconomy.findOne({ userId: targetUser.id, guildId: guild.id });
