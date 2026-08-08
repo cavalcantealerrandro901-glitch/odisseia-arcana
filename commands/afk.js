@@ -1,47 +1,48 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const mongoose = require('mongoose');
+
+const afkSchema = new mongoose.Schema({
+  userId: String,
+  guildId: String,
+  reason: String,
+  timestamp: Number
+});
+const Afk = mongoose.models.Afk || mongoose.model('Afk', afkSchema);
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('afk')
-    .setDescription('Fique ausente (AFK) com um motivo opcional.')
+    .setDescription('Deixa você ausente (AFK) e avisa quem te mencionar.')
     .addStringOption(option =>
       option.setName('motivo')
-        .setDescription('Motivo do AFK (opcional)')
+        .setDescription('O motivo de você estar ausente')
         .setRequired(false)
     ),
   name: 'afk',
-  category: 'Geral',
   aliases: ['ausente'],
-  description: 'Fique ausente (AFK) com um motivo opcional.',
+  category: 'Utilidade',
+  description: 'Define seu status como AFK.',
   async execute(ctx, client, isSlash, args = []) {
     const author = ctx.author || ctx.user;
-    const UserModel = mongoose.models.User;
+    const guild = ctx.guild;
 
-    if (!UserModel) {
-      return ctx.reply({ content: '❌ Erro ao conectar ao banco de dados.' });
-    }
+    const reason = isSlash 
+      ? (ctx.options.getString('motivo') || 'Nenhum motivo informado.') 
+      : (args.join(' ') || 'Nenhum motivo informado.');
 
-    let reason = 'Sem motivo informado';
+    // Salva ou atualiza o status de AFK no MongoDB
+    await Afk.findOneAndUpdate(
+      { userId: author.id, guildId: guild.id },
+      { reason, timestamp: Date.now() },
+      { upsert: true, new: true }
+    );
 
-    if (isSlash) {
-      const inputReason = ctx.options.getString('motivo');
-      if (inputReason) reason = inputReason;
-    } else {
-      if (args.length > 0) {
-        reason = args.join(' ');
-      }
-    }
+    const embed = new EmbedBuilder()
+      .setTitle('💤 Status AFK Ativado')
+      .setColor(0xe67e22)
+      .setDescription(`Tudo bem, **${author.username}**! Agora você está marcado como **AFK**.\n\n📝 **Motivo:** ${reason}`)
+      .setTimestamp();
 
-    let userData = await UserModel.findOne({ userId: author.id });
-    if (!userData) {
-      userData = await UserModel.create({ userId: author.id });
-    }
-
-    userData.afkReason = reason;
-    userData.afkTimestamp = new Date();
-    await userData.save();
-
-    await ctx.reply(`💤 **${author.username}**, você agora está AFK: **${reason}**.\nAssim que você enviar uma nova mensagem, seu AFK será removido!`);
+    return ctx.reply({ embeds: [embed] });
   }
 };
