@@ -104,14 +104,16 @@ module.exports = {
         await freshData.save();
 
         const successEmbed = new EmbedBuilder()
-          .setTitle('🎉 Recompensa Diária Coletada com Sucesso!')
+          .setTitle('✨ Recompensa Diária Resgatada com Sucesso!')
           .setColor(0xf1c40f)
           .setDescription(
-            `Parabéns, ${author}!\n\n` +
-            `🪙 **Prêmio:** \`+${reward.toLocaleString()} moedas\`\n` +
-            `🔥 **Sequência Atual:** \`${freshData.dailyStreak} dia(s)\`\n` +
-            `💰 **Novo Saldo:** \`${freshData.balance.toLocaleString()} moedas\``
+            `Parabéns, ${author}! Sua dedicação contínua está dando frutos admiráveis.\n\n` +
+            `🪙 **Prêmio Recebido:** \`+${reward.toLocaleString()} moedas\`\n` +
+            `🔥 **Sequência Consolidada:** \`${freshData.dailyStreak} dia(s) consecutivos\`\n` +
+            `💰 **Tesouro Atual na Carteira:** \`${freshData.balance.toLocaleString()} moedas\`\n\n` +
+            `*Cada dia de constância fortalece ainda mais o seu legado. Continue brilhando e retorne amanhã para colher frutos ainda maiores!*`
           )
+          .setThumbnail(author.displayAvatarURL())
           .setTimestamp();
 
         const disabledRow = new ActionRowBuilder().addComponents(
